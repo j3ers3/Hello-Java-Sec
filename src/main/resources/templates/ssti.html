@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
+
+<body>
+<!-- 顶部导航栏 -->
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边栏 -->
+        <div th:replace="~{commons/commons::siderbar(active='ssti.html')}"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <h2>SSTI</h2>
+            <hr>
+
+            <div class="dec">SSTI(Server Side Template Injection) 服务器模板注入, 服务端接收了用户的输入，将其作为 Web
+                应用模板内容的一部分，在进行目标编译渲染的过程中，执行了用户插入的恶意内容。
+            </div>
+
+            <div class="box-float">
+                <div class="float1">
+
+                    <h5><label for="code" class="control-label">漏洞代码</label></h5>
+                    <textarea class="form-control" name="code" id="code" rows="10">
+ @GetMapping("/doc/{document}")
+     public void getDocument(@PathVariable String document) {
+     System.out.println(document);
+ }
+                    </textarea>
+
+                    <a class="btn btn-sm btn-danger" href="/SSTI/doc/__${T(java.lang.Runtime).getRuntime().exec('open -a Calculator')}__::.x">点击测试</a><br>
+                    <hr>
+
+                    <h5><label for="code" class="control-label">安全代码</label></h5>
+                    <textarea class="form-control" name="code" id="code" rows="10">
+ @GetMapping("/safe/doc/{document}")
+     public void getDocument(@PathVariable String document, HttpServletResponse response) {
+     System.out.println("Retrieving " + document);
+ }
+                    </textarea>
+
+                    <a class="btn btn-sm btn-success" href="/SSTI/safe/doc/__${T(java.lang.Runtime).getRuntime().exec('open -a Calculator')}__::.x">点击测试</a><br>
+                    <hr>
+
+
+                </div>
+
+                <div class="float2">
+                    <h5><label for="code" class="control-label">安全编码</label></h5>
+                    <textarea class="form-control" name="code" id="code" rows="10">
+
+                    </textarea>
+
+
+                </div>
+
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- 引入script -->
+<div th:replace="~{commons/commons::script}"></div>
+
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
+
+<body>
+<!-- 顶部导航栏 -->
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边栏 -->
+        <div th:replace="~{commons/commons::siderbar(active='xss.html')}"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <h2>XSS</h2>
+            <hr>
+
+            <div class="dec">XSS(Cross Site
+                Scripting) 跨站脚本攻击，攻击者插入恶意Script代码,当用户浏览该页之时,嵌入其中Web里面的Script代码会被执行,从而达到恶意攻击用户的目的。
+            </div>
+
+            <div class="box-float">
+                <div class="float1">
+
+                    <h5><label for="code" class="control-label">漏洞代码</label></h5>
+                    <textarea class="form-control" name="code" id="code" rows="6">
+ @GetMapping("/reflect")
+ public static String input(String content) {
+     return content;
+ }
+                    </textarea>
+
+                    <a class="btn btn-sm btn-danger"
+                       th:href="@{/XSS/reflect?content=aaa<script>alert(1)</script>}">点击测试</a><br>
+                    <hr>
+
+
+                    <h5><label for="code" class="control-label">安全代码 - 安全函数</label></h5>
+                    <textarea class="form-control" name="code" id="code" rows="6">
+ import org.springframework.web.util.HtmlUtils;
+ @GetMapping("/safe1")
+ public static String safe1(String content) {
+     return HtmlUtils.htmlEscape(content);
+ }
+                    </textarea>
+
+                    <a class="btn btn-sm btn-success"
+                       th:href="@{/XSS/safe1?content=aaa<script>alert(1)</script>}">点击测试</a>
+                </div>
+
+                <div class="float2">
+                    <h5><label for="code" class="control-label">安全编码</label></h5>
+                    <textarea class="form-control" name="code" id="code" rows="6">
+【必须】外部输入拼接到response页面前进行编码处理
+ 当响应“content-type”为“html”类型时，外部输入拼接到响应包中，需根据输出位置进行编码处理。
+                    </textarea>
+                    <br>
+                    <hr>
+
+                    <h5><label for="code" class="control-label">安全代码 - 自定义过滤</label></h5>
+                    <textarea class="form-control" name="code" id="code" rows="6">
+ private static String XssFilter(String content) {
+        content = StringUtils.replace(content, "&", "&amp;");
+        content = StringUtils.replace(content, "<", "&lt;");
+        content = StringUtils.replace(content, ">", "&gt;");
+        content = StringUtils.replace(content, "\"", "&quot;");
+        content = StringUtils.replace(content, "'", "&#x27;");
+        content = StringUtils.replace(content, "/", "&#x2F;");
+        return content;
+ }
+                    </textarea>
+                    <a class="btn btn-sm btn-success"
+                       th:href="@{/XSS/safe2?content=aaa<script>alert(1)</script>}">点击测试</a>
+                </div>
+
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- 引入script -->
+<div th:replace="~{commons/commons::script}"></div>
+
+
+</body>
+
+</html>
