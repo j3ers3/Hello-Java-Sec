@@ -14,8 +14,7 @@
 
 <body class="text-center">
 <form class="form-signin" th:action="@{/user/login}">
-    <img class="mb-4" th:src="@{/img/logo.png}" alt="" width="100" height="100">
-    <h1 class="h3 mb-3 font-weight-normal">请登录</h1>
+    <img class="mb-4" th:src="@{/img/logo.png}" alt="" width="150" height="150">
     <label class="sr-only">Username</label>
     <input type="text" class="form-control" name="username" placeholder="username" required="" autofocus="">
     <label class="sr-only">Password</label>
@@ -27,8 +26,6 @@
         </label>
     </div>
     <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
-    <a class="btn btn-sm">中文</a>
-    <a class="btn btn-sm">English</a>
 </form>
 
 </body>

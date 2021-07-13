@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
+
+<body>
+<!-- 顶部导航栏 -->
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边栏 -->
+        <div th:replace="~{commons/commons::siderbar(active='ssrf.html')}"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <h2>SSRF</h2>
+            <hr>
+
+            <div class="dec">SSRF(Server-Side Request Forgery) 服务器端请求伪造，是一种由攻击者构造形成由服务端发起请求的一个安全漏洞。
+            </div>
+            <br>
+
+            <div class="box-float">
+                <div class="float1">
+
+                    <a style="float:right" class="btn btn-sm btn-danger"
+                       th:href="@{/SSRF/URLConnection?url=file:///etc/passwd}">点击测试</a>
+                    <h5>漏洞代码 - URLConnection方式</h5>
+                    <h5><label for="code" class="control-label"></label></h5>
+                    <textarea class="form-control" name="code" id="code1">
+@GetMapping("/URLConnection")
+public String URLConnection(String url) {
+    return Http.URLConnection(url);
+}
+                    </textarea>
+                    <br>
+
+
+                    <a style="float:right" class="btn btn-sm btn-danger"
+                       th:href="@{/SSRF/HTTPURLConnection/safe?url=http://surl-8.cn/0}">点击测试</a>
+                    <h5>漏洞代码 - bypass</h5>
+                    <textarea class="form-control" name="code" id="code2">
+@GetMapping("/URLConnection/safe")
+public String URLConnectionSafe(String url) {
+    if (!Security.is_http(url)){
+        return "不允许非http/https协议!!!";
+    }else if (Security.is_intranet(url)) {
+        return "不允许访问内网!!!";
+    }else{
+        return Http.URLConnection(url);
+    }
+}
+                    </textarea>
+                </div>
+
+
+                <div class="float2">
+                    <h5>安全编码</h5>
+                    <textarea class="form-control" name="code" id="code3">
+【必须】避免直接访问不可信地址
+服务器访问不可信地址时，禁止访问私有地址段及内网域名。
+建议通过URL解析函数进行解析，获取host或者domain后通过DNS获取其IP，然后和内网地址进行比较。
+对已校验通过地址进行访问时，应关闭跟进跳转功能。
+                    </textarea>
+                    <br>
+
+                    <a style="float:right" class="btn btn-sm btn-success"
+                       th:href="@{/SSRF/HTTPURLConnection/safe?url=http://192.168.1.1}">点击测试</a>
+                    <h5>安全代码</h5>
+                    <textarea class="form-control" name="code" id="code4">
+// 判断是否是http类型
+public static boolean is_http(String url) {
+    return url.startsWith("http://") || url.startsWith("https://");
+}
+// 判断是否为内网
+public static boolean is_intranet(String url) {
+    Pattern reg = Pattern.compile("^(127\\.0\\.0\\.1)|(localhost)|(10\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})|(172\\.((1[6-9])|(2\\d)|(3[01]))\\.\\d{1,3}\\.\\d{1,3})|(192\\.168\\.\\d{1,3}\\.\\d{1,3})$");
+    Matcher match = reg.matcher(url);
+    Boolean a = match.find();
+    return a;
+}
+// 不允许跳转或判断跳转
+HttpURLConnection conn = (HttpURLConnection) u.openConnection();
+conn.setInstanceFollowRedirects(false); // 不允许重定向
+conn.connect();
+                    </textarea>
+                </div>
+
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- 引入script -->
+<div th:replace="~{commons/commons::script}"></div>
+
+
+</body>
+
+</html>

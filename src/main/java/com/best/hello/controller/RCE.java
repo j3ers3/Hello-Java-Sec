@@ -126,9 +126,9 @@ public class RCE {
     @GetMapping("/js")
     public void jsEngine(String url) throws Exception {
         // 通过脚本名称获取
-        ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
+        // ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
         // 通过文件扩展名获取
-        // ScriptEngine engine = new ScriptEngineManager().getEngineByExtension("js");
+        ScriptEngine engine = new ScriptEngineManager().getEngineByExtension("js");
 
         // Bindings：用来存放数据的容器
         Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);

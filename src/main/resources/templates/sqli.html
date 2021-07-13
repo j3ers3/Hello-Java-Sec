@@ -9,28 +9,29 @@
 <div class="container-fluid">
     <div class="row">
         <!-- 侧边栏 -->
-        <div th:replace="~{commons/commons::siderbar(active='xss.html')}"></div>
+        <div th:replace="~{commons/commons::siderbar(active='sqli.html')}"></div>
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <h2>XSS</h2>
+            <h2>SQL Injection</h2>
             <hr>
-            <div class="dec">XSS(Cross Site
-                Scripting) 跨站脚本攻击，攻击者插入恶意Script代码,当用户浏览该页之时,嵌入其中Web里面的Script代码会被执行,从而达到恶意攻击用户的目的。
+            <div class="dec">SQLI(SQL Injection)
+                SQL注入即是指web应用程序对用户输入数据的合法性没有判断或过滤不严，攻击者可以在web应用程序中事先定义好的查询语句的结尾上添加额外的SQL语句。
             </div>
             <br>
 
             <div class="box-float">
                 <div class="float1">
                     <a style="float:right" class="btn btn-sm btn-danger"
-                       th:href="@{/XSS/reflect?content=test<script>alert(1)</script>}">点击测试</a>
+                       th:href="@{/SQLI/sql_1?id=1' or '1'='1}">点击测试</a>
                     <h5>漏洞代码</h5>
 
                     <textarea class="form-control" name="code" id="code1">
-@GetMapping("/reflect")
-public static String input(String content) {
-    return content;
-}
-                    </textarea>
+Connection conn = DriverManager.getConnection(db_url, db_user, db_pass);
+Statement stmt = conn.createStatement();
+String sql = "select * from users where id = '" + id + "'";
+System.out.println("[*] 执行SQL语句：" + sql);
+ResultSet rs = stmt.executeQuery(sql);
+          </textarea>
 
                     <br>
 

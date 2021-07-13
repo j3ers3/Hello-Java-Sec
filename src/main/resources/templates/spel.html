@@ -17,26 +17,27 @@
 
             <div class="dec">SpEL（Spring Expression Language）表达式注入, 是一种功能强大的表达式语言、用于在运行时查询和操作对象图，由于未对参数做过滤可造成任意命令执行。
             </div>
+            <br>
+
 
             <div class="box-float">
                 <div class="float1">
+                    <a style="float:right" class="btn btn-sm btn-danger"
+                       th:href="@{/spel?ex=100-1}">点击测试</a>
+                    <h5>漏洞代码</h5>
 
-                    <h5><label for="code" class="control-label">漏洞代码</label></h5>
-                    <textarea class="form-control" name="code" id="code" rows="8">
- @GetMapping("/spel")
- public String rce(String ex) {
-     ExpressionParser parser = new SpelExpressionParser();
-     String result = parser.parseExpression(ex).getValue().toString();
-     System.out.println(result);
-     return result;
- }
+                    <textarea class="form-control" name="code" id="code1">
+@GetMapping("/spel")
+public String rce(String ex) {
+    ExpressionParser parser = new SpelExpressionParser();
+    String result = parser.parseExpression(ex).getValue().toString();
+    System.out.println(result);
+    return result;
+}
                     </textarea>
-
-                    <a class="btn btn-sm btn-danger" th:href="@{/spel?ex=100-1}">点击测试</a><br>
-
-
-
+                </div>
             </div>
+
         </main>
     </div>
 </div>

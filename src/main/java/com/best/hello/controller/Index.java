@@ -24,17 +24,6 @@ import com.alibaba.fastjson.JSON;
 @Controller
 public class Index {
 
-    // 如果请求路径为index，则调用index()方法
-    @RequestMapping("/index")
-    public String index() {
-        return "index";
-    }
-
-    @RequestMapping("/login")
-    public String login() {
-        return "login";
-    }
-
     @RequestMapping("/")
     public String redirect() {
         return "redirect:/index";
@@ -45,33 +34,13 @@ public class Index {
     public String sysInfo() {
         Map<String, String> m = new HashMap<>();
 
+        m.put("app", "Hello Java SEC");
+        m.put("author", "nul1");
         m.put("tomcat_version", ServerInfo.getServerInfo());
-        m.put("app_name", "Java SEC");
         m.put("java_version", System.getProperty("java.version"));
         m.put("fastjson_version", JSON.VERSION);
 
         return JSON.toJSONString(m);
 
     }
-
-    @GetMapping("/index/xss")
-    public static String xss() {
-        return "xss";
-    }
-
-    @GetMapping("/index/spel")
-    public static String spel(){
-        return "spel";
-    }
-
-    @GetMapping("/index/rce")
-    public static String rce(){
-        return "rce";
-    }
-
-    @GetMapping("/index/ssti")
-    public static String ssti(){
-        return "ssti";
-    }
-
 }

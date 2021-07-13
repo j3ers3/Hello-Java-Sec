@@ -2,16 +2,9 @@ body {
   font-size: .875rem;
 }
 
-.feather {
-  width: 16px;
-  height: 16px;
-  vertical-align: text-bottom;
-}
-
 /*
  * Sidebar
  */
-
 .sidebar {
   position: fixed;
   top: 0;
@@ -23,7 +16,6 @@ body {
 }
 
 .sidebar-sticky {
-  position: -webkit-sticky;
   position: sticky;
   top: 48px; /* Height of navbar */
   height: calc(100vh - 48px);
@@ -32,57 +24,50 @@ body {
   overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
 }
 
+/* 侧边栏字体 */
 .sidebar .nav-link {
   font-weight: 500;
-  color: #333;
+  color: #AEB7C2;
 }
 
-.sidebar .nav-link .feather {
-  margin-right: 4px;
-  color: #999;
+/* 侧边栏模式 */
+.sidebar .nav > li > a {
+  #padding: 16px 20px;
+  color: #AEB7C2;
+  border-left: 5px solid transparent;
 }
 
+/* 侧边栏图标 */
+.sidebar .nav i {
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+.sidebar .nav span {
+  position: relative;
+  top: -2px;
+}
+
+/* 激活后的颜色 */
 .sidebar .nav-link.active {
-  color: #007bff;
+  color: white;
 }
 
-.sidebar .nav-link:hover .feather,
-.sidebar .nav-link.active .feather {
-  color: inherit;
-}
-
-.sidebar-heading {
-  font-size: .75rem;
-  text-transform: uppercase;
-}
-
-/*
- * Navbar
- */
-
-.navbar-brand {
-  padding-top: .75rem;
-  padding-bottom: .75rem;
-  font-size: 1rem;
-  background-color: rgba(0, 0, 0, .25);
-  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
-}
-
-.navbar .form-control {
-  padding: .75rem 1rem;
-  border-width: 0;
-  border-radius: 0;
-}
-
-.form-control-dark {
+/* 鼠标放上去字体颜色变白 */
+.sidebar .nav > li > a:hover, .sidebar .nav > li > a:focus, .sidebar .nav > li > a.active {
   color: #fff;
-  background-color: rgba(255, 255, 255, .1);
-  border-color: rgba(255, 255, 255, .1);
+  background-color: transparent;
 }
 
-.form-control-dark:focus {
-  border-color: transparent;
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
+/* 鼠标放上去图标变蓝 */
+.sidebar .nav > li > a:hover i, .sidebar .nav > li > a:focus i, .sidebar .nav > li > a.active i {
+  color: #00AAFF;
+}
+
+/* 激活后的背景样式 */
+.sidebar .nav > li > a:focus, .sidebar .nav > li > a.active {
+  background-color: #252c35;
+  border-left-color: #00AAFF;
 }
 
 /*
@@ -114,5 +99,4 @@ body {
 
 .dec {
   line-height: 40px;      /* 设置行高 */
-
 }
