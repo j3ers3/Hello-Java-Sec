@@ -19,7 +19,7 @@ public class Redirect {
     }
 
     /**
-     * 白名单模式
+     * @safe 白名单模式
      */
     @GetMapping("/safe")
     @ResponseBody

@@ -1,5 +1,8 @@
 package com.best.hello.util;
 
+import org.jsoup.safety.Whitelist;
+import org.springframework.util.StringUtils;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -43,7 +46,6 @@ public class Security {
         url_list.add("oa.baidu.com");
 
         // 从url转换host
-
         URI uri = null;
         try {
             uri = new URI(url);
@@ -55,6 +57,32 @@ public class Security {
 
         return url_list.contains(host);
 
+    }
+
+    public static String filter_xss(String content) {
+        content = StringUtils.replace(content, "&", "&amp;");
+        content = StringUtils.replace(content, "<", "&lt;");
+        content = StringUtils.replace(content, ">", "&gt;");
+        content = StringUtils.replace(content, "\"", "&quot;");
+        content = StringUtils.replace(content, "'", "&#x27;");
+        content = StringUtils.replace(content, "/", "&#x2F;");
+        return content;
+    }
+
+
+    public static boolean check_sql(String content) {
+        String black = "'|;|--|+|,|%|=|>|<|*|(|)|and|or|exec|insert|select|delete|update|count|drop|chr|mid|master|truncate|char|declare";
+        String[] black_list = black.split("|");
+        for (int i = 0; i < black_list.length; i++) {
+            if (content.contains(black_list[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean check_traversal(String content) {
+        return content.contains("..") || content.contains("/");
     }
 
 }

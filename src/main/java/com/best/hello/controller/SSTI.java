@@ -21,27 +21,29 @@ import java.util.Map;
 @RequestMapping("/SSTI")
 public class SSTI {
 
-    /*
-    * thymeleaf模版注入
-    * http://god.com:8888/SSTI/thymeleaf?lang=index
+    /**
+    * @vul thymeleaf模版注入
+    * @poc http://127.0.0.1:8888/SSTI/thymeleaf?lang=index
     */
     @GetMapping("/thymeleaf")
     public String thymeleaf(@RequestParam String lang) {
         return "user/" + lang + "/welcome"; //template path is tainted
     }
 
-    /*
-    * 将请求的url作为视图名称，调用模板引擎去解析
-    * 在这种情况下，我们只要可以控制请求的controller的参数，一样可以造成RCE漏洞
-    * PoC: http://god.com:8888/SSTI/doc/__${T(java.lang.Runtime).getRuntime().exec("open -a Calculator")}__::.x
-    */
+    /**
+     * @vul 将请求的url作为视图名称，调用模板引擎去解析，在这种情况下，我们只要可以控制请求的controller的参数，一样可以造成RCE漏洞
+     * @poc http://god.com:8888/SSTI/doc/__${T(java.lang.Runtime).getRuntime().exec("open -a Calculator")}__::.x
+     */
     @GetMapping("/doc/{document}")
     public void getDocument(@PathVariable String document) {
         System.out.println(document);
     }
 
-    // 由于controller的参数被设置为HttpServletResponse，Spring认为它已经处理了HTTP Response，因此不会发生视图名称解析
-    @GetMapping("/safe/doc/{document}")
+
+    /**
+     * @safe 由于controller的参数被设置为HttpServletResponse，Spring认为它已经处理了HTTP Response，因此不会发生视图名称解析
+     */
+    @GetMapping("/doc/safe/{document}")
     public void getDocument(@PathVariable String document, HttpServletResponse response) {
         System.out.println("Retrieving " + document);
     }

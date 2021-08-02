@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
+
+<body>
+<!-- 顶部导航栏 -->
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边栏 -->
+        <div th:replace="~{commons/commons::siderbar(active='actuator.html')}"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <h2>Actuator</h2>
+            <hr>
+
+            <div class="dec">Actuator, 安全配置
+            </div>
+            <hr>
+            <br>
+
+            <div class="box-float">
+                <div class="float1">
+                    <a style="float:right" class="btn btn-sm btn-danger"
+                       th:href="@{/actuator}">运行</a>
+                    <h5><span class="lnr lnr-bug"> 错误配置</span></h5>
+
+                    <textarea class="form-control" name="code" id="code1">
+# 不安全的配置：Actuator设置全部暴露
+management.endpoints.web.exposure.include=*
+                    </textarea> <br>
+
+                    <a style="float:right" class="btn btn-sm btn-success"
+                       href="/Redirect/safe?url=http://www.baidu.com">运行</a>
+                    <h5><span class="lnr lnr-smile"> 安全配置</span></h5>
+                    <textarea class="form-control" name="code" id="code2">
+                    </textarea>
+                </div>
+
+                <div class="float2">
+                    <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
+                    <textarea class="form-control" name="code" id="suggestion">
+
+                    </textarea>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- 引入script -->
+<div th:replace="~{commons/commons::script}"></div>
+
+
+</body>
+
+</html>

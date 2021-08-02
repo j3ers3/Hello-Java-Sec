@@ -1,32 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
-<head th:fragment="head">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Java Sec">
-    <meta name="author" content="nul1">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
 
-    <title>Login</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap4.min.css}">
-    <link rel="stylesheet" th:href="@{/css/signin.css}">
-</head>
+<body class="text-center body-signin">
+<div class="col-md-4 col-sm-10">
+<form class="form-signin" th:action="@{/user/login}" method="post">
+    <img class="mb-4" src="/img/logo.png" alt=""><span style="font-size: 32px;"> Java漏洞平台</span>
+
+    <p th:text="${msg}"></p>
+
+    <input type="text" class="form-control" name="username" placeholder="用户名" required=""><br>
+    <input type="password" class="form-control" name="password" placeholder="密码" required="">
 
 
-<body class="text-center">
-<form class="form-signin" th:action="@{/user/login}">
-    <img class="mb-4" th:src="@{/img/logo.png}" alt="" width="150" height="150">
-    <label class="sr-only">Username</label>
-    <input type="text" class="form-control" name="username" placeholder="username" required="" autofocus="">
-    <label class="sr-only">Password</label>
-    <input type="password" class="form-control" name="password" placeholder="password" required="">
-    <p style="color: red" th:text="${msg}"></p>
     <div class="checkbox mb-3">
         <label>
-            <input type="checkbox" value="remember-me"> Remember me
+            <input type="checkbox" value="remember-me"> Remember Me
         </label>
     </div>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
+
 </form>
+
+
+</div>
+
 
 </body>
 

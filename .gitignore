@@ -2,6 +2,7 @@
 .vscode
 /logs/
 /target/
+/out
 .apt_generated
 .classpath
 .factorypath

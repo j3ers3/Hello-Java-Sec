@@ -1,55 +1,175 @@
-
-#main-nav.nav-tabs.nav-stacked > li > a {
-    padding: 10px 8px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #4A515B;
-    border: 1px solid #D5D5D5;
-    border-radius: 4px;
+body {
+    font-size: .875rem;
 }
 
-#main-nav.nav-tabs.nav-stacked > li > a > span {
-    color: #4A515B;
+/*
+ * Sidebar
+ */
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100; /* Behind the navbar */
+    padding: 0;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
 }
 
-#main-nav.nav-tabs.nav-stacked > li.active > a, #main-nav.nav-tabs.nav-stacked > li > a:hover {
-    color: #FFF;
-    background: #3C4049;
-    background: -moz-linear-gradient(top, #4A515B 0%, #3C4049 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #4A515B), color-stop(100%, #3C4049));
-    background: -webkit-linear-gradient(top, #4A515B 0%, #3C4049 100%);
-    background: -o-linear-gradient(top, #4A515B 0%, #3C4049 100%);
-    background: -ms-linear-gradient(top, #4A515B 0%, #3C4049 100%);
-    background: linear-gradient(top, #4A515B 0%, #3C4049 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#4A515B', endColorstr='#3C4049');
-    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#4A515B', endColorstr='#3C4049')";
-    border-color: #2B2E33;
+.sticky-top {
+    background-color: #224b8f;
 }
 
-#main-nav.nav-tabs.nav-stacked > li.active > a, #main-nav.nav-tabs.nav-stacked > li > a:hover > span {
-    color: #FFF;
+.sidebar-sticky {
+    #position: sticky;
+    top: 48px; /* Height of navbar */
+    height: calc(100vh - 48px);
+    padding-top: 48px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
-#main-nav.nav-tabs.nav-stacked > li {
-    margin-bottom: 4px;
+/* 侧边栏字体 */
+.sidebar .nav-link {
+    font-weight: 500;
+    color: #AEB7C2;
 }
 
-/*定义二级菜单样式*/
-.secondmenu a {
-    font-size: 10px;
-    color: #4A515B;
-    text-align: left;
+/* 侧边栏样式 */
+.sidebar .nav > li > a {
+    padding: 10px 30px; /* 上下内边距是 10px，左右内边距是 30px*/
+    color: #AEB7C2;
+    border-left: 5px solid transparent; /* 左边样式 */
 }
 
-.navbar-static-top {
-    background-color: blue;
-    margin-bottom: 5px;
+/* 侧边栏图标 */
+.sidebar .nav i {
+    margin-right: 10px;
+    font-size: 18px;
 }
 
-.navbar-brand {
-    background: url('') no-repeat 10px 8px;
+/* 下拉图标 */
+.sidebar .nav > li > a[data-toggle="collapse"] .icon-submenu {
     display: inline-block;
     vertical-align: middle;
-    padding-left: 50px;
+    *vertical-align: auto;
+    *zoom: 1;
+    *display: inline;
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    -ms-transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    transition: all 0.2s ease-out;
+    float: right;
+    position: relative;
+    top: 5px;
+    font-size: 12px;
+    line-height: 1.1;
+    -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+}
+
+.sidebar .nav > li > a[data-toggle="collapse"].collapsed .icon-submenu {
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+}
+
+/* 子菜单 */
+.sidebar .nav .nav {
+    background-color: #252c35;
+}
+
+.sidebar .nav .nav > li > a {
+    padding-left: 60px;
+    padding-top: 4px;
+    padding-bottom: 10px;
+    border-left: 5px solid transparent; /* 左边样式 */
+}
+
+.sidebar .nav .nav > li > a:focus, .sidebar .nav .nav > li > a.active {
+    background-color: transparent;
+    border-left-color: transparent;
+}
+
+.sidebar .nav .nav > li > a.active a {
     color: #fff;
+}
+
+
+.sidebar .nav span {
+    position: relative;
+    top: -2px;
+}
+
+/* 激活后的颜色 */
+.sidebar .nav-link.active {
+    color: white;
+}
+
+/* 鼠标放上去字体颜色变白 */
+.sidebar .nav > li > a:hover, .sidebar .nav > li > a:focus, .sidebar .nav > li > a.active {
+    color: #fff;
+    background-color: transparent;
+}
+
+.sidebar .nav .nav > li > a:hover, .sidebar .nav .nav > li > a:focus, .sidebar .nav .nav> li > a.active {
+    color: #90d7ec;
+    background-color: transparent;
+}
+
+/* 鼠标放上去图标变蓝 */
+.sidebar .nav > li > a:hover i, .sidebar .nav > li > a:focus i, .sidebar .nav > li > a.active i {
+    color: #00AAFF;
+}
+
+/* 激活后的背景样式 */
+.sidebar .nav > li > a:focus, .sidebar .nav > li > a.active {
+    background-color: #252c35;
+    border-left-color: #00AAFF;
+}
+
+/*
+ * Utilities
+ */
+
+.border-top {
+    border-top: 1px solid #e5e5e5;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.main {
+    margin-left: 10px;
+}
+.box-float {
+    width: 1100px;
+    height: 1000px;
+    #border: 1px solid;
+    margin-top: 10px;
+}
+
+.box-float .float1 {
+    width: 550px;
+    height: 500px;
+    #background-color: blue;
+    float: left;
+}
+
+.box-float .float2 {
+    width: 500px;
+    height: 500px;
+    #background-color: green;
+    float: right;
+}
+
+/*
+ * 漏洞描述
+ */
+.dec {
+    font-size: 15px;
 }

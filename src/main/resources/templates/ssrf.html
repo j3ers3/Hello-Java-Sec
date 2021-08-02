@@ -23,9 +23,8 @@
                 <div class="float1">
 
                     <a style="float:right" class="btn btn-sm btn-danger"
-                       th:href="@{/SSRF/URLConnection?url=file:///etc/passwd}">点击测试</a>
-                    <h5>漏洞代码 - URLConnection方式</h5>
-                    <h5><label for="code" class="control-label"></label></h5>
+                       th:href="@{/SSRF/URLConnection?url=file:///etc/passwd}">运行</a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - URLConnection方式</span></h5>
                     <textarea class="form-control" name="code" id="code1">
 @GetMapping("/URLConnection")
 public String URLConnection(String url) {
@@ -36,7 +35,7 @@ public String URLConnection(String url) {
 
 
                     <a style="float:right" class="btn btn-sm btn-danger"
-                       th:href="@{/SSRF/HTTPURLConnection/safe?url=http://surl-8.cn/0}">点击测试</a>
+                       th:href="@{/SSRF/HTTPURLConnection/safe?url=http://surl-8.cn/0}">运行</a>
                     <h5>漏洞代码 - bypass</h5>
                     <textarea class="form-control" name="code" id="code2">
 @GetMapping("/URLConnection/safe")
@@ -54,8 +53,8 @@ public String URLConnectionSafe(String url) {
 
 
                 <div class="float2">
-                    <h5>安全编码</h5>
-                    <textarea class="form-control" name="code" id="code3">
+                    <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
+                    <textarea class="form-control" name="code" id="suggestion">
 【必须】避免直接访问不可信地址
 服务器访问不可信地址时，禁止访问私有地址段及内网域名。
 建议通过URL解析函数进行解析，获取host或者domain后通过DNS获取其IP，然后和内网地址进行比较。
@@ -64,8 +63,8 @@ public String URLConnectionSafe(String url) {
                     <br>
 
                     <a style="float:right" class="btn btn-sm btn-success"
-                       th:href="@{/SSRF/HTTPURLConnection/safe?url=http://192.168.1.1}">点击测试</a>
-                    <h5>安全代码</h5>
+                       th:href="@{/SSRF/HTTPURLConnection/safe?url=http://192.168.1.1}">运行</a>
+                    <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
                     <textarea class="form-control" name="code" id="code4">
 // 判断是否是http类型
 public static boolean is_http(String url) {

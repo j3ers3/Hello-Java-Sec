@@ -18,41 +18,46 @@
             <div class="dec">SSTI(Server Side Template Injection) 服务器模板注入, 服务端接收了用户的输入，将其作为 Web
                 应用模板内容的一部分，在进行目标编译渲染的过程中，执行了用户插入的恶意内容。
             </div>
+            <br>
 
             <div class="box-float">
                 <div class="float1">
 
-                    <h5><label for="code" class="control-label">漏洞代码</label></h5>
-                    <textarea class="form-control" name="code" id="code" rows="10">
+                    <a style="float:right" class="btn btn-sm btn-danger" href="/SSTI/doc/__${T(java.lang.Runtime).getRuntime().exec('open -a Calculator')}__::.x">运行</a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
+                    <textarea class="form-control" name="code" id="code1">
+ /**
+   * 将请求的url作为视图名称，调用模板引擎去解析
+   * 在这种情况下，我们只要可以控制请求的controller的参数，一样可以造成RCE漏洞
+   * payload: __${T(java.lang.Runtime).getRuntime().exec("open -a Calculator")}__::.x
+   */
  @GetMapping("/doc/{document}")
      public void getDocument(@PathVariable String document) {
-     System.out.println(document);
+         System.out.println(document);
  }
                     </textarea>
+                    <br>
 
-                    <a class="btn btn-sm btn-danger" href="/SSTI/doc/__${T(java.lang.Runtime).getRuntime().exec('open -a Calculator')}__::.x">点击测试</a><br>
-                    <hr>
 
-                    <h5><label for="code" class="control-label">安全代码</label></h5>
-                    <textarea class="form-control" name="code" id="code" rows="10">
- @GetMapping("/safe/doc/{document}")
+                    <a style="float:right" class="btn btn-sm btn-danger" href="/SSTI/doc/safe/__${T(java.lang.Runtime).getRuntime().exec('open -a Calculator')}__::.x">运行</a>
+                    <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
+                    <textarea class="form-control" name="code" id="code2">
+ /**
+   * @safe 由于controller的参数被设置为HttpServletResponse，Spring认为它已经处理了HTTP Response，因此不会发生视图名称解析
+   */
+ @GetMapping("/doc/safe/{document}")
      public void getDocument(@PathVariable String document, HttpServletResponse response) {
-     System.out.println("Retrieving " + document);
+         System.out.println("Retrieving " + document);
  }
                     </textarea>
-
-                    <a class="btn btn-sm btn-success" href="/SSTI/safe/doc/__${T(java.lang.Runtime).getRuntime().exec('open -a Calculator')}__::.x">点击测试</a><br>
-                    <hr>
-
 
                 </div>
 
                 <div class="float2">
-                    <h5><label for="code" class="control-label">安全编码</label></h5>
-                    <textarea class="form-control" name="code" id="code" rows="10">
+                    <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
+                    <textarea class="form-control" name="code" id="suggestion">
 
                     </textarea>
-
 
                 </div>
 

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
+
+<body>
+<!-- 顶部导航栏 -->
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边栏 -->
+        <div th:replace="~{commons/commons::siderbar(active='xxe.html')}"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <h2>XML外部实体注入</h2>
+            <hr>
+
+            <div class="dec">XXE (XML External Entity Injection), XML外部实体注入，当应用是通过用户上传的XML文件或POST请求进行数据的传输，并且应用没有禁止XML引用外部实体，也没有过滤用户提交的XML数据，那么就会产生XML外部实体注入漏洞
+
+            </div>
+            <hr>
+            <br>
+
+            <div class="box-float">
+                <div class="float1">
+                    <a style="float:right" class="btn btn-sm btn-danger"
+                       th:href="@{/XXE/XMLReader}">运行</a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - XMLReader</span></h5>
+                    <textarea class="form-control" name="code" id="code1">
+@RequestMapping(value = "/XMLReader")
+public String XMLReader(@RequestBody String content) {
+    try {
+        XMLReader xmlReader = XMLReaderFactory.createXMLReader();
+        // 修复：禁用外部实体
+        // xmlReader.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        xmlReader.parse(new InputSource(new StringReader(content)));
+        return "XMLReader XXE";
+    } catch (Exception e) {
+    return e.toString();
+    }
+}
+                    </textarea> <br>
+
+                    <a style="float:right" class="btn btn-sm btn-danger"
+                       th:href="@{/XXE/SAXBuilder}">运行</a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - SAXReader</span></h5>
+                    <textarea class="form-control" name="code" id="code2" rows="10">
+SAXReader sax = new SAXReader();
+// 修复：禁用外部实体
+// sax.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+sax.read(new InputSource(new StringReader(content)));
+                    </textarea> <br>
+
+                    <a style="float:right" class="btn btn-sm btn-danger"
+                       th:href="@{/XXE/SAXBuilder}">运行</a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - SAXBuilder</span></h5>
+                    <textarea class="form-control" name="code" id="code4">
+@RequestMapping(value = "/SAXBuilder")
+public String SAXBuilder(@RequestBody String content) {
+    try {
+        SAXBuilder saxbuilder = new SAXBuilder();
+        // fixed: saxbuilder.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        saxbuilder.build(new InputSource(new StringReader(content)));
+        return "SAXBuilder XXE";
+    } catch (Exception e) {
+        return e.toString();
+    }
+}
+                    </textarea> <br>
+
+                    <a style="float:right" class="btn btn-sm btn-danger"
+                       th:href="@{/XXE/DocumentBuilder}">运行</a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - DocumentBuilder</span></h5>
+                    <textarea class="form-control" name="code" id="code5">
+DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+// fixed: dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+DocumentBuilder builder = factory.newDocumentBuilder();
+                    </textarea>
+
+                </div>
+
+                <div class="float2">
+                    <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
+                    <textarea class="form-control" name="code" id="suggestion">
+禁用外部实体
+xxx.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+                    </textarea>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- 引入script -->
+<div th:replace="~{commons/commons::script}"></div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
+
+<body>
+<!-- 顶部导航栏 -->
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边栏 -->
+        <div th:replace="~{commons/commons::siderbar(active='traversal.html')}"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <h2>目录遍历</h2>
+            <hr>
+
+            <div class="dec">目录遍历,
+                应用系统在处理下载文件时未对文件进行过滤，系统后台程序程序中如果不能正确地过滤客户端提交的../和./之类的目录跳转符，攻击者可以通过输入../进行目录跳转，从而下载、删除任意文件。
+            </div>
+            <br>
+
+            <div class="box-float">
+                <div class="float1">
+
+                    <a style="float:right" class="btn btn-sm btn-danger"
+                       th:href="@{/Traversal/download?filename=../../../../../../../etc/passwd}">运行</a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
+                    <textarea class="form-control" name="code" id="code1">
+@GetMapping("/download")
+public String download(String filename, HttpServletRequest request, HttpServletResponse response) {
+    String filePath = System.getProperty("user.dir") + "/logs/" + filename;
+    try {
+        File file = new File(filePath);
+        InputStream is = new BufferedInputStream(new FileInputStream(file));
+        byte[] buffer = new byte[is.available()];
+        is.read(buffer);
+        is.close();
+                    </textarea>
+                    <br>
+
+
+                    <a style="float:right" class="btn btn-sm btn-success"
+                       th:href="@{/Traversal/download/safe?filename=../}">运行</a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 过滤</span></h5>
+                    <textarea class="form-control" name="code" id="code2">
+public static boolean check_traversal(String content) {
+    return content.contains("..") || content.contains("/");
+}
+                    </textarea>
+                </div>
+
+
+                <div class="float2">
+                    <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
+                    <textarea class="form-control" name="code" id="suggestion">
+避免路径拼接
+文件目录避免外部参数拼接。保存文件目录建议后台写死并对文件名进行校验（字符类型、长度）。建议文件保存时，将文件名替换为随机字符串。
+如因业务需要不能满足1.2.3的要求，文件路径、文件命中拼接了不可行数据，需判断请求文件名和文件路径参数中是否存在../或..\(windows)， 如存在应判定路径非法并拒绝请求。
+                    </textarea>
+                    <br>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+
+<!-- 引入script -->
+<div th:replace="~{commons/commons::script}"></div>
+
+
+</body>
+
+</html>

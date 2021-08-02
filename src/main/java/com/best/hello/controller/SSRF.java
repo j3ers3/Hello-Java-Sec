@@ -36,7 +36,7 @@ public class SSRF {
     }
 
     /**
-     * 不允许重定向
+     * @safe 不允许重定向
      */
     @GetMapping("/HTTPURLConnection/safe")
     public String HTTPURLConnection(String url) {

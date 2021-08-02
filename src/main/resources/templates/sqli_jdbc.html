@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
+
+<body>
+<!-- 顶部导航栏 -->
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边栏 -->
+        <div th:replace="~{commons/commons::siderbar(active='sqli_jdbc.html')}"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <h2>SQL Injection - JDBC</h2>
+            <hr>
+            <div class="dec">SQLI(SQL Injection)
+                SQL注入即是指web应用程序对用户输入数据的合法性没有判断或过滤不严，攻击者可以在web应用程序中事先定义好的查询语句的结尾上添加额外的SQL语句。
+            </div>
+            <hr>
+            <br>
+
+            <div class="box-float">
+                <div class="float1">
+                    <a style="float:right" class="btn btn-sm btn-danger"
+                       href="/SQLI/jdbc?id=1' and updatexml(1,concat(0x7e,(SELECT user()),0x7e),1)--%20+">运行</a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - 语句拼接</span></h5>
+
+                    <textarea class="form-control" name="code" id="code1">
+Connection conn = DriverManager.getConnection(db_url, db_user, db_pass);
+Statement stmt = conn.createStatement();
+String sql = "select * from users where id = '" + id + "'";
+System.out.println("[*] 执行SQL语句：" + sql);
+ResultSet rs = stmt.executeQuery(sql);
+                    </textarea>
+
+                    <br>
+
+                    <a style="float:right" class="btn btn-sm btn-success"
+                       href="/SQLI/jdbc/pre?id=1'">运行</a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 预编译方法</span></h5>
+
+                    <textarea class="form-control" name="code" id="code2">
+Connection conn = DriverManager.getConnection(db_url, db_user, db_pass);
+Statement stmt = conn.createStatement();
+String sql = "select * from users where id = ?";
+PreparedStatement st = conn.prepareStatement(sql);
+st.setString(1, id);
+ResultSet rs = st.executeQuery();
+                    </textarea>
+
+                </div>
+
+                <div class="float2">
+                    <form class="form-inline">
+                        <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
+                    </form>
+                    <textarea class="form-control" name="code" id="suggestion">
+【必须】SQL语句默认使用预编译并绑定变量
+Web后台系统应默认使用预编译绑定变量的形式创建sql语句，保持查询语句和数据相分离。以从本质上避免SQL注入风险。
+                    </textarea>
+                    <br>
+
+                    <a style="float:right" class="btn btn-sm btn-success"
+                       href="/SQLI/jdbc/filter?id=1'">运行</a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 过滤方法</span></h5>
+                    <textarea class="form-control" name="code" id="code4">
+public static boolean check_sql(String content) {
+    String black = "'|;|--|+|,|%|=|*|(|)|like|xor|and|or|exec|insert|select|delete|update|count|drop|chr|mid|master|truncate|char|declare";
+    String[] black_list = black.split("|");
+    for (int i=0 ; i < black_list.length ; i++ ){
+        if (content.contains(black_list[i])){
+            return true;
+        }
+    }
+    return false;
+}
+                    </textarea>
+                </div>
+
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- 引入script -->
+<div th:replace="~{commons/commons::script}"></div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
+
+<body>
+<!-- 顶部导航栏 -->
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边栏 -->
+        <div th:replace="~{commons/commons::siderbar(active='deserialize.html')}"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <h2>反序列化漏洞</h2>
+            <hr>
+            <div class="dec">反序列漏洞，但当输入的反序列化的数据可被用户控制，那么攻击者即可通过构造恶意输入，让反序列化产生非预期的对象，在此过程中执行构造的任意代码
+            </div>
+            <hr>
+            <br>
+
+            <div class="box-float">
+                <div class="float1">
+                    <a style="float:right" class="btn btn-sm btn-danger"
+                       href="/Deserialize/readObject?base64=payload">运行</a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - readObject</span></h5>
+
+                    <textarea class="form-control" name="code" id="code1">
+public String cc(String base64) {
+    try {
+        BASE64Decoder decoder = new BASE64Decoder();
+
+        base64 = base64.replace(" ", "+");
+        byte[] bytes = decoder.decodeBuffer(base64);
+
+        ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
+        ObjectInputStream in = new ObjectInputStream(stream);
+        in.readObject();
+        in.close();
+        return "反序列化漏洞";
+    } catch (Exception e) {
+        return e.toString();
+    }
+}
+                    </textarea>
+
+                    <br>
+
+                    <a style="float:right" class="btn btn-sm btn-success"
+                       href="/SQLI/jdbc/pre?id=1'">运行</a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 预编译方法</span></h5>
+
+                    <textarea class="form-control" name="code" id="code2">
+
+                    </textarea>
+
+                </div>
+
+                <div class="float2">
+                    <form class="form-inline">
+                        <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
+                    </form>
+                    <textarea class="form-control" name="code" id="suggestion">
+更新commons-collections、commons-io等第三方库版本；
+业务需要使用反序列化时，尽量避免反序列化数据可被用户控制，如无法避免建议尽量使用白名单校验的修复方式
+                    </textarea>
+                    <br>
+
+                    <a style="float:right" class="btn btn-sm btn-success"
+                       href="/SQLI/jdbc/filter?id=1'">运行</a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 过滤方法</span></h5>
+                    <textarea class="form-control" name="code" id="code4">
+
+                    </textarea>
+                </div>
+
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- 引入script -->
+<div th:replace="~{commons/commons::script}"></div>
+
+
+</body>
+
+</html>

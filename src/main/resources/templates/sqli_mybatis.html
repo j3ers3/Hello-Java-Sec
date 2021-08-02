@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
+
+<body>
+<!-- 顶部导航栏 -->
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边栏 -->
+        <div th:replace="~{commons/commons::siderbar(active='sqli_mybatis.html')}"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <h2>SQL Injection - Mybatis</h2>
+            <hr>
+            <div class="dec">SQLI(SQL Injection)
+                SQL注入即是指web应用程序对用户输入数据的合法性没有判断或过滤不严，攻击者可以在web应用程序中事先定义好的查询语句的结尾上添加额外的SQL语句。
+            </div>
+            <br>
+
+            <div class="box-float">
+                <div class="float1">
+                    <a style="float:right" class="btn btn-sm btn-danger"
+                       href="/SQLI/mybatis/vul/order?field=id%20and%20(updatexml(1,concat(0x7e,(select%20user())),0))&sort=desc">运行</a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - order by 注入</span></h5>
+
+                    <textarea class="form-control" name="code" id="code1">
+/**
+  * 使用 #{} 会将对象转成字符串，形成 order by "user" desc 造成错误，因此很多研发会采用${}来解决，从而造成SQL注入
+  */
+@RequestMapping("/mybatis/vul/order")
+public List<User> orderBy(String field, String sort) {
+    return userMapper.orderBy(field, sort);
+}
+
+// mapper.xml语句
+<select id="orderBy" resultType="com.best.hello.entity.User">
+    select * from users order by ${field} ${sort}
+</select>
+                    </textarea>
+                    <br>
+
+                    <a style="float:right" class="btn btn-sm btn-success"
+                       href="/SQLI/mybatis/safe/id/1">运行</a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 强制类型</span></h5>
+                    <textarea class="form-control" name="code" id="code2">
+@RequestMapping("/mybatis/safe/id/{id}")
+public List<User> queryById(@PathVariable Integer id) {
+    return userMapper.queryById2(id);
+}
+
+// 使用 ${} 存在注入，但强制使用Integer导致注入无效
+@Select("select * from users where id = ${id}")
+List<User> queryById2(@Param("id") Integer id);
+                    </textarea>
+
+                </div>
+
+                <div class="float2">
+                    <form class="form-inline">
+                        <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
+                    </form>
+                    <textarea class="form-control" name="code" id="suggestion">
+【必须】SQL语句默认使用预编译并绑定变量
+使用Mybatis作为持久层框架，应通过#{}语法进行参数绑定，MyBatis 会创建 PreparedStatement 参数占位符，并通过占位符安全地设置参数。
+针对order by 注入可以在java层面做映射来进行解决。
+                    </textarea>
+                    <br>
+
+                    <a style="float:right" class="btn btn-sm btn-success"
+                       href="/SQLI/mybatis/safe/order?field=id">运行</a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 排序映射</span></h5>
+                    <textarea class="form-control" name="code" id="code4">
+<select id="orderBySafe" resultType="com.best.hello.entity.User">
+    select * from users
+    <choose>
+        <when test="field == 'id'">
+            order by id desc
+        </when>
+        <when test="field == 'user'">
+            order by user desc
+        </when>
+        <otherwise>
+            order by id desc
+        </otherwise>
+    </choose>
+</select>
+                    </textarea>
+
+                </div>
+
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- 引入script -->
+<div th:replace="~{commons/commons::script}"></div>
+
+
+</body>
+
+</html>

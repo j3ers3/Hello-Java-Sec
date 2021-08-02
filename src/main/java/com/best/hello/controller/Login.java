@@ -9,9 +9,13 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class Login {
+    // todo 密码明文写死
+    String user = "admin";
+    String pass = "admin";
+
     @RequestMapping("/user/login")
     public String login(@RequestParam("username") String username, @RequestParam("password") String password, Model model, HttpSession session) {
-        if ("admin".equals(username) && "admin".equals(password)){
+        if (user.equals(username) && pass.equals(password)){
             session.setAttribute("LoginUser", username);
             return "redirect:/index";
         } else {

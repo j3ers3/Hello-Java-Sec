@@ -8,34 +8,59 @@
     <meta name="description" content="Java Sec">
     <meta name="author" content="nul1">
 
-    <title>Java Sec</title>
+    <title>Java 漏洞平台</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap4.min.css}">
-    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
     <link rel="stylesheet" th:href="@{/css/codemirror.css}">
+    <link rel="stylesheet" th:href="@{/css/signin.css}">
     <link rel="stylesheet" th:href="@{/css/linearicons.css}">
+    <link rel="stylesheet" th:href="@{/css/mdn-like.css}">
 </head>
 
 <!--顶部导航栏,利用th:fragment提取出来,命名为topbar-->
-<nav class="navbar navbar-dark bg-primary sticky-top p-0" th:fragment="topbar">
+<nav class="navbar navbar-dark sticky-top p-0" th:fragment="topbar">
     <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/index">Java 漏洞平台</a>
     <ul class="navbar-nav px-3">
 
         <li class="nav-item">
-            <!--<a style="color:white" th:href="@{/login}">Login</a>-->
-            <a style="color:white" th:href="@{/user/logout}">注销</a>
+            <!-- todo -->
+            <a class="btn btn-sm btn-default" style="color:white" target="_blank"
+               href="https://github.com/j3ers3/Hello-Java-Sec">Github</a>
+            <a class="btn btn-sm btn-default" style="color:white" th:href="@{/user/logout}"> 注销</a>
         </li>
     </ul>
 </nav>
 
 <!--侧边栏,利用th:fragment提取出来,命名为sidebar-->
-<nav class="col-md-2  bg-dark sidebar" th:fragment="siderbar">
+<nav class="col-md-2 bg-dark sidebar" th:fragment="siderbar">
     <div class="sidebar-sticky">
         <ul class="nav flex-column flex-sm-column">
 
             <li class="nav-item">
+                <a href="#sub_sql" th:class="${active=='sqli_jdbc.html' ? 'nav-link active':'nav-link'}"
+                   data-toggle="collapse"><i
+                        class="lnr lnr-drop"></i><span>SQL注入</span><i class="icon-submenu lnr lnr-chevron-left"></i></a>
+                <!-- 访问子菜单时不收卷 -->
+                <div id="sub_sql" th:class="${active==('sqli_jdbc.html') ? 'collapsed':'collapse'}">
+                    <ul class="nav flex-column">
+                        <li>
+                            <a th:class="${active=='sqli_jdbc.html' ? 'nav-link active':'nav-link'}"
+                               th:href="@{/index/sqli/jdbc}">
+                                <span>JDBC</span></a>
+                        </li>
+                        <li>
+                            <a th:class="${active=='sqli_mybatis.html' ? 'nav-link active':'nav-link'}"
+                               th:href="@{/index/sqli/mybatis}">
+                                <span>MyBatis</span></a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item">
                 <!-- 判断是否高亮-->
                 <a th:class="${active=='xss.html'?'nav-link active':'nav-link'}" th:href="@{/index/xss}">
-                    <i class="lnr lnr-code"></i><span>XSS</span>
+                    <i class="lnr lnr-code"></i><span>XSS漏洞</span>
                 </a>
             </li>
 
@@ -46,16 +71,18 @@
             </li>
 
             <li class="nav-item">
+                <a th:class="${active=='deserialize.html'?'nav-link active':'nav-link'}"
+                   th:href="@{/index/deserialize}">
+                    <i class="lnr lnr-bug"></i><span>反序列化漏洞</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
                 <a th:class="${active=='spel.html'?'nav-link active':'nav-link'}" th:href="@{/index/spel}">
                     <i class="lnr lnr-poop"></i><span>表达式注入</span>
                 </a>
             </li>
 
-            <li class="nav-item">
-                <a th:class="${active=='sqli.html'?'nav-link active':'nav-link'}" th:href="@{/index/sqli}">
-                    <i class="lnr lnr-drop"></i><span>SQL注入</span>
-                </a>
-            </li>
 
             <li class="nav-item">
                 <a th:class="${active=='ssti.html'?'nav-link active':'nav-link'}" th:href="@{/index/ssti}">
@@ -70,16 +97,23 @@
             </li>
 
             <li class="nav-item">
-                <a th:class="${active=='1.html'?'nav-link active':'nav-link'}" th:href="@{/actuator}">
-                    <i class="lnr lnr-paw"></i><span>Actuator</span>
+                <a th:class="${active=='xxe.html'?'nav-link active':'nav-link'}" th:href="@{/index/xxe}">
+                    <i class="lnr lnr-book"></i><span>XML外部实体注入</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a th:class="${active=='traversal.html'?'nav-link active':'nav-link'}" th:href="@{/index/traversal}">
                     <i class="lnr lnr-layers"></i><span>目录遍历</span>
                 </a>
             </li>
+
+            <li class="nav-item">
+                <a th:class="${active=='actuator.html'?'nav-link active':'nav-link'}" th:href="@{/index/actuator}">
+                    <i class="lnr lnr-paw"></i><span>Actuator</span>
+                </a>
+            </li>
+
 
             <li class="nav-item">
                 <a class="nav-link" href="#">
@@ -93,32 +127,63 @@
                 </a>
             </li>
 
+
             <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="lnr lnr-book"></i><span>XML外部实体注入</span>
-                </a>
+                <a href="#sub_mid" data-toggle="collapse" th:class="${active=='1.html'?'nav-link active':'nav-link'}"><i
+                        class="lnr lnr-bug"></i>
+                    <span>组件漏洞</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+                <div id="sub_mid" class="collapse">
+                    <ul class="nav flex-column">
+                        <li>
+                            <a th:class="${active=='1.html'?'nav-link active':'nav-link'}"
+                               th:href="@{/Redirect/vul?url=https://www.baidu.com}">
+                                <span>Shiro</span></a>
+                        </li>
+                        <li>
+                            <a th:class="${active=='1.html'?'nav-link active':'nav-link'}"
+                               th:href="@{/Redirect/vul?url=https://www.baidu.com}">
+                                <span>Fastjson</span></a>
+                        </li>
+                        <li>
+                            <a th:class="${active=='1.html'?'nav-link active':'nav-link'}"
+                               th:href="@{/Redirect/vul?url=https://www.baidu.com}">
+                                <span>XStream</span></a>
+                        </li>
+                    </ul>
+                </div>
             </li>
 
             <li class="nav-item">
-                <a th:class="${active=='1.html'?'nav-link active':'nav-link'}" th:href="@{/GetIP/xxf}">
-                    <i class="lnr lnr-heart"></i><span>XXF头欺骗</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a th:class="${active=='1.html'?'nav-link active':'nav-link'}" th:href="@{/Redirect/vul?url=https://www.baidu.com}">
-                    <i class="lnr lnr-heart"></i><span>重定向</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a th:class="${active=='1.html'?'nav-link active':'nav-link'}" th:href="@{/sysinfo}">
-                    <i class="lnr lnr-cog"></i><span>系统信息</span>
-                </a>
+                <a href="#sub_other" data-toggle="collapse" th:class="${active=='1.html'?'nav-link active':'nav-link'}"><i
+                        class="lnr lnr-heart"></i>
+                    <span>其他漏洞</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+                <div id="sub_other" class="collapse">
+                    <ul class="nav flex-column">
+                        <li>
+                            <a th:class="${active=='redirect.html' ? 'nav-link active':'nav-link'}"
+                               th:href="@{/index/redirect}">
+                                <span>重定向</span></a>
+                        </li>
+                        <li>
+                            <a th:class="nav-link" th:href="@{/GetIP/xxf}">
+                                <span>XXF头欺骗</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a th:class="nav-link" th:href="@{/swagger-ui.html}">
+                                <span>Swagger未授权访问</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a th:class="nav-link" th:href="@{/sysinfo}">
+                                <span>系统信息</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </li>
 
         </ul>
-
     </div>
 </nav>
 
@@ -135,27 +200,24 @@
             mode: "groovy",
             indentUnit: 4,
             indentWithTabs: true,
-            matchBrackets: true,
             lineNumbers: true,
+            theme: "mdn-like",
         });
         $("#code1").text(editor.getValue());
 
         var editor = CodeMirror.fromTextArea(document.getElementById("code2"), {
             mode: "groovy",
             indentUnit: 4,
-            indentWithTabs: true,
-            matchBrackets: true,
             lineNumbers: true,
+            theme: "mdn-like",
         });
         $("#code2").text(editor.getTextArea().value);
 
-        var editor = CodeMirror.fromTextArea(document.getElementById("code3"), {
+        var editor = CodeMirror.fromTextArea(document.getElementById("suggestion"), {
             mode: "groovy",
-            indentUnit: 4,
-            indentWithTabs: true,
-            matchBrackets: true,
-            lineNumbers: true,
+            theme: "mdn-like",
             lineWrapping: true,
+
         });
         $("#code3").text(editor.getTextArea().value);
 
@@ -163,10 +225,19 @@
             mode: "groovy",
             indentUnit: 4,
             indentWithTabs: true,
-            matchBrackets: true,
             lineNumbers: true,
+            theme: "mdn-like",
         });
         $("#code4").text(editor.getTextArea().value);
+
+        var editor = CodeMirror.fromTextArea(document.getElementById("code5"), {
+            mode: "groovy",
+            indentUnit: 4,
+            indentWithTabs: true,
+            lineNumbers: true,
+            theme: "mdn-like",
+        });
+        $("#code5").text(editor.getTextArea().value);
 
     </script>
 </div>

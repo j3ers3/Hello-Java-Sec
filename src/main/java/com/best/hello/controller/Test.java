@@ -1,9 +1,9 @@
 package com.best.hello.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.*;
+
+import java.lang.reflect.Constructor;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -21,12 +21,16 @@ import com.alibaba.fastjson.JSON;
  * @date 2021/06
  */
 
-@Controller
-public class Index {
+@RestController
+public class Test {
 
-    @RequestMapping("/")
-    public String redirect() {
-        return "redirect:/index";
+    @Value("#{1+2}")
+    String a;
+
+
+    @RequestMapping("/test")
+    public String test() {
+        return a;
     }
 
     @RequestMapping("/sysinfo")
@@ -41,6 +45,24 @@ public class Index {
         m.put("fastjson_version", JSON.VERSION);
 
         return JSON.toJSONString(m);
-
     }
+
+    @GetMapping("/aabb")
+    public void aa() {
+        try {
+            Class clazz = Class.forName("java.lang.Runtime");
+            Constructor<?>[] constructors = clazz.getDeclaredConstructors();
+            Constructor<?> constructor = constructors[0];
+            constructor.setAccessible(true);
+            clazz.getMethod("exec", String.class).invoke(constructor.newInstance(), "open -a Calculator");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+
+
 }

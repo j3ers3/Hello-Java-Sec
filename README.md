@@ -1,23 +1,24 @@
 # ☕️ Hello Java Sec ![Stage](https://img.shields.io/badge/Release-DEV-brightgreen.svg)
-> 学习 Java 漏洞，记录一下代码
+> Java漏洞平台，结合漏洞代码和安全编码，帮助研发同学理解和减少漏洞
 
-![](media/16261597400147.jpg)
+![](media/16278906186353.jpg)
 
 
 - 默认账号：admin/admin
 
 ## Vulnerability
-- [ ] SQLi
+- [x] SQLi
 - [x] XSS
 - [x] RCE
+- [x] Deserialize
 - [x] SSTI
 - [x] SpEL
 - [x] SSRF
-- [ ] Directory Traversal
+- [x] Directory Traversal
 - [x] Redirect
 - [ ] CSRF
 - [ ] File Upload
-- [ ] XXE
+- [x] XXE
 - [x] Actuator
 - [ ] Fastjson
 
@@ -33,8 +34,9 @@ spring.datasource.password=1234567
 ### Jar
 ```
 git clone https://github.com/j3ers3/Hello-Java-Sec
+cd Hello-Java-Sec
 mvn clean package -DskipTests
-java -jar hello-0.0.1-SNAPSHOT.jar
+java -jar target/hello-1.0.0-SNAPSHOT.jar
 ```
 
 
