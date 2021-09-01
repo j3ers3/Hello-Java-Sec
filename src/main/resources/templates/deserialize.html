@@ -12,12 +12,20 @@
         <div th:replace="~{commons/commons::siderbar(active='deserialize.html')}"></div>
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <h2>反序列化漏洞</h2>
-            <hr>
-            <div class="dec">反序列漏洞，但当输入的反序列化的数据可被用户控制，那么攻击者即可通过构造恶意输入，让反序列化产生非预期的对象，在此过程中执行构造的任意代码
+            <div class="vul_header">
+                <span>不安全的反序列化</span>
+                <a class="btn btn-sm btn-primary" target="_blank" href="">漏洞案例</a>
             </div>
             <hr>
-            <br>
+            <div class="dec shadow-sm p-3 mb-4  rounded">反序列漏洞，当输入的反序列化的数据可被用户控制，那么攻击者即可通过构造恶意输入，让反序列化产生非预期的对象，在此过程中执行构造的任意代码（多见于第三方组件产生的漏洞）
+            </div>
+
+            <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
+            <textarea disabled="disabled" class="form-control p-2 mb-5 rounded" id="coder">
+更新commons-collections、commons-io等第三方库版本；
+业务需要使用反序列化时，尽量避免反序列化数据可被用户控制，如无法避免建议尽量使用白名单校验的修复方式
+            </textarea><hr>
+
 
             <div class="box-float">
                 <div class="float1">
@@ -25,7 +33,10 @@
                        href="/Deserialize/readObject?base64=payload">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - readObject</span></h5>
 
-                    <textarea class="form-control" name="code" id="code1">
+                    <textarea class="form-control" id="code1">
+// readObject，读取输入流,并转换对象。ObjectInputStream.readObject() 方法的作用正是从一个源输入流中读取字节序列，再把它们反序列化为一个对象。
+// payload：java -jar ysoserial-0.0.6-SNAPSHOT-BETA-all.jar CommonsCollections5 "open -a Calculator" | base64
+
 public String cc(String base64) {
     try {
         BASE64Decoder decoder = new BASE64Decoder();
@@ -34,6 +45,8 @@ public String cc(String base64) {
         byte[] bytes = decoder.decodeBuffer(base64);
 
         ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
+
+        // 反序列化流，将序列化的原始数据恢复为对象
         ObjectInputStream in = new ObjectInputStream(stream);
         in.readObject();
         in.close();
@@ -44,32 +57,15 @@ public String cc(String base64) {
 }
                     </textarea>
 
-                    <br>
-
-                    <a style="float:right" class="btn btn-sm btn-success"
-                       href="/SQLI/jdbc/pre?id=1'">运行</a>
-                    <h5><span class="lnr lnr-smile"> 安全代码 - 预编译方法</span></h5>
-
-                    <textarea class="form-control" name="code" id="code2">
-
-                    </textarea>
-
                 </div>
 
                 <div class="float2">
-                    <form class="form-inline">
-                        <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
-                    </form>
-                    <textarea class="form-control" name="code" id="suggestion">
-更新commons-collections、commons-io等第三方库版本；
-业务需要使用反序列化时，尽量避免反序列化数据可被用户控制，如无法避免建议尽量使用白名单校验的修复方式
-                    </textarea>
-                    <br>
 
                     <a style="float:right" class="btn btn-sm btn-success"
-                       href="/SQLI/jdbc/filter?id=1'">运行</a>
-                    <h5><span class="lnr lnr-smile"> 安全代码 - 过滤方法</span></h5>
-                    <textarea class="form-control" name="code" id="code4">
+                       href="#">运行</a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 黑白名单</span></h5>
+                    <textarea class="form-control" id="code2">
+// 使用Apache Commons IO的ValidatingObjectInputStream，accept方法来实现反序列化类白/黑名单控制
 
                     </textarea>
                 </div>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
+
+<body>
+<!-- 顶部导航栏 -->
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边栏 -->
+        <div th:replace="~{commons/commons::siderbar(active='fastjson.html')}"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div class="vul_header">
+                <span>组件漏洞 - Fastjson反序列化</span>
+            </div>
+            <hr>
+            <div class="dec shadow-sm p-3 mb-4 rounded">fastjson是阿里巴巴的开源JSON解析库，它可以解析JSON格式的字符串，支持将Java Bean序列化为JSON字符串，也可以从JSON字符串反序列化到JavaBean，历史上存在多个反序列化漏洞。
+            </div>
+
+            <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
+            <textarea disabled="disabled" class="form-control p-3 mb-5 rounded" id="coder">
+对于第三方依赖组件，需要及时更新版本
+            </textarea>
+            <hr>
+
+            <div class="box-float">
+                <div class="float1">
+                    <a style="float:right" class="btn btn-sm btn-danger"
+                       href="/Fastjson/vul">运行</a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
+
+                    <textarea class="form-control" id="code1">
+// 使用了低版本，存在漏洞
+// poc: {"@type":"java.net.Inet4Address","val":"8d5tv8.dnslog.cn"}
+
+<dependency>
+    <groupId>com.alibaba</groupId>
+    <artifactId>fastjson</artifactId>
+    <version>1.2.24</version>
+</dependency>
+
+                    </textarea>
+
+                </div>
+
+                <div class="float2">
+
+                    <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
+                    <textarea class="form-control" id="code2">
+// 尽量升级最新版本来解决漏洞
+
+<dependency>
+    <groupId>com.alibaba</groupId>
+    <artifactId>fastjson</artifactId>
+    <version>最新版</version>
+</dependency>
+
+                    </textarea>
+                </div>
+
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- 引入script -->
+<div th:replace="~{commons/commons::script}"></div>
+
+
+</body>
+
+</html>

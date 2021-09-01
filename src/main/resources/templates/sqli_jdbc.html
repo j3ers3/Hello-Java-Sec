@@ -12,59 +12,98 @@
         <div th:replace="~{commons/commons::siderbar(active='sqli_jdbc.html')}"></div>
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <h2>SQL Injection - JDBC</h2>
-            <hr>
-            <div class="dec">SQLI(SQL Injection)
-                SQL注入即是指web应用程序对用户输入数据的合法性没有判断或过滤不严，攻击者可以在web应用程序中事先定义好的查询语句的结尾上添加额外的SQL语句。
+            <div class="vul_header">
+                <span>SQL Injection - JDBC</span>
+
+                <a class="btn btn-sm btn-primary" target="_blank" href="">漏洞案例</a>
             </div>
             <hr>
-            <br>
+            <div class="dec shadow-sm p-3 mb-4   rounded">SQLI(SQL Injection)，
+                SQL注入是因为程序未能正确对用户的输入进行检查，将用户的输入以拼接的方式带入SQL语句，导致了SQL注入的产生。攻击者可通过SQL注入直接获取数据库信息，造成信息泄漏。<br>
+                JDBC有两个方法执行SQL语句，分别是PrepareStatement和Statement。
+            </div>
+
+            <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
+            <textarea disabled="disabled" class="form-control p-3 mb-5 rounded" id="coder">
+【必须】SQL语句默认使用预编译并绑定变量
+ Web后台系统应默认使用预编译绑定变量的形式创建sql语句，保持查询语句和数据相分离。以从本质上避免SQL注入风险。
+
+【必须】屏蔽异常栈
+ 应用程序出现异常时，禁止将数据库版本、数据库结构、操作系统版本、堆栈跟踪、文件名和路径信息、SQL 查询字符串等对攻击者有用的信息返回给客户端。建议重定向到一个统一、默认的错误提示页面，进行信息过滤。
+            </textarea>
+            <hr>
 
             <div class="box-float">
                 <div class="float1">
                     <a style="float:right" class="btn btn-sm btn-danger"
                        href="/SQLI/jdbc?id=1' and updatexml(1,concat(0x7e,(SELECT user()),0x7e),1)--%20+">运行</a>
-                    <h5><span class="lnr lnr-bug"> 漏洞代码 - 语句拼接</span></h5>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - 语句拼接(Statement)</span></h5>
 
-                    <textarea class="form-control" name="code" id="code1">
+                    <textarea class="form-control" id="code1">
+// 采用原始的Statement拼接语句，导致漏洞产生
+// PoC： /SQLI/jdbc?id=1' and updatexml(1,concat(0x7e,(SELECT user()),0x7e),1)--%20+
+@RequestMapping("/jdbc")
+public String jdbcVul(String id) {
+    StringBuilder result = new StringBuilder();
+    try {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        Connection conn = DriverManager.getConnection(db_url, db_user, db_pass);
+
+        Statement stmt = conn.createStatement();
+        // 拼接语句产生SQL注入
+        String sql = "select * from users where id = '" + id + "'";
+        ResultSet rs = stmt.executeQuery(sql);
+
+        while (rs.next()) {
+            String res_name = rs.getString("user");
+            String res_pass = rs.getString("pass");
+            String info = String.format("查询结果 %s: %s", res_name, res_pass);
+            result.append(info);
+        }
+        rs.close();
+        conn.close();
+
+    } catch (Exception e) {
+        // 输出错误页面，可被进行报错回显，更有利于攻击者注入
+        return e.toString();
+    }
+    return result.toString();
+}
+                    </textarea><br><br>
+
+                    <a style="float:right" class="btn btn-sm btn-danger"
+                       href="/SQLI/jdbc/vul/pre?id=2%20or%201=1">运行</a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - 语句拼接(PrepareStatement)</span></h5>
+
+                    <textarea class="form-control" id="code2">
+// PrepareStatement会对SQL语句进行预编译，但有时开发者为了便利，直接采取拼接的方式构造SQL，此时进行预编译也无用。
 Connection conn = DriverManager.getConnection(db_url, db_user, db_pass);
-Statement stmt = conn.createStatement();
-String sql = "select * from users where id = '" + id + "'";
-System.out.println("[*] 执行SQL语句：" + sql);
-ResultSet rs = stmt.executeQuery(sql);
+String sql = "select * from users where id = " + id;
+PreparedStatement st = conn.prepareStatement(sql);
+System.out.println("[*] 执行SQL语句：" + st);
+ResultSet rs = st.executeQuery();
                     </textarea>
+                </div>
 
-                    <br>
-
+                <div class="float2">
                     <a style="float:right" class="btn btn-sm btn-success"
                        href="/SQLI/jdbc/pre?id=1'">运行</a>
-                    <h5><span class="lnr lnr-smile"> 安全代码 - 预编译方法</span></h5>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 正确预编译</span></h5>
 
-                    <textarea class="form-control" name="code" id="code2">
+                    <textarea class="form-control" id="code3">
+// 正确的使用PrepareStatement可以有效避免SQL注入，使用？作为占位符
 Connection conn = DriverManager.getConnection(db_url, db_user, db_pass);
 Statement stmt = conn.createStatement();
 String sql = "select * from users where id = ?";
 PreparedStatement st = conn.prepareStatement(sql);
 st.setString(1, id);
 ResultSet rs = st.executeQuery();
-                    </textarea>
-
-                </div>
-
-                <div class="float2">
-                    <form class="form-inline">
-                        <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
-                    </form>
-                    <textarea class="form-control" name="code" id="suggestion">
-【必须】SQL语句默认使用预编译并绑定变量
-Web后台系统应默认使用预编译绑定变量的形式创建sql语句，保持查询语句和数据相分离。以从本质上避免SQL注入风险。
-                    </textarea>
-                    <br>
+                    </textarea><br><br>
 
                     <a style="float:right" class="btn btn-sm btn-success"
                        href="/SQLI/jdbc/filter?id=1'">运行</a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - 过滤方法</span></h5>
-                    <textarea class="form-control" name="code" id="code4">
+                    <textarea class="form-control" id="code4">
 public static boolean check_sql(String content) {
     String black = "'|;|--|+|,|%|=|*|(|)|like|xor|and|or|exec|insert|select|delete|update|count|drop|chr|mid|master|truncate|char|declare";
     String[] black_list = black.split("|");
@@ -77,7 +116,6 @@ public static boolean check_sql(String content) {
 }
                     </textarea>
                 </div>
-
             </div>
         </main>
     </div>

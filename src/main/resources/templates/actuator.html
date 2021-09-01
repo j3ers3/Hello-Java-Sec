@@ -12,12 +12,13 @@
         <div th:replace="~{commons/commons::siderbar(active='actuator.html')}"></div>
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <h2>Actuator</h2>
-            <hr>
-
-            <div class="dec">Actuator, 安全配置
+            <div class="vul_header">
+                <span>Actuator未授权访问</span>
+                <a class="btn btn-sm btn-primary" target="_blank" href="">漏洞案例</a>
             </div>
             <hr>
+            <div class="dec shadow-sm p-3 mb-4  rounded">Actuator, 是Spring Boot提供的服务监控和管理中间件，默认配置会出现接口未授权访问，部分接口会泄露网站流量信息和内存信息等，使用Jolokia库特性甚至可以远程执行任意代码，获取服务器权限。</div>
+
             <br>
 
             <div class="box-float">
@@ -30,18 +31,15 @@
 # 不安全的配置：Actuator设置全部暴露
 management.endpoints.web.exposure.include=*
                     </textarea> <br>
-
-                    <a style="float:right" class="btn btn-sm btn-success"
-                       href="/Redirect/safe?url=http://www.baidu.com">运行</a>
-                    <h5><span class="lnr lnr-smile"> 安全配置</span></h5>
-                    <textarea class="form-control" name="code" id="code2">
-                    </textarea>
                 </div>
 
                 <div class="float2">
-                    <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
-                    <textarea class="form-control" name="code" id="suggestion">
-
+                    <a style="float:right" class="btn btn-sm btn-success"
+                       href="">运行</a>
+                    <h5><span class="lnr lnr-smile"> 安全配置</span></h5>
+                    <textarea class="form-control" name="code" id="code2">
+1. 禁用接口 management.endpoints.enabled-by-default=false
+2. 或使用spring security加个认证
                     </textarea>
                 </div>
             </div>

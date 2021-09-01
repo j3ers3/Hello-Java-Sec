@@ -1,6 +1,5 @@
 package com.best.hello.util;
 
-import org.jsoup.safety.Whitelist;
 import org.springframework.util.StringUtils;
 
 import java.net.URI;
@@ -12,6 +11,8 @@ import java.util.regex.Pattern;
 
 /**
  * 存放安全类
+ *
+ * @date 2021/08/02
  */
 public class Security {
 
@@ -20,7 +21,7 @@ public class Security {
      *
      * @return True or False
      */
-    public static boolean is_intranet(String url) {
+    public static boolean isIntranet(String url) {
         Pattern reg = Pattern.compile("^(127\\.0\\.0\\.1)|(localhost)|(10\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})|(172\\.((1[6-9])|(2\\d)|(3[01]))\\.\\d{1,3}\\.\\d{1,3})|(192\\.168\\.\\d{1,3}\\.\\d{1,3})$");
         Matcher match = reg.matcher(url);
         Boolean a = match.find();
@@ -32,14 +33,14 @@ public class Security {
      *
      * @return True or False
      */
-    public static boolean is_http(String url) {
+    public static boolean isHttp(String url) {
         return url.startsWith("http://") || url.startsWith("https://");
     }
 
     /**
      * 判断url是否在白名单内
      */
-    public static boolean is_white(String url) {
+    public static boolean isWhite(String url) {
         List<String> url_list = new ArrayList<String>();
         url_list.add("baidu.com");
         url_list.add("www.baidu.com");
@@ -59,7 +60,7 @@ public class Security {
 
     }
 
-    public static String filter_xss(String content) {
+    public static String filterXss(String content) {
         content = StringUtils.replace(content, "&", "&amp;");
         content = StringUtils.replace(content, "<", "&lt;");
         content = StringUtils.replace(content, ">", "&gt;");
@@ -70,7 +71,7 @@ public class Security {
     }
 
 
-    public static boolean check_sql(String content) {
+    public static boolean checkSql(String content) {
         String black = "'|;|--|+|,|%|=|>|<|*|(|)|and|or|exec|insert|select|delete|update|count|drop|chr|mid|master|truncate|char|declare";
         String[] black_list = black.split("|");
         for (int i = 0; i < black_list.length; i++) {
@@ -81,8 +82,19 @@ public class Security {
         return false;
     }
 
-    public static boolean check_traversal(String content) {
+    public static boolean checkTraversal(String content) {
         return content.contains("..") || content.contains("/");
+    }
+
+    public static boolean checkOs(String content) {
+        String black = "|,&,&&,;,||";
+        String[] black_list = black.split(",");
+        for (String s : black_list) {
+            if (content.contains(s)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

@@ -22,16 +22,17 @@ public class XSS {
     /**
      * 反射型XSS
      *
-     * @poc http://god.com:8888/XSS/reflect?content=<img/src=1 onerror=alert(1)>
+     * @poc http://127.0.0.1:8888/XSS/reflect?content=<img/src=1 onerror=alert(1)>
      */
     @GetMapping("/reflect")
-    public static String input(String content) {
+    public static String reflect(String content) {
+        System.out.println("[vul] 执行xss");
         return content;
     }
 
 
     /**
-     * @safe 方案一、采用spring的HtmlUtils.htmlEscape()来过滤
+     * @safe 方案一、采用自带函数HtmlUtils.htmlEscape()来过滤
      */
     @GetMapping("/escape")
     public static String safe1(String content) {
@@ -44,7 +45,7 @@ public class XSS {
      */
     @GetMapping("/filter")
     public static String safe2(String content) {
-        return Security.filter_xss(content);
+        return Security.filterXss(content);
     }
 
     /**

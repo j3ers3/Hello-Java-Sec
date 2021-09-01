@@ -12,60 +12,52 @@
         <div th:replace="~{commons/commons::siderbar(active='spel.html')}"></div>
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <h2>SpEL注入</h2>
-            <hr>
-
-            <div class="dec">SpEL（Spring Expression Language）表达式注入, 是一种功能强大的表达式语言、用于在运行时查询和操作对象图，由于未对参数做过滤可造成任意命令执行。
+            <div class="vul_header">
+                <span>表达式注入</span>
+                <a class="btn btn-sm btn-primary" target="_blank" href="">漏洞案例</a>
             </div>
             <hr>
-            <br>
+            <div class="dec shadow-sm p-3 mb-4 rounded">SpEL（Spring Expression Language）表达式注入, 是一种功能强大的表达式语言、用于在运行时查询和操作对象图，由于未对参数做过滤可造成任意命令执行。
+            </div>
+
+            <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
+            <textarea disabled="disabled" class="form-control p-3 mb-5 rounded" id="coder">
+web view层通常通过模板技术或者表达式引擎来实现界面与业务数据分离，比如jsp中的EL表达式。这些引擎通常可执行敏感操作，如果外部不可信数据未经过滤拼接到表达式中进行解析，则可能造成严重漏洞。
+应避免外部输入的内容拼接到EL表达式或其他表达式引起、模板引擎进行解析。
+白名单过滤外部输入，仅允许字符、数字、下划线等。
+            </textarea>
+            <hr>
 
             <div class="box-float">
                 <div class="float1">
                     <a style="float:right" class="btn btn-sm btn-danger"
-                       href="/spel?ex=100-1">运行</a>
+                       href="/SPEL/vul?ex=100-1">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
 
                     <textarea class="form-control" name="code" id="code1">
-// Payload: T(java.lang.Runtime).getRuntime().exec(%22open%20-a%20Calculator%22)
+// PoC: T(java.lang.Runtime).getRuntime().exec(%22open%20-a%20Calculator%22)
 
-@GetMapping("/spel")
-public String rce(String ex) {
+@GetMapping("/vul")
+public String spelVul(String ex) {
     ExpressionParser parser = new SpelExpressionParser();
     String result = parser.parseExpression(ex).getValue().toString();
     System.out.println(result);
     return result;
 }
                     </textarea>
-                    <br>
-
-                    <a style="float:right" class="btn btn-sm btn-success"
-                       href="">运行</a>
-                    <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
-                    <textarea class="form-control" name="code" id="code2">
-
-                    </textarea>
 
                 </div>
 
                 <div class="float2">
-                    <form class="form-inline">
-                        <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
-                    </form>
-                    <textarea class="form-control" name="code" id="suggestion">
-web view层通常通过模板技术或者表达式引擎来实现界面与业务数据分离，比如jsp中的EL表达式。这些引擎通常可执行敏感操作，如果外部不可信数据未经过滤拼接到表达式中进行解析。则可能造成严重漏洞。
-
-应避免外部输入的内容拼接到EL表达式或其他表达式引起、模板引擎进行解析。
-白名单过滤外部输入，仅允许字符、数字、下划线等。
+                    <a style="float:right" class="btn btn-sm btn-success"
+                       href="">运行</a>
+                    <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
+                    <textarea class="form-control" name="code" id="code2">
+todo
                     </textarea>
 
                 </div>
-
             </div>
-
-
-
-
         </main>
     </div>
 </div>

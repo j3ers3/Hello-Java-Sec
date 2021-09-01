@@ -12,21 +12,30 @@
         <div th:replace="~{commons/commons::siderbar(active='xxe.html')}"></div>
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <h2>XML外部实体注入</h2>
-            <hr>
-
-            <div class="dec">XXE (XML External Entity Injection), XML外部实体注入，当应用是通过用户上传的XML文件或POST请求进行数据的传输，并且应用没有禁止XML引用外部实体，也没有过滤用户提交的XML数据，那么就会产生XML外部实体注入漏洞
-
+            <div class="vul_header">
+                <span>XML外部实体注入</span>
+                <a class="btn btn-sm btn-primary" target="_blank" href="">漏洞案例</a>
             </div>
             <hr>
-            <br>
+
+            <div class="dec shadow-sm p-3 mb-4 rounded">XXE (XML External Entity Injection), XML外部实体注入，当开发人员配置其XML解析功能允许外部实体引用时，攻击者可利用这一可引发安全问题的配置方式，实施任意文件读取、内网端口探测、命令执行、拒绝服务等攻击。
+            </div>
+
+            <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
+            <textarea disabled="disabled" class="form-control p-2 mb-5 rounded" id="coder">
+【必须】XML解析器关闭DTD解析
+ 读取外部传入XML文件时，XML解析器初始化过程中设置关闭DTD解析。
+ 如：
+ xxx.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            </textarea>
+            <hr>
 
             <div class="box-float">
                 <div class="float1">
                     <a style="float:right" class="btn btn-sm btn-danger"
                        th:href="@{/XXE/XMLReader}">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - XMLReader</span></h5>
-                    <textarea class="form-control" name="code" id="code1">
+                    <textarea class="form-control" id="code1">
 @RequestMapping(value = "/XMLReader")
 public String XMLReader(@RequestBody String content) {
     try {
@@ -39,52 +48,77 @@ public String XMLReader(@RequestBody String content) {
     return e.toString();
     }
 }
-                    </textarea> <br>
+                    </textarea> <br><br>
 
                     <a style="float:right" class="btn btn-sm btn-danger"
                        th:href="@{/XXE/SAXBuilder}">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - SAXReader</span></h5>
-                    <textarea class="form-control" name="code" id="code2" rows="10">
+                    <textarea class="form-control" id="code2">
 SAXReader sax = new SAXReader();
 // 修复：禁用外部实体
 // sax.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 sax.read(new InputSource(new StringReader(content)));
-                    </textarea> <br>
+                    </textarea> <br><br>
 
                     <a style="float:right" class="btn btn-sm btn-danger"
                        th:href="@{/XXE/SAXBuilder}">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - SAXBuilder</span></h5>
-                    <textarea class="form-control" name="code" id="code4">
+                    <textarea class="form-control" id="code3">
 @RequestMapping(value = "/SAXBuilder")
 public String SAXBuilder(@RequestBody String content) {
     try {
         SAXBuilder saxbuilder = new SAXBuilder();
-        // fixed: saxbuilder.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        // 修复: saxbuilder.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
         saxbuilder.build(new InputSource(new StringReader(content)));
         return "SAXBuilder XXE";
     } catch (Exception e) {
         return e.toString();
     }
 }
-                    </textarea> <br>
-
-                    <a style="float:right" class="btn btn-sm btn-danger"
-                       th:href="@{/XXE/DocumentBuilder}">运行</a>
-                    <h5><span class="lnr lnr-bug"> 漏洞代码 - DocumentBuilder</span></h5>
-                    <textarea class="form-control" name="code" id="code5">
-DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-// fixed: dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-DocumentBuilder builder = factory.newDocumentBuilder();
                     </textarea>
 
                 </div>
 
                 <div class="float2">
-                    <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
-                    <textarea class="form-control" name="code" id="suggestion">
-禁用外部实体
-xxx.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+                    <a style="float:right" class="btn btn-sm btn-danger"
+                       th:href="@{/XXE/DocumentBuilder}">运行</a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - DocumentBuilder</span></h5>
+                    <textarea class="form-control" id="code4">
+DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+// 修复: dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+DocumentBuilder builder = factory.newDocumentBuilder();
+                    </textarea><br><br>
+
+                    <a style="float:right" class="btn btn-sm btn-danger"
+                       th:href="@{/XXE/unmarshaller}">运行</a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - Unmarshaller</span></h5>
+                    <textarea class="form-control" id="code5">
+/**
+  *  PoC
+  * Content-Type: application/xml
+  * <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE student[<!ENTITY out SYSTEM "file:///etc/hosts">]><student><name>&out;</name></student>
+  */
+public String Unmarshaller(@RequestBody String content) {
+    try {
+        JAXBContext context = JAXBContext.newInstance(Student.class);
+        Unmarshaller unmarshaller = context.createUnmarshaller();
+
+        XMLInputFactory xif = XMLInputFactory.newFactory();
+        // 修复: 禁用外部实体
+        // xif.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        // xif.setProperty(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+
+        XMLStreamReader xsr = xif.createXMLStreamReader(new StringReader(content));
+
+        Object o = unmarshaller.unmarshal(xsr);
+        return o.toString();
+
+} catch (Exception e) {
+    e.printStackTrace();
+}
+
                     </textarea>
+
                 </div>
             </div>
         </main>

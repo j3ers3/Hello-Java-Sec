@@ -14,24 +14,24 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-public class Fastjson {
+@RequestMapping("/Fastjson")
+public class FastjsonVul {
 
-    @RequestMapping(value = "/fastjson", method = {RequestMethod.POST})
-    /*
-     * @RequestBody 接收的参数来自请求body中，
-     * 就application/json类型的数据而言，使用注解@RequestBody可以将body里面所有的json数据传到后端，后端再进行解析。
+    /**
+     * 触发条件：Fastjson版本小于等于1.2.24、Java版本小于8u121(?)
+     * @poc {"@type":"java.net.Inet4Address","val":"a.8d5tv8.dnslog.cn"}
      *
-     * 触发条件：Fastjson版本小于等于1.2.24、Java版本小于8u121
      */
-    public String rce(@RequestBody String params) {
+    @RequestMapping(value = "/vul", method = {RequestMethod.POST})
+    public String vul(@RequestBody String content) {
 
         try {
             // 转换成object
-            JSONObject json_ob = JSON.parseObject(params);
-            System.out.println(json_ob);
+            JSONObject jsonToObject = JSON.parseObject(content);
+            System.out.println(jsonToObject);
 
             // 获取ob中name字段;
-            return json_ob.get("name").toString();
+            return jsonToObject.get("name").toString();
 
         } catch (Exception e) {
             return e.toString();

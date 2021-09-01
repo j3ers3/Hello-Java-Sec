@@ -24,7 +24,7 @@ public class Redirect {
     @GetMapping("/safe")
     @ResponseBody
     public String safe(String url) {
-        if (Security.is_white(url)) {
+        if (Security.isWhite(url)) {
             return "安全域名：" + url;
         } else {
             return "非法重定向域名！！";

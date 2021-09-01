@@ -13,9 +13,9 @@ public class MvcConfig implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         // 路由 -> 视图.html
-        registry.addViewController("/").setViewName("index");
-        registry.addViewController("/index").setViewName("index");
+        registry.addViewController("/").setViewName("login");
         registry.addViewController("/login").setViewName("login");
+        registry.addViewController("/index").setViewName("index");
         registry.addViewController("/index/xss").setViewName("xss");
         registry.addViewController("/index/rce").setViewName("rce");
         registry.addViewController("/index/spel").setViewName("spel");
@@ -28,16 +28,22 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addViewController("/index/deserialize").setViewName("deserialize");
         registry.addViewController("/index/redirect").setViewName("redirect");
         registry.addViewController("/index/actuator").setViewName("actuator");
+        registry.addViewController("/index/broken_access_control").setViewName("bac");
+        registry.addViewController("/index/upload").setViewName("upload");
+        registry.addViewController("/index/password").setViewName("password");
+        registry.addViewController("/index/xstream").setViewName("xstream");
+        registry.addViewController("/index/fastjson").setViewName("fastjson");
 
     }
 
     /**
      * 拦截器，判断是否登录成功
+     * todo
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginHandlerInterceptor())
                 .addPathPatterns("/**")
-                .excludePathPatterns("/index", "/", "/user/login", "/login", "/css/**", "/js/**", "/img/**");
+                .excludePathPatterns("/user/login", "/login", "/", "/css/**", "/js/**", "/img/**");
     }
 }

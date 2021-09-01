@@ -13,6 +13,7 @@ body {
     z-index: 100; /* Behind the navbar */
     padding: 0;
     box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+    width: 230px;
 }
 
 .sticky-top {
@@ -36,15 +37,15 @@ body {
 
 /* 侧边栏样式 */
 .sidebar .nav > li > a {
-    padding: 10px 30px; /* 上下内边距是 10px，左右内边距是 30px*/
+    padding: 9px 25px; /* 上下内边距是 10px，左右内边距是 30px*/
     color: #AEB7C2;
-    border-left: 5px solid transparent; /* 左边样式 */
+    border-left: 4px solid transparent; /* 左边样式 */
 }
 
 /* 侧边栏图标 */
 .sidebar .nav i {
     margin-right: 10px;
-    font-size: 18px;
+    font-size: 16px;
 }
 
 /* 下拉图标 */
@@ -64,9 +65,6 @@ body {
     top: 5px;
     font-size: 12px;
     line-height: 1.1;
-    -moz-transform: rotate(-90deg);
-    -ms-transform: rotate(-90deg);
-    -webkit-transform: rotate(-90deg);
     transform: rotate(-90deg);
 }
 
@@ -82,11 +80,12 @@ body {
     background-color: #252c35;
 }
 
+/* 子菜单布局 */
 .sidebar .nav .nav > li > a {
-    padding-left: 60px;
+    padding-left: 50px;
     padding-top: 4px;
-    padding-bottom: 10px;
-    border-left: 5px solid transparent; /* 左边样式 */
+    padding-bottom: 6px;
+    border-left: 4px solid transparent; /* 左边样式 */
 }
 
 .sidebar .nav .nav > li > a:focus, .sidebar .nav .nav > li > a.active {
@@ -116,7 +115,7 @@ body {
 }
 
 .sidebar .nav .nav > li > a:hover, .sidebar .nav .nav > li > a:focus, .sidebar .nav .nav> li > a.active {
-    color: #90d7ec;
+    color: #fff;
     background-color: transparent;
 }
 
@@ -125,15 +124,19 @@ body {
     color: #00AAFF;
 }
 
+/* 鼠标放上去left变蓝*/
+.sidebar .nav > li > a:hover {
+    border-left-color: #00AAFF;
+}
+
 /* 激活后的背景样式 */
 .sidebar .nav > li > a:focus, .sidebar .nav > li > a.active {
     background-color: #252c35;
     border-left-color: #00AAFF;
 }
 
-/*
- * Utilities
- */
+
+/* 面板 */
 
 .border-top {
     border-top: 1px solid #e5e5e5;
@@ -167,9 +170,29 @@ body {
     float: right;
 }
 
+
+.vul_header span {
+    font-size: 20px;
+    font-weight: 10;
+}
+.vul_header a {
+    float:right;
+    margin-right: 10px;
+}
+
 /*
  * 漏洞描述
  */
 .dec {
     font-size: 15px;
+    background-color: #cee1f3;
+}
+
+
+#coder {
+    background-color: #cee1f3;
+    border: 0;
+    height:130px;
+    font-size: 16px;
+
 }

@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * SQL注入，包括常规的拼接和Mybatis排序注入
+ *
  * @author nul1
  * @date 2021/07/24
  */
@@ -42,25 +43,18 @@ public class SQLI {
      * @poc http://127.0.0.1:8888/SQLI/jdbc?id=1' and updatexml(1,concat(0x7e,(SELECT user()),0x7e),1)--%20+
      */
     @RequestMapping("/jdbc")
-    public String sql_1(String id) {
+    public String jdbcVul(String id) {
 
         StringBuilder result = new StringBuilder();
 
         try {
-            /*
-             * 注册 JDBC 驱动
-             * com.mysql.jdbc.Driver 对应版本 5
-             * com.mysql.cj.jdbc.Driver 对应高版本
-             */
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            // 建立连接
             Connection conn = DriverManager.getConnection(db_url, db_user, db_pass);
 
-            // 执行查询
             Statement stmt = conn.createStatement();
             String sql = "select * from users where id = '" + id + "'";
-            System.out.println("[*] 执行SQL语句：" + sql);
+            System.out.println("[vul] 执行SQL语句：" + sql);
             ResultSet rs = stmt.executeQuery(sql);
 
             // 获取查询结果
@@ -87,7 +81,7 @@ public class SQLI {
      * @poc http://127.0.0.1:8888/SQLI/jdbc/pre?id=1'
      */
     @RequestMapping("/jdbc/pre")
-    public String sql_pre(String id) {
+    public String preVul(String id) {
 
         StringBuilder result = new StringBuilder();
 
@@ -99,7 +93,43 @@ public class SQLI {
             String sql = "select * from users where id = ?";
             PreparedStatement st = conn.prepareStatement(sql);
             st.setString(1, id);
-            System.out.println("[*] 执行SQL语句：" + st);
+            System.out.println("[vul] 执行SQL语句：" + st);
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()) {
+                String res_name = rs.getString("user");
+                String res_pass = rs.getString("pass");
+
+                String info = String.format("查询结果%n %s: %s%n", res_name, res_pass);
+                result.append(info);
+            }
+
+            rs.close();
+            conn.close();
+
+        } catch (Exception e) {
+            return e.toString();
+        }
+        return result.toString();
+    }
+
+    /**
+     * @safe 采用预编译的方法，但没使用?占位，开发者为方便会直接采取拼接的方式构造SQL语句，此时进行预编译也无法阻止SQL注入
+     * @poc http://127.0.0.1:8888/SQLI/jdbc/vul/pre?id=2%20and%201=1
+     */
+    @RequestMapping("/jdbc/vul/pre")
+    public String preSafe(String id) {
+
+        StringBuilder result = new StringBuilder();
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection conn = DriverManager.getConnection(db_url, db_user, db_pass);
+
+            String sql = "select * from users where id = " + id;
+            PreparedStatement st = conn.prepareStatement(sql);
+            System.out.println("[Safe] 执行SQL语句：" + st);
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
@@ -124,9 +154,9 @@ public class SQLI {
      * @poc http://127.0.0.1:8888/SQLI/jdbc/filter?id=1'
      */
     @RequestMapping("/jdbc/filter")
-    public String filter(String id) {
+    public String sqlFilter(String id) {
 
-        if (!Security.check_sql(id)){
+        if (!Security.checkSql(id)) {
             StringBuilder result = new StringBuilder();
 
             try {
@@ -137,7 +167,7 @@ public class SQLI {
                 Statement stmt = conn.createStatement();
                 String sql = "select * from users where id = '" + id + "'";
 
-                System.out.println("[*] 执行SQL语句：" + sql);
+                System.out.println("[Safe] 执行SQL语句：" + sql);
                 ResultSet rs = stmt.executeQuery(sql);
 
                 while (rs.next()) {
@@ -164,8 +194,9 @@ public class SQLI {
      * *******************************************************************
      * Mybatis相关
      * *******************************************************************
+     *
      * @safe 正常查询
-     * @poc http://god.com:8888/SQLI/mybatis/query?user=admin
+     * @poc http://127.0.0.1:8888/SQLI/mybatis/query?user=admin
      */
     @GetMapping("/mybatis/query")
     public List<User> queryByUser(String user) {
@@ -174,7 +205,7 @@ public class SQLI {
 
     /**
      * @vul String id + ${} 参数注入
-     * @poc http://god.com:8888/SQLI/mybatis/vul/id/1 or 1=1
+     * @poc http://127.0.0.1:8888/SQLI/mybatis/vul/id/1 or 1=1
      */
     @GetMapping("/mybatis/vul/id/{id}")
     public List<User> queryById(@PathVariable String id) {
@@ -183,7 +214,7 @@ public class SQLI {
 
     /**
      * @safe Int id + ${} 不存在注入
-     * @poc http://god.com:8888/SQLI/mybatis/safe/id/1 or 1=1
+     * @poc http://127.0.0.1:8888/SQLI/mybatis/safe/id/1 or 1=1
      */
     @GetMapping("/mybatis/safe/id/{id}")
     public List<User> queryById(@PathVariable Integer id) {
@@ -224,9 +255,7 @@ public class SQLI {
     }
 
     /**
-     * Hibernate
+     * Hibernate todo
      */
-
-
 
 }

@@ -59,7 +59,7 @@ public class Traversal {
     @GetMapping("/download/safe")
     public String download_safe(String filename) {
 
-        if (!Security.check_traversal(filename)) {
+        if (!Security.checkTraversal(filename)) {
             String filePath = System.getProperty("user.dir") + "/logs/" + filename;
             return "安全路径：" + filePath;
         } else {

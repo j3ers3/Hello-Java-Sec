@@ -12,13 +12,21 @@
         <div th:replace="~{commons/commons::siderbar(active='redirect.html')}"></div>
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <h2>重定向漏洞</h2>
-            <hr>
-
-            <div class="dec">重定向漏洞
+            <div class="vul_header">
+                <span>开放重定向</span>
+                <a class="btn btn-sm btn-primary" target="_blank" href="">漏洞案例</a>
             </div>
             <hr>
-            <br>
+            <div class="dec shadow-sm p-3 mb-4 rounded">开放重定向漏洞，是指后台服务器在告知浏览器跳转时,未对客户端传入的重定向地址进行合法性校验,导致用户浏览器跳转到钓鱼页面的一种漏洞<br>出现场景：用户登录、统一身份认证等需要跳转的地方</div>
+
+            <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
+            <textarea disabled="disabled" class="form-control p-3 mb-5 rounded" id="coder">
+【必须】避免不可信域名的302跳转
+ 如果对外部传入域名进行302跳转，必须设置可信域名列表并对传入域名进行校验。
+
+ 为避免校验被绕过，应避免直接对URL进行字符串匹配。应通过通过URL解析函数进行解析，获取host或者domain后和白名单进行比较。
+            </textarea>
+            <hr>
 
             <div class="box-float">
                 <div class="float1">
@@ -26,14 +34,17 @@
                        th:href="@{/Redirect/vul?url=https://www.baidu.com}">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
 
-                    <textarea class="form-control" name="code" id="code1">
+                    <textarea class="form-control" id="code1">
+// 对跳转url未做任何限制
 public String vul(String url) {
     return "redirect:" + url;
 }
-                    </textarea> <br>
+                    </textarea>
+                </div>
 
+                <div class="float2">
                     <a style="float:right" class="btn btn-sm btn-success"
-                       href="/Redirect/safe?url=http://www.baidu.com">运行</a>
+                       href="/Redirect/safe?url=http://www.evil.com">运行</a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - 白名单模式</span></h5>
                     <textarea class="form-control" name="code" id="code2">
 public static boolean is_white(String url) {
@@ -53,16 +64,6 @@ public static boolean is_white(String url) {
 
     return url_list.contains(host);
  }
-                    </textarea>
-                </div>
-
-                <div class="float2">
-                    <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
-                    <textarea class="form-control" name="code" id="suggestion">
-【必须】避免不可信域名的302跳转
-如果对外部传入域名进行302跳转，必须设置可信域名列表并对传入域名进行校验。
-
-为避免校验被绕过，应避免直接对URL进行字符串匹配。应通过通过URL解析函数进行解析，获取host或者domain后和白名单进行比较。
                     </textarea>
                 </div>
             </div>

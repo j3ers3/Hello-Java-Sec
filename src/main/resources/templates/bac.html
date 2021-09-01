@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
+
+<body>
+<!-- 顶部导航栏 -->
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边栏 -->
+        <div th:replace="~{commons/commons::siderbar(active='bac.html')}"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div class="vul_header">
+                <span>越权访问</span>
+                <a class="btn btn-sm btn-primary" target="_blank" href="">漏洞案例</a>
+            </div>
+            <hr>
+            <div class="dec shadow-sm p-3 mb-4   rounded">失效的访问控制（Broken Access Control），应用在检查授权时存在纰漏，使得攻击者在获得低权限用户账户后，利用一些方式绕过权限检查，访问或者操作其他用户或者更高权限。越权漏洞的成因主要是因为开发人员在对数据进行增、删、改、查询时对客户端请求的数据过分相信而遗漏了权限的判定，一旦权限验证不充分，就易致越权漏洞。
+            </div>
+
+
+            <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
+            <textarea disabled="disabled" class="form-control p-2 mb-5 rounded" id="coder">
+【必须】权限校验
+ 对于非公共操作，应当校验当前访问账号进行操作权限（常见于CMS）和数据权限校验。
+ 1. 验证当前用户的登录态
+ 2. 从可信结构中获取经过校验的当前请求账号的身份信息（如：session）。禁止从用户请求参数或Cookie中获取外部传入不可信用户身份直接进行查询。
+ 3. 校验当前用户是否具备该操作权限
+ 4. 校验当前用户是否具备所操作数据的权限。避免越权。
+            </textarea>
+            <hr>
+
+            <div class="box-float">
+                <div class="float1">
+                    <a style="float:right" class="btn btn-sm btn-danger"
+                       href="#">运行</a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
+
+                    <textarea class="form-control" id="code1">
+// 高频且危害巨大的漏洞
+// todo
+                    </textarea>
+                </div>
+
+                <div class="float2">
+                    <a style="float:right" class="btn btn-sm btn-success"
+                       href="#">运行</a>
+                    <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
+                    <textarea class="form-control" id="code2">
+todo
+                    </textarea>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- 引入script -->
+<div th:replace="~{commons/commons::script}"></div>
+
+
+</body>
+
+</html>

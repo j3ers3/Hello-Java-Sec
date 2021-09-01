@@ -17,6 +17,7 @@ public class SSRF {
      */
     @GetMapping("/URLConnection")
     public String URLConnection(String url) {
+        System.out.println("[Vul] 执行SSRF：" + url);
         return Http.URLConnection(url);
     }
 
@@ -26,9 +27,9 @@ public class SSRF {
      */
     @GetMapping("/URLConnection/safe")
     public String URLConnectionSafe(String url) {
-        if (!Security.is_http(url)){
+        if (!Security.isHttp(url)){
             return "不允许非http/https协议!!!";
-        }else if (Security.is_intranet(url)) {
+        }else if (Security.isIntranet(url)) {
             return "不允许访问内网!!!";
         }else{
             return Http.URLConnection(url);
@@ -40,9 +41,9 @@ public class SSRF {
      */
     @GetMapping("/HTTPURLConnection/safe")
     public String HTTPURLConnection(String url) {
-        if (!Security.is_http(url)){
+        if (!Security.isHttp(url)){
             return "不允许非http/https协议!!!";
-        }else if (Security.is_intranet(url)) {
+        }else if (Security.isIntranet(url)) {
             return "不允许访问内网!!!";
         }else{
             return Http.HTTPURLConnection(url);

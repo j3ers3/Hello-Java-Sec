@@ -5,8 +5,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-//import org.apache.velocity.app.Velocity;
-//import org.apache.velocity.VelocityContext;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
@@ -32,7 +30,7 @@ public class SSTI {
 
     /**
      * @vul 将请求的url作为视图名称，调用模板引擎去解析，在这种情况下，我们只要可以控制请求的controller的参数，一样可以造成RCE漏洞
-     * @poc http://god.com:8888/SSTI/doc/__${T(java.lang.Runtime).getRuntime().exec("open -a Calculator")}__::.x
+     * @poc http://127.0.0.1:8888/SSTI/doc/__${T(java.lang.Runtime).getRuntime().exec("open -a Calculator")}__::.x
      */
     @GetMapping("/doc/{document}")
     public void getDocument(@PathVariable String document) {

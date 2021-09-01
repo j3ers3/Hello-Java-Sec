@@ -1,15 +1,18 @@
 package com.best.hello.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.best.hello.controller.XXE.Student;
+import org.apache.catalina.util.ServerInfo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Constructor;
-
-import java.util.Map;
+import javax.naming.Context;
+import javax.naming.NamingEnumeration;
+import javax.naming.directory.*;
+import java.lang.reflect.Field;
 import java.util.HashMap;
-
-import org.apache.catalina.util.ServerInfo;
-import com.alibaba.fastjson.JSON;
+import java.util.Hashtable;
+import java.util.Map;
 
 
 /**
@@ -47,18 +50,36 @@ public class Test {
         return JSON.toJSONString(m);
     }
 
+
     @GetMapping("/aabb")
     public void aa() {
         try {
-            Class clazz = Class.forName("java.lang.Runtime");
-            Constructor<?>[] constructors = clazz.getDeclaredConstructors();
-            Constructor<?> constructor = constructors[0];
-            constructor.setAccessible(true);
-            clazz.getMethod("exec", String.class).invoke(constructor.newInstance(), "open -a Calculator");
+
+            //Runtime rt = Runtime.getRuntime();
+            //Class name2 = rt.getClass();
+            //System.out.println(name2);
+            //Class name1 = Runtime.class;
+            //System.out.println(name1);
+            //Class name = Class.forName("java.lang.Runtime");
+            //System.out.println(name);
+            //Constructor<?>[] constructors = name.getDeclaredConstructors();
+            //Constructor<?> constructor = constructors[0];
+            //constructor.setAccessible(true);
+            //name.getMethod("exec", String.class).invoke(constructor.newInstance(), "open -a Calculator");
+
+            Student student = new Student();
+            Class<?> name = student.getClass();
+            Field[] a = name.getDeclaredFields();
+            for(Field m:a)
+                System.out.println(m);
+
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
 
 

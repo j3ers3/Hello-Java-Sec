@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
+
+<body>
+<!-- 顶部导航栏 -->
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边栏 -->
+        <div th:replace="~{commons/commons::siderbar(active='upload.html')}"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div class="vul_header">
+                <span>文件操作 - 任意文件上传</span>
+                <a class="btn btn-sm btn-primary" target="_blank" href="">漏洞案例</a>
+            </div>
+            <hr>
+            <div class="dec shadow-sm p-3 mb-4 rounded">文件上传漏洞，是指用户上传了一个可执行的脚本文件(如jsp\php\asp)，并通过此脚本文件获得了执行服务器端命令的能力。常见场景是web服务器允许用户上传图片或者普通文本文件保存，这种漏洞属于低成本高杀伤力</div>
+
+
+            <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
+            <textarea disabled="disabled" class="form-control p-2 mb-5 rounded" id="coder">
+【必须】文件类型限制
+必须在服务器端采用白名单方式对上传或下载的文件类型、大小进行严格的限制。仅允许业务所需文件类型上传，避免上传.jsp、.jspx、.html、.exe等文件
+            </textarea>
+            <hr>
+            <div th:if="${message}" >
+                <span style="color:red" th:text="${message}"/>
+                <hr>
+            </div>
+
+            <div class="box-float">
+                <div class="float1">
+                    <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
+                    <form method="POST" th:action="@{/UPLOAD/uploadVul}" enctype="multipart/form-data">
+                        <input type="file" name="file" />
+                        <input type="submit" class="btn btn-sm btn-danger" value="上传" />
+                    </form><br>
+
+                    <textarea class="form-control" id="code1">
+// 允许上传任意文件导致的安全风险
+
+public String singleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+    try {
+        byte[] bytes = file.getBytes();
+        Path dir = Paths.get(UPLOADED_FOLDER);
+        Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
+
+        Files.write(path, bytes);
+        redirectAttributes.addFlashAttribute("message","上传文件成功：" + path + "");
+    } catch (Exception e) {
+         return e.toString();
+    }
+    return "redirect:upload_status";
+}
+                    </textarea>
+                </div>
+
+                <div class="float2">
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 白名单</span></h5>
+                    <form method="POST" th:action="@{/UPLOAD/uploadSafe}" enctype="multipart/form-data">
+                        <input type="file" name="file" />
+                        <input type="submit" class="btn btn-sm btn-success" value="上传" />
+                    </form><br>
+                    <textarea class="form-control" id="code2">
+// 对上传文件后缀名做白名单处理
+
+public String singleFileUploadSafe(@RequestParam("file") MultipartFile file,
+                                   RedirectAttributes redirectAttributes) {
+    try {
+        byte[] bytes = file.getBytes();
+        String fileName = file.getOriginalFilename();
+        Path dir = Paths.get(UPLOADED_FOLDER);
+        Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
+
+        // 获取文件后缀名
+        String Suffix = fileName.substring(fileName.lastIndexOf("."));
+
+        String[] SuffixSafe = {".jpg", ".png", ".jpeg", ".gif", ".bmp", ".ico"};
+        boolean flag = false;
+
+        for (String s : SuffixSafe) {
+            if (Suffix.toLowerCase().equals(s)) {
+                flag = true;
+                break;
+            }
+        }
+
+        if (!flag) {
+            return "只允许上传图片，[.jpg, .png, .jpeg, .gif, .bmp, .ico]";
+        }
+                    </textarea>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- 引入script -->
+<div th:replace="~{commons/commons::script}"></div>
+
+
+</body>
+
+</html>

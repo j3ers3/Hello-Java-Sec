@@ -12,12 +12,22 @@
         <div th:replace="~{commons/commons::siderbar(active='ssrf.html')}"></div>
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <h2>SSRF</h2>
-            <hr>
-
-            <div class="dec">SSRF(Server-Side Request Forgery) 服务器端请求伪造，是一种由攻击者构造形成由服务端发起请求的一个安全漏洞。
+            <div class="vul_header">
+                <span>SSRF</span>
+                <a class="btn btn-sm btn-primary" target="_blank" href="">漏洞案例</a>
             </div>
-            <br>
+            <hr>
+            <div class="dec shadow-sm p-3 mb-4 rounded">SSRF(Server-Side Request Forgery) 服务器端请求伪造，是一种由攻击者构造形成由服务端发起请求的一个安全漏洞。
+            </div>
+
+            <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
+            <textarea disabled="disabled" class="form-control p-2 mb-5 rounded" id="coder">
+【必须】避免直接访问不可信地址
+服务器访问不可信地址时，禁止访问私有地址段及内网域名。
+建议通过URL解析函数进行解析，获取host或者domain后通过DNS获取其IP，然后和内网地址进行比较。
+对已校验通过地址进行访问时，应关闭跟进跳转功能。
+            </textarea>
+            <hr>
 
             <div class="box-float">
                 <div class="float1">
@@ -25,19 +35,40 @@
                     <a style="float:right" class="btn btn-sm btn-danger"
                        th:href="@{/SSRF/URLConnection?url=file:///etc/passwd}">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - URLConnection方式</span></h5>
-                    <textarea class="form-control" name="code" id="code1">
+                    <textarea class="form-control" id="code1">
+// url参数没做限制，可调用URLConnection发起任意请求，比如请求内网，或使用file等协议读取文件
 @GetMapping("/URLConnection")
 public String URLConnection(String url) {
     return Http.URLConnection(url);
 }
-                    </textarea>
-                    <br>
+
+public static String URLConnection(String url) {
+    try {
+        URL u = new URL(url);
+        URLConnection conn = u.openConnection();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+        String content;
+        StringBuffer html = new StringBuffer();
+
+        while ((content = reader.readLine()) != null) {
+            html.append(content);
+        }
+        reader.close();
+        return html.toString();
+
+    } catch (Exception e) {
+        return e.getMessage();
+    }
+}
+                    </textarea><br><br>
 
 
                     <a style="float:right" class="btn btn-sm btn-danger"
                        th:href="@{/SSRF/HTTPURLConnection/safe?url=http://surl-8.cn/0}">运行</a>
-                    <h5>漏洞代码 - bypass</h5>
-                    <textarea class="form-control" name="code" id="code2">
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - 短链接绕过</span></h5>
+                    <textarea class="form-control" id="code2">
+// SSRF修复经常碰到的问题，虽然过滤了内网地址，但通过短链接跳转的方式可以绕过
 @GetMapping("/URLConnection/safe")
 public String URLConnectionSafe(String url) {
     if (!Security.is_http(url)){
@@ -53,33 +84,27 @@ public String URLConnectionSafe(String url) {
 
 
                 <div class="float2">
-                    <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
-                    <textarea class="form-control" name="code" id="suggestion">
-【必须】避免直接访问不可信地址
-服务器访问不可信地址时，禁止访问私有地址段及内网域名。
-建议通过URL解析函数进行解析，获取host或者domain后通过DNS获取其IP，然后和内网地址进行比较。
-对已校验通过地址进行访问时，应关闭跟进跳转功能。
-                    </textarea>
-                    <br>
 
                     <a style="float:right" class="btn btn-sm btn-success"
                        th:href="@{/SSRF/HTTPURLConnection/safe?url=http://192.168.1.1}">运行</a>
                     <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
-                    <textarea class="form-control" name="code" id="code4">
+                    <textarea class="form-control" id="code3">
 // 判断是否是http类型
-public static boolean is_http(String url) {
+public static boolean isHttp(String url) {
     return url.startsWith("http://") || url.startsWith("https://");
 }
+
 // 判断是否为内网
-public static boolean is_intranet(String url) {
+public static boolean isIntranet(String url) {
     Pattern reg = Pattern.compile("^(127\\.0\\.0\\.1)|(localhost)|(10\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})|(172\\.((1[6-9])|(2\\d)|(3[01]))\\.\\d{1,3}\\.\\d{1,3})|(192\\.168\\.\\d{1,3}\\.\\d{1,3})$");
     Matcher match = reg.matcher(url);
     Boolean a = match.find();
     return a;
 }
+
 // 不允许跳转或判断跳转
 HttpURLConnection conn = (HttpURLConnection) u.openConnection();
-conn.setInstanceFollowRedirects(false); // 不允许重定向
+conn.setInstanceFollowRedirects(false); // 不允许重定向或者对重定向后的地址做二次判断
 conn.connect();
                     </textarea>
                 </div>
