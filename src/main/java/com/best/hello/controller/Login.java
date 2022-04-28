@@ -18,10 +18,11 @@ public class Login {
     String user = "admin";
     String pass = "admin";
 
+    @ApiOperation(value = "登录")
     @RequestMapping("/user/login")
     public String login(@RequestParam("username") String username, @RequestParam("password") String password, @RequestParam("captcha") String captcha, Model model, HttpSession session, HttpServletRequest request) {
         if (!CaptchaUtil.ver(captcha, request)) {
-            CaptchaUtil.clear(request);  // 清除session中的验证码，没效果
+            CaptchaUtil.clear(request);
             model.addAttribute("msg", "验证码不正确");
             return "login";
         }
@@ -30,12 +31,11 @@ public class Login {
             session.setAttribute("LoginUser", username);
             return "redirect:/index";
         } else {
-            model.addAttribute("msg", "用户名或者密码错误"); //显示错误信息
+            model.addAttribute("msg", "用户名或者密码错误");
             return "login";
         }
     }
 
-    // 注销
     @ApiOperation(value = "注销")
     @GetMapping("/user/logout")
     public String logout(HttpSession session) {
