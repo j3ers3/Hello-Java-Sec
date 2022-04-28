@@ -24,7 +24,6 @@
 - [x] Xstream
 - [x] Log4shell
 - [x] JNDI
-- [x] 越权
 - [x] Dos
 - [ ] more
 

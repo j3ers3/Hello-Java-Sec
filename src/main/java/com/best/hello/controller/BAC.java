@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
-@Api("越权访问")
 @Slf4j
 @RestController
 @RequestMapping("/BAC")
