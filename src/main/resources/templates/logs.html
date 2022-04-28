@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
+
+<body>
+<!-- 顶部导航栏 -->
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边栏 -->
+        <div th:replace="~{commons/commons::siderbar(active='logs.html')}"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div class="vul_header">
+                <span>登录日志</span>
+            </div>
+            <hr>
+
+            <div class="col-md-4">
+                <form role="search" th:action="@{/admin/logs/search}" method="get">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="q" placeholder="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-success" type="submit">搜索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <table class="table table-striped table-bordered table-sm">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>用户名</th>
+                    <th>登录IP</th>
+                    <th>登录时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="l:${logs}">
+                    <td th:text="${l.getId()}"></td>
+                    <td th:text="${l.getUser()}"></td>
+                    <td th:text="${l.getIP()}"></td>
+                    <td th:text="${l.getDate()}"></td>
+                    <td>
+                        <a class="btn btn-sm btn-danger" th:href="@{/admin/logs/del/{id}(id=${l.getId()})}">删除</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+
+
+        </main>
+    </div>
+</div>
+
+<!-- 引入script -->
+<div th:replace="~{commons/commons::script}"></div>
+
+
+</body>
+</html>

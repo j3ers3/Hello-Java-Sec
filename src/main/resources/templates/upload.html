@@ -17,27 +17,48 @@
                 <a class="btn btn-sm btn-primary" target="_blank" href="">漏洞案例</a>
             </div>
             <hr>
-            <div class="dec shadow-sm p-3 mb-4 rounded">文件上传漏洞，是指用户上传了一个可执行的脚本文件(如jsp\php\asp)，并通过此脚本文件获得了执行服务器端命令的能力。常见场景是web服务器允许用户上传图片或者普通文本文件保存，这种漏洞属于低成本高杀伤力</div>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
+                </li>
+            </ul>
 
-
-            <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
-            <textarea disabled="disabled" class="form-control p-2 mb-5 rounded" id="coder">
+            <div class="tab-content">
+                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
+                    文件上传漏洞，是指用户上传了一个可执行的脚本文件(如jsp\php\asp)，并通过此脚本文件获得了执行服务器端命令的能力。常见场景是web服务器允许用户上传图片或者普通文本文件保存，这种漏洞属于低成本高杀伤力
+                </div>
+                <div class="tab-pane fade" id="bb">
+                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder"
+                              style="height: 220px;">
 【必须】文件类型限制
-必须在服务器端采用白名单方式对上传或下载的文件类型、大小进行严格的限制。仅允许业务所需文件类型上传，避免上传.jsp、.jspx、.html、.exe等文件
-            </textarea>
+ 必须在服务器端采用白名单方式对上传或下载的文件类型、大小进行严格的限制。仅允许业务所需文件类型上传，避免上传.jsp、.jspx、.html、.exe等危险文件。
+
+【建议】其他
+ 对上传的文件回显相对路径或者不显示路径。
+ 设置目录权限限制，禁止上传目录的执行权限。
+ 建议使用OSS静态存储服务器来存储用户上传的文件
+                    </textarea>
+                </div>
+            </div>
+
             <hr>
-            <div th:if="${message}" >
+
+            <div th:if="${message}">
                 <span style="color:red" th:text="${message}"/>
                 <hr>
             </div>
 
             <div class="box-float">
                 <div class="float1">
-                    <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5><br>
                     <form method="POST" th:action="@{/UPLOAD/uploadVul}" enctype="multipart/form-data">
-                        <input type="file" name="file" />
-                        <input type="submit" class="btn btn-sm btn-danger" value="上传" />
-                    </form><br>
+                        <input type="file" name="file"/>
+                        <input type="submit" class="btn btn-sm btn-danger" value="上传"/>
+                    </form>
+                    <br>
 
                     <textarea class="form-control" id="code1">
 // 允许上传任意文件导致的安全风险
@@ -59,11 +80,12 @@ public String singleFileUpload(@RequestParam("file") MultipartFile file, Redirec
                 </div>
 
                 <div class="float2">
-                    <h5><span class="lnr lnr-smile"> 安全代码 - 白名单</span></h5>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 白名单</span></h5><br>
                     <form method="POST" th:action="@{/UPLOAD/uploadSafe}" enctype="multipart/form-data">
-                        <input type="file" name="file" />
-                        <input type="submit" class="btn btn-sm btn-success" value="上传" />
-                    </form><br>
+                        <input type="file" name="file"/>
+                        <input type="submit" class="btn btn-sm btn-success" value="上传"/>
+                    </form>
+                    <br>
                     <textarea class="form-control" id="code2">
 // 对上传文件后缀名做白名单处理
 

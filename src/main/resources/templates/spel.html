@@ -17,15 +17,29 @@
                 <a class="btn btn-sm btn-primary" target="_blank" href="">漏洞案例</a>
             </div>
             <hr>
-            <div class="dec shadow-sm p-3 mb-4 rounded">SpEL（Spring Expression Language）表达式注入, 是一种功能强大的表达式语言、用于在运行时查询和操作对象图，由于未对参数做过滤可造成任意命令执行。
-            </div>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
+                </li>
+            </ul>
 
-            <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
-            <textarea disabled="disabled" class="form-control p-3 mb-5 rounded" id="coder">
+            <div class="tab-content">
+                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
+                    SpEL（Spring Expression Language）表达式注入, 是一种功能强大的表达式语言、用于在运行时查询和操作对象图，由于未对参数做过滤可造成任意命令执行。
+                </div>
+                <div class="tab-pane fade" id="bb">
+                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder"
+                              style="height: 180px;">
 web view层通常通过模板技术或者表达式引擎来实现界面与业务数据分离，比如jsp中的EL表达式。这些引擎通常可执行敏感操作，如果外部不可信数据未经过滤拼接到表达式中进行解析，则可能造成严重漏洞。
 应避免外部输入的内容拼接到EL表达式或其他表达式引起、模板引擎进行解析。
 白名单过滤外部输入，仅允许字符、数字、下划线等。
-            </textarea>
+                    </textarea>
+                </div>
+            </div>
+
             <hr>
 
             <div class="box-float">

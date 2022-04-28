@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
+
+<body>
+<!-- 顶部导航栏 -->
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边栏 -->
+        <div th:replace="~{commons/commons::siderbar(active='csrf.html')}"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div class="vul_header">
+                <span>XSS漏洞</span>
+                <a class="btn btn-sm btn-primary" target="_blank" href="#">漏洞案例</a>
+            </div>
+            <h3></h3>
+            <hr>
+            <div class="dec shadow-sm p-3 mb-4 rounded">CSRF是指跨站请求伪造（Cross-site request forgery）
+            </div>
+
+            <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
+            <textarea disabled="disabled" class="form-control p-2 mb-5 rounded" id="coder">
+【必须】部署CSRF防御机制
+ 对于可重放的敏感操作请求，需部署CSRF防御机制，参考如下两种CSRF防御方式：
+ 设置CSRF Token
+ 服务端给合法的客户颁发CSRF Token，客户端在发送请求时携带该token供服务端校验，服务端拒绝token验证不通过的请求。以此来防止第三方构造合法的恶意操作链接。Token的作用域可以是Request级或者Session级。
+ CSRF Token应具备随机性，保证其不可预测和枚举。另外由于浏览器会自动对表单所访问的域名添加相应的cookie信息，所以CSRF Token不应该通过Cookie传输。
+
+ 校验Referer头
+ 通过检查HTTP请求的Referer字段是否属于本站域名，非本站域名的请求进行拒绝。
+ 这种校验方式需要注意两点：
+     1.要需要处理Referer为空的情况，当Referer为空则拒绝请求
+     2.注意避免例如qq.com.evil.com 部分匹配的情况。
+            </textarea>
+            <hr>
+
+            <div class="box-float">
+                <div class="float1">
+                    <a style="float:right" class="btn btn-sm btn-danger"
+                       th:href="@{/XSS/reflect?content=test<script>alert(1)</script>}">运行</a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
+
+                    <textarea class="form-control" id="code1">
+
+                    </textarea><br><br>
+
+                    <a style="float:right" class="btn btn-sm btn-success text-right"
+                       th:href="@{/XSS/escape?content=test<script>alert(1)</script>}">运行</a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - htmlEscape方法</span></h5>
+
+                    <textarea class="form-control" id="code2">
+
+                    </textarea>
+                </div>
+
+                <div class="float2">
+
+                    <a style="float:right" class="btn btn-sm btn-success text-right"
+                       th:href="@{/XSS/filter?content=test<script>alert(1)</script>}">运行</a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 自定义过滤</span></h5>
+                    <textarea class="form-control" id="code3">
+
+                    </textarea><br><br>
+
+
+                </div>
+
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- 引入script -->
+<div th:replace="~{commons/commons::script}"></div>
+
+
+</body>
+
+</html>

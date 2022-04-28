@@ -17,30 +17,40 @@
                 <a class="btn btn-sm btn-primary" target="_blank" href="">漏洞案例</a>
             </div>
             <hr>
-            <div class="dec shadow-sm p-3 mb-4 rounded">SSRF(Server-Side Request Forgery) 服务器端请求伪造，是一种由攻击者构造形成由服务端发起请求的一个安全漏洞。
+
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
+                    SSRF(Server-Side Request Forgery) 服务器端请求伪造，是一种由攻击者构造形成由服务端发起请求的一个安全漏洞。
+                </div>
+                <div class="tab-pane fade" id="bb">
+                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder" style="height: 160px;">
+【必须】避免直接访问不可信地址
+1.服务器访问不可信地址时，禁止访问私有地址段及内网域名。
+2.建议通过URL解析函数进行解析，获取host或者domain后通过DNS获取其IP，然后和内网地址进行比较。
+3.对已校验通过地址进行访问时，应关闭跟进跳转功能。
+                    </textarea>
+                </div>
             </div>
 
-            <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
-            <textarea disabled="disabled" class="form-control p-2 mb-5 rounded" id="coder">
-【必须】避免直接访问不可信地址
-服务器访问不可信地址时，禁止访问私有地址段及内网域名。
-建议通过URL解析函数进行解析，获取host或者domain后通过DNS获取其IP，然后和内网地址进行比较。
-对已校验通过地址进行访问时，应关闭跟进跳转功能。
-            </textarea>
             <hr>
 
             <div class="box-float">
                 <div class="float1">
 
                     <a style="float:right" class="btn btn-sm btn-danger"
-                       th:href="@{/SSRF/URLConnection?url=file:///etc/passwd}">运行</a>
+                       th:href="@{/SSRF/URLConnection?url=file:///etc/passwd}"> 运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - URLConnection方式</span></h5>
                     <textarea class="form-control" id="code1">
 // url参数没做限制，可调用URLConnection发起任意请求，比如请求内网，或使用file等协议读取文件
-@GetMapping("/URLConnection")
-public String URLConnection(String url) {
-    return Http.URLConnection(url);
-}
 
 public static String URLConnection(String url) {
     try {
@@ -69,11 +79,11 @@ public static String URLConnection(String url) {
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - 短链接绕过</span></h5>
                     <textarea class="form-control" id="code2">
 // SSRF修复经常碰到的问题，虽然过滤了内网地址，但通过短链接跳转的方式可以绕过
-@GetMapping("/URLConnection/safe")
+
 public String URLConnectionSafe(String url) {
     if (!Security.is_http(url)){
         return "不允许非http/https协议!!!";
-    }else if (Security.is_intranet(url)) {
+    }else if (Security.isIntranet(url)) {
         return "不允许访问内网!!!";
     }else{
         return Http.URLConnection(url);

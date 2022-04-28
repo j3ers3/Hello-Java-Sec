@@ -24,7 +24,7 @@ public class Security {
     public static boolean isIntranet(String url) {
         Pattern reg = Pattern.compile("^(127\\.0\\.0\\.1)|(localhost)|(10\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})|(172\\.((1[6-9])|(2\\d)|(3[01]))\\.\\d{1,3}\\.\\d{1,3})|(192\\.168\\.\\d{1,3}\\.\\d{1,3})$");
         Matcher match = reg.matcher(url);
-        Boolean a = match.find();
+        boolean a = match.find();
         return a;
     }
 
@@ -53,8 +53,8 @@ public class Security {
         } catch (URISyntaxException e) {
             System.out.print(e);
         }
+        assert uri != null;
         String host = uri.getHost().toLowerCase();
-        System.out.println(host);
 
         return url_list.contains(host);
 
@@ -73,9 +73,9 @@ public class Security {
 
     public static boolean checkSql(String content) {
         String black = "'|;|--|+|,|%|=|>|<|*|(|)|and|or|exec|insert|select|delete|update|count|drop|chr|mid|master|truncate|char|declare";
-        String[] black_list = black.split("|");
-        for (int i = 0; i < black_list.length; i++) {
-            if (content.contains(black_list[i])) {
+        String[] black_list = black.split("\\|");
+        for (String s : black_list) {
+            if (content.contains(s)) {
                 return true;
             }
         }
@@ -95,6 +95,11 @@ public class Security {
             }
         }
         return false;
+    }
+
+    public static boolean checkXXE(String content) {
+        String black = "ENTITY";
+        return content.toUpperCase().contains(black);
     }
 
 }

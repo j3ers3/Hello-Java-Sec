@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
+
+<body>
+<!-- 顶部导航栏 -->
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边栏 -->
+        <div th:replace="~{commons/commons::siderbar(active='dos.html')}"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div class="vul_header">
+                <span>DoS漏洞</span>
+            </div>
+            <hr>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
+                    DoS是Denial of Service的简称，即拒绝服务，造成DoS的攻击行为被称为DoS攻击，其目的是使计算机或网络无法提供正常的服务。
+                </div>
+                <div class="tab-pane fade" id="bb">
+                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder" style="height: 100px;">
+
+                    </textarea>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="box-float">
+                <div class="float1">
+                    <a style="float:right" class="btn btn-sm btn-danger"
+                       href="/DoS/redos/vul?content=aaaaaaaaaaaaaaaaaaaa">运行</a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
+
+                    <textarea class="form-control" id="code1">
+// Pattern.matches造成的ReDoS
+// PoC: vul?contnet=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab
+
+public String vul(String content) {
+
+    boolean match = Pattern.matches("(a|aa)+", content);
+    return String.format("正则匹配：%s，正则表达式拒绝服务攻击", match);
+}
+                    </textarea>
+
+                </div>
+
+                <div class="float2">
+
+                    <a style="float:right" class="btn btn-sm btn-success"
+                       href="/DoS/redos/safe?content=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab">运行</a>
+                    <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
+                    <textarea class="form-control" id="code2">
+public String safe(String content) {
+    boolean match = com.google.re2j.Pattern.matches("(a|aa)+", content);
+    return String.format("正则匹配：%s，安全正则表达式", match);
+}
+                    </textarea>
+                </div>
+
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- 引入script -->
+<div th:replace="~{commons/commons::script}"></div>
+
+
+</body>
+
+</html>

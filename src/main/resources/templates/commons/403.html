@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
+
+<body>
+
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div th:replace="~{commons/commons::siderbar}"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+      <pre>
+        403 没权限
+      </pre>
+        </main>
+    </div>
+</div>
+
+<!-- 引入script -->
+<div th:replace="~{commons/commons::script}"></div>
+
+
+</body>
+</html>

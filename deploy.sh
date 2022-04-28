@@ -1,0 +1,1 @@
+docker build -t javasec . && docker run -d -p 80:8888 -v /opt/javasec/logs:/logs javasec

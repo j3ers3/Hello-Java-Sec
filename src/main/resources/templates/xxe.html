@@ -18,16 +18,31 @@
             </div>
             <hr>
 
-            <div class="dec shadow-sm p-3 mb-4 rounded">XXE (XML External Entity Injection), XML外部实体注入，当开发人员配置其XML解析功能允许外部实体引用时，攻击者可利用这一可引发安全问题的配置方式，实施任意文件读取、内网端口探测、命令执行、拒绝服务等攻击。
-            </div>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
+                </li>
+            </ul>
 
-            <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
-            <textarea disabled="disabled" class="form-control p-2 mb-5 rounded" id="coder">
+            <div class="tab-content">
+                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
+                    XXE (XML External Entity Injection),
+                    XML外部实体注入，当开发人员配置其XML解析功能允许外部实体引用时，攻击者可利用这一可引发安全问题的配置方式，实施任意文件读取、内网端口探测、命令执行、拒绝服务等攻击。
+                </div>
+                <div class="tab-pane fade" id="bb">
+                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder"
+                              style="height: 180px;">
 【必须】XML解析器关闭DTD解析
  读取外部传入XML文件时，XML解析器初始化过程中设置关闭DTD解析。
- 如：
+ 参考示例:
  xxx.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-            </textarea>
+                    </textarea>
+                </div>
+            </div>
+
             <hr>
 
             <div class="box-float">

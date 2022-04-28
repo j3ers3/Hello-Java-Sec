@@ -5,15 +5,11 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-/**
- * 视图跳转
- */
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        // 路由 -> 视图.html
-        registry.addViewController("/").setViewName("login");
+        registry.addViewController("/").setViewName("index");
         registry.addViewController("/login").setViewName("login");
         registry.addViewController("/index").setViewName("index");
         registry.addViewController("/index/xss").setViewName("xss");
@@ -33,17 +29,24 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addViewController("/index/password").setViewName("password");
         registry.addViewController("/index/xstream").setViewName("xstream");
         registry.addViewController("/index/fastjson").setViewName("fastjson");
+        registry.addViewController("/index/admin").setViewName("logs");
+        registry.addViewController("/index/xff").setViewName("xff");
+        registry.addViewController("/index/unauth").setViewName("unauth");
+        registry.addViewController("/index/jackson").setViewName("jackson");
+        registry.addViewController("/index/log4j").setViewName("log4j");
+        registry.addViewController("/index/jndi").setViewName("jndi");
+        registry.addViewController("/index/csrf").setViewName("csrf");
+        registry.addViewController("/index/dos").setViewName("dos");
+        registry.addViewController("/index/cors").setViewName("cors");
+        registry.addViewController("/index/captcha").setViewName("captcha_vul");
 
     }
 
-    /**
-     * 拦截器，判断是否登录成功
-     * todo
-     */
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginHandlerInterceptor())
                 .addPathPatterns("/**")
-                .excludePathPatterns("/user/login", "/login", "/", "/css/**", "/js/**", "/img/**");
+                .excludePathPatterns("/user/login", "/user/ldap", "/login", "/css/**", "/js/**", "/img/**", "/Unauth/**", "/captcha");
     }
 }

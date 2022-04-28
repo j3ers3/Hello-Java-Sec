@@ -37,4 +37,9 @@ public interface UserMapper {
     @Select("select * from users")
     List<User> list();
 
+    // 模糊搜索，直接'%#{q}%' 会报错
+    // 安全代码：@Select("select * from users where user like concat('%',#{q},'%')")
+    @Select("select * from users where user like '%${q}%'")
+    List<User> search(String q);
+
 }

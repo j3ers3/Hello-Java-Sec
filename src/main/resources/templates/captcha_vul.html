@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
+
+<body>
+<!-- 顶部导航栏 -->
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边栏 -->
+        <div th:replace="~{commons/commons::siderbar(active='captcha_vul.html')}"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div class="vul_header">
+                <span>验证码复用</span>
+            </div>
+            <hr>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
+                    验证码反复利用，可以直接进行暴力破解。（这是一类常见的安全问题）<br>
+                    一般来说，验证码是与Session绑定的，Session生成时，也伴随着验证码的生成和绑定，在访问页面时，接口的请求和验证码的生成通常是异步进行的，这使得两个功能变得相对独立。也就意味着我们如果仅请求接口，而不触发验证码的生成，那么验证码就不会变化。
+
+                    并且在考虑安全时，开发人员的关注点往往在 验证码校验 是否通过，通过则进入业务流程，不通过则重新填写，而忽视了这个用户是否按照既定的业务流程在走（接口访问与验证码生成是否同时进行），验证码是否被多次使用了。
+                </div>
+                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded fade" id="bb">
+                    不管验证码是不是输入正确，都应该及时销毁验证码。
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="box-float">
+                <div class="float1">
+                    <a style="float:right" class="btn btn-sm btn-danger"
+                       href="#">运行</a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
+
+                    <textarea class="form-control" id="code1">
+ // 未清除session中的验证码，导致可复用
+
+ if (!CaptchaUtil.ver(captcha, request)) {
+     model.addAttribute("msg", "验证码不正确");
+     return "login";
+ }
+                    </textarea>
+
+                </div>
+
+                <div class="float2">
+
+                    <a style="float:right" class="btn btn-sm btn-success"
+                       href="#">运行</a>
+                    <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
+                    <textarea class="form-control" id="code2">
+// 不管账号正确与否，一次请求后都清掉验证码
+
+request.getSession().removeAttribute("captcha");
+                    </textarea>
+                </div>
+
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- 引入script -->
+<div th:replace="~{commons/commons::script}"></div>
+
+
+</body>
+
+</html>

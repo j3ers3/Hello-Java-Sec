@@ -14,42 +14,66 @@
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
             <div class="vul_header">
                 <span>越权访问</span>
-                <a class="btn btn-sm btn-primary" target="_blank" href="">漏洞案例</a>
+                <a class="btn btn-sm btn-primary" target="_blank" href="#">漏洞案例</a>
             </div>
             <hr>
-            <div class="dec shadow-sm p-3 mb-4   rounded">失效的访问控制（Broken Access Control），应用在检查授权时存在纰漏，使得攻击者在获得低权限用户账户后，利用一些方式绕过权限检查，访问或者操作其他用户或者更高权限。越权漏洞的成因主要是因为开发人员在对数据进行增、删、改、查询时对客户端请求的数据过分相信而遗漏了权限的判定，一旦权限验证不充分，就易致越权漏洞。
-            </div>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
+                </li>
+            </ul>
 
-
-            <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
-            <textarea disabled="disabled" class="form-control p-2 mb-5 rounded" id="coder">
+            <div class="tab-content">
+                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
+                    失效的访问控制（Broken Access
+                    Control），应用在检查授权时存在纰漏，使得攻击者在获得低权限用户账户后，利用一些方式绕过权限检查，访问或者操作其他用户或者更高权限。越权漏洞的成因主要是因为开发人员在对数据进行增、删、改、查询时对客户端请求的数据过分相信而遗漏了权限的判定，一旦权限验证不充分，就易致越权漏洞。
+                </div>
+                <div class="tab-pane fade" id="bb">
+                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder"
+                              style="height: 180px;">
 【必须】权限校验
- 对于非公共操作，应当校验当前访问账号进行操作权限（常见于CMS）和数据权限校验。
+ 对于非公共操作，应当校验当前访问账号进行操作权限和数据权限校验。
  1. 验证当前用户的登录态
  2. 从可信结构中获取经过校验的当前请求账号的身份信息（如：session）。禁止从用户请求参数或Cookie中获取外部传入不可信用户身份直接进行查询。
  3. 校验当前用户是否具备该操作权限
- 4. 校验当前用户是否具备所操作数据的权限。避免越权。
-            </textarea>
+ 4. 校验当前用户是否具备所操作数据的权限，避免越权。
+                    </textarea>
+                </div>
+            </div>
+
             <hr>
 
             <div class="box-float">
                 <div class="float1">
                     <a style="float:right" class="btn btn-sm btn-danger"
-                       href="#">运行</a>
+                       href="/BAC/vul/info?name=admin">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
 
                     <textarea class="form-control" id="code1">
-// 高频且危害巨大的漏洞
-// todo
+// 未做权限控制，通过遍历name参数可查询任意用户信息
+@GetMapping("/vul/info")
+public List<User> vul(String name) {
+    return userMapper.queryByUser(name);
+}
                     </textarea>
                 </div>
 
                 <div class="float2">
                     <a style="float:right" class="btn btn-sm btn-success"
-                       href="#">运行</a>
+                       href="/BAC/safe/info?name=admin">运行</a>
                     <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
                     <textarea class="form-control" id="code2">
-todo
+// 只允许查询当前用户信息
+public String safe(String name, HttpSession session) {
+    if (session.getAttribute("LoginUser").equals(name)) {
+        return userMapper.queryByUser(name);
+    } else {
+        return String.format("当前登录：%s，只能查询自己的信息", session.getAttribute("LoginUser"));
+    }
+}
                     </textarea>
                 </div>
             </div>

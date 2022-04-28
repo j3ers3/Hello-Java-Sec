@@ -14,12 +14,33 @@
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
             <div class="vul_header">
                 <span>Actuator未授权访问</span>
-                <a class="btn btn-sm btn-primary" target="_blank" href="">漏洞案例</a>
+                <a class="btn btn-sm btn-primary" target="_blank" href="#">漏洞案例</a>
             </div>
             <hr>
-            <div class="dec shadow-sm p-3 mb-4  rounded">Actuator, 是Spring Boot提供的服务监控和管理中间件，默认配置会出现接口未授权访问，部分接口会泄露网站流量信息和内存信息等，使用Jolokia库特性甚至可以远程执行任意代码，获取服务器权限。</div>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
+                </li>
+            </ul>
 
-            <br>
+            <div class="tab-content">
+                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
+                    Actuator, 是Spring
+                    Boot提供的服务监控和管理中间件，默认配置会出现接口未授权访问，部分接口会泄露网站流量信息和内存信息等，使用Jolokia库特性甚至可以远程执行任意代码，获取服务器权限。
+                </div>
+                <div class="tab-pane fade" id="bb">
+                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder"
+                              style="height: 120px;">
+【建议】
+ 禁止对外开放不安全的接口
+                    </textarea>
+                </div>
+            </div>
+
+            <hr>
 
             <div class="box-float">
                 <div class="float1">
@@ -30,7 +51,7 @@
                     <textarea class="form-control" name="code" id="code1">
 # 不安全的配置：Actuator设置全部暴露
 management.endpoints.web.exposure.include=*
-                    </textarea> <br>
+                    </textarea> <br><br>
                 </div>
 
                 <div class="float2">
@@ -38,8 +59,8 @@ management.endpoints.web.exposure.include=*
                        href="">运行</a>
                     <h5><span class="lnr lnr-smile"> 安全配置</span></h5>
                     <textarea class="form-control" name="code" id="code2">
-1. 禁用接口 management.endpoints.enabled-by-default=false
-2. 或使用spring security加个认证
+方案一、禁用接口 management.endpoints.enabled-by-default=false
+方案二、使用spring security加个认证
                     </textarea>
                 </div>
             </div>

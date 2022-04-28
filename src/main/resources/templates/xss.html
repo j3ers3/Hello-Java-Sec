@@ -18,24 +18,39 @@
             </div>
             <h3></h3>
             <hr>
-            <div class="dec shadow-sm p-3 mb-4 rounded">XSS(Cross Site
-                Scripting) 跨站脚本攻击，攻击者插入恶意Script代码,当用户浏览该页之时,嵌入其中Web里面的Script代码会被执行,从而达到恶意攻击用户的目的。
-            </div>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
+                </li>
+            </ul>
 
-            <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
-            <textarea disabled="disabled" class="form-control p-2 mb-5 rounded" id="coder">
+            <div class="tab-content">
+                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
+                    XSS(Cross Site
+                    Scripting) 跨站脚本攻击，攻击者插入恶意Script代码,当用户浏览该页之时,嵌入其中Web里面的Script代码会被执行,从而达到恶意攻击用户的目的。
+                </div>
+                <div class="tab-pane fade" id="bb">
+                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder" style="height: 260px;">
 【必须】外部输入拼接到response页面前进行编码处理
- 当响应“content-type”为“html”类型时，外部输入拼接到响应包中，需根据输出位置进行编码处理,需要对以下6个特殊字符进行HTML实体编码(&, <, >, ", ',/)
+ 当响应“content-type”为“html”类型时，外部输入拼接到响应包中，需根据输出位置进行编码处理,需要对以下6个特殊字符进行HTML实体编码(&, <, >, ", ',/)，也可参考或直接使用业界已有成熟第三方库如ESAPI。
+
+【必须】设置正确的HTTP响应包类型
+ 响应包的HTTP头“Content-Type”必须正确配置响应包的类型，禁止非HTML类型的响应包设置为“text/html”。此举会使浏览器在直接访问链接时，将非HTML格式的返回报文当做HTML解析，增加反射型XSS的触发几率。
 
 【建议】设置安全的HTTP响应头
  控制用户登录鉴权的Cookie字段 应当设置HttpOnly属性以防止被XSS漏洞/JavaScript操纵泄漏。
-            </textarea>
+                    </textarea>
+                </div>
+            </div>
             <hr>
 
             <div class="box-float">
                 <div class="float1">
                     <a style="float:right" class="btn btn-sm btn-danger"
-                       th:href="@{/XSS/reflect?content=test<script>alert(1)</script>}">运行</a>
+                       th:href="@{/XSS/reflect?content=test<script>alert(/xss/)</script>}">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
 
                     <textarea class="form-control" id="code1">
@@ -98,6 +113,15 @@ public static String safe3(String content) {
            .addProtocols("img", "src", "http", "https")  // img的src属性只允许http和https开头
            .addProtocols("a", "href", "http", "https");
     return Jsoup.clean(content, whitelist);
+}
+                    </textarea><br><br>
+
+                    <a style="float:right" class="btn btn-sm btn-success text-right"
+                       th:href="@{/XSS/esapi?content=aaa<img%20src=1%20onerror=alert(1)>}">运行</a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - ESAPI</span></h5>
+                    <textarea class="form-control" id="code5">
+public static String safe4(String content){
+    return ESAPI.encoder().encodeForHTML(content);
 }
                     </textarea>
                 </div>

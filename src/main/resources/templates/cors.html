@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
+
+<body>
+<!-- 顶部导航栏 -->
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边栏 -->
+        <div th:replace="~{commons/commons::siderbar(active='cors.html')}"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div class="vul_header">
+                <span>CORS</span>
+            </div>
+            <hr>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
+                    CORS(Cross-origin resource sharing),即跨域资源共享，用于绕过SOP（同源策略）来实现跨域资源访问的一种技术。
+                    CORS漏洞则是利用CORS技术窃取用户敏感数据，CORS漏洞的成因是服务端配置的规则不当所导致的，服务器端没有配置Access-Control-Allow-Origin等字段
+                </div>
+                <div class="tab-pane fade" id="bb">
+                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder" style="height: 100px;">
+配置Access-Control-Allow-Origin字段
+                    </textarea>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="box-float">
+                <div class="float1">
+                    <a style="float:right" class="btn btn-sm btn-danger"
+                       href="/CORS/vul">运行</a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
+
+                    <textarea class="form-control" id="code1">
+public String corsVul(HttpServletRequest request, HttpServletResponse response) {
+        String origin = request.getHeader("origin");
+        response.setHeader("Access-Control-Allow-Origin", origin);
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+        return "cors vul";
+}
+                    </textarea>
+
+                </div>
+
+                <div class="float2">
+                    <a style="float:right" class="btn btn-sm btn-success"
+                       href="/CORS/safe">运行</a>
+                    <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
+                    <textarea class="form-control" id="code2">
+@CrossOrigin(origins = {"127.0.0.1", "http://127.0.0.1", "https://127.0.0.1"})
+                    </textarea>
+                </div>
+
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- 引入script -->
+<div th:replace="~{commons/commons::script}"></div>
+
+
+</body>
+
+</html>

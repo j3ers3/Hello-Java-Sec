@@ -17,14 +17,27 @@
                 <a class="btn btn-sm btn-primary" target="_blank" href="">漏洞案例</a>
             </div>
             <hr>
-            <div class="dec shadow-sm p-3 mb-4   rounded">SSTI(Server Side Template Injection) 服务器模板注入, 服务端接收了用户的输入，将其作为 Web
-                应用模板内容的一部分，在进行目标编译渲染的过程中，执行了用户插入的恶意内容。
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
+                    SSTI(Server Side Template Injection) 服务器模板注入, 服务端接收了用户的输入，将其作为 Web
+                    应用模板内容的一部分，在进行目标编译渲染的过程中，执行了用户插入的恶意内容。
+                </div>
+                <div class="tab-pane fade" id="bb">
+                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder" style="height: 100px;">
+null
+                    </textarea>
+                </div>
             </div>
 
-            <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
-            <textarea disabled="disabled" class="form-control p-3 mb-5 rounded" id="coder">
-todo
-            </textarea>
             <hr>
 
             <div class="box-float">

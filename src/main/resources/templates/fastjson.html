@@ -16,13 +16,27 @@
                 <span>组件漏洞 - Fastjson反序列化</span>
             </div>
             <hr>
-            <div class="dec shadow-sm p-3 mb-4 rounded">fastjson是阿里巴巴的开源JSON解析库，它可以解析JSON格式的字符串，支持将Java Bean序列化为JSON字符串，也可以从JSON字符串反序列化到JavaBean，历史上存在多个反序列化漏洞。
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
+                    fastjson是阿里巴巴的开源JSON解析库，它可以解析JSON格式的字符串，支持将Java Bean序列化为JSON字符串，也可以从JSON字符串反序列化到JavaBean，历史上存在多个反序列化漏洞。
+                </div>
+                <div class="tab-pane fade" id="bb">
+                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder" style="height: 140px;">
+方案一、对于第三方依赖组件，需要及时更新版本
+方案二、通过配置以下参数开启 SafeMode 来防护攻击：ParserConfig.getGlobalInstance().setSafeMode(true)
+                    </textarea>
+                </div>
             </div>
 
-            <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
-            <textarea disabled="disabled" class="form-control p-3 mb-5 rounded" id="coder">
-对于第三方依赖组件，需要及时更新版本
-            </textarea>
             <hr>
 
             <div class="box-float">

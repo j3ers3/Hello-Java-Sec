@@ -18,16 +18,31 @@
             </div>
             <hr>
 
-            <div class="dec shadow-sm p-3 mb-4 rounded">路径穿越（目录遍历）,
-                应用系统在处理下载文件时未对文件进行过滤，系统后台程序程序中如果不能正确地过滤客户端提交的../和./之类的目录跳转符，攻击者可以通过输入../进行目录跳转，从而下载、删除任意文件。
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
+                    目录遍历,
+                    应用系统在处理下载文件时未对文件进行过滤，系统后台程序程序中如果不能正确地过滤客户端提交的../和./之类的目录跳转符，攻击者可以通过输入../进行目录跳转，从而下载、删除任意文件。
+                </div>
+                <div class="tab-pane fade" id="bb">
+                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder" style="height: 160px;">
+【必须】避免路径拼接
+ 1. 文件目录避免外部参数拼接。
+ 2. 保存文件目录建议后台写死并对文件名进行校验（字符类型、长度）。
+ 3. 建议文件保存时，将文件名替换为随机字符串。
+ 如因业务需要不能满足1.2.3的要求，需判断请求文件名和文件路径参数中是否存在../或..\(windows)， 如存在应判定路径非法并拒绝请求。
+                    </textarea>
+                </div>
             </div>
 
-            <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
-            <textarea disabled="disabled" class="form-control p-2 mb-5 rounded" id="coder">
-【建议】避免路径拼接
-文件目录避免外部参数拼接。保存文件目录建议后台写死并对文件名进行校验（字符类型、长度）。建议文件保存时，将文件名替换为随机字符串。
-如因业务需要不能满足1.2.3的要求，文件路径、文件命中拼接了不可行数据，需判断请求文件名和文件路径参数中是否存在../或..\(windows)， 如存在应判定路径非法并拒绝请求。
-            </textarea>
             <hr>
 
             <div class="box-float">

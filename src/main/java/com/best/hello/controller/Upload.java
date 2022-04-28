@@ -1,5 +1,8 @@
 package com.best.hello.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -9,6 +12,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+@Api("上传漏洞")
+@Slf4j
 @Controller
 @RequestMapping("/UPLOAD")
 public class Upload {
@@ -22,10 +27,7 @@ public class Upload {
         return "upload";
     }
 
-    /**
-     * @vul 上传文件，未做任何处理
-     * @poc http://127.0.0.1:8888/UPLOAD/vul
-     */
+    @ApiOperation(value = "vul：上传任意文件")
     @PostMapping("/uploadVul")
     public String singleFileUpload(@RequestParam("file") MultipartFile file,
                                    RedirectAttributes redirectAttributes) {
@@ -43,9 +45,9 @@ public class Upload {
                 Files.createDirectories(dir);
             }
             Files.write(path, bytes);
-            System.out.println("[+] 上传文件成功：" + path);
+            log.info("[vul] 上传文件：" + path);
             redirectAttributes.addFlashAttribute("message",
-                    "上传文件成功：" + path + "");
+                    "上传成功：" + path + " （不要将绝对路径暴露出来！）");
 
         } catch (Exception e) {
             return e.toString();
@@ -54,10 +56,7 @@ public class Upload {
     }
 
 
-    /**
-     * @safe 白名单后缀名处理
-     * @poc http://127.0.0.1:8888/UPLOAD/safe
-     */
+    @ApiOperation(value = "safe：白名单后缀名处理")
     @PostMapping("/uploadSafe")
     public String singleFileUploadSafe(@RequestParam("file") MultipartFile file,
                                        RedirectAttributes redirectAttributes) {
@@ -73,6 +72,7 @@ public class Upload {
             Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
 
             // 获取文件后缀名，并且索引到最后一个，避免使用.jpg.jsp来绕过
+            assert fileName != null;
             String Suffix = fileName.substring(fileName.lastIndexOf("."));
 
             String[] SuffixSafe = {".jpg", ".png", ".jpeg", ".gif", ".bmp", ".ico"};
@@ -86,7 +86,7 @@ public class Upload {
                 }
             }
 
-            System.out.println("[*] 尝试上传文件：" + fileName);
+            log.info("[safe] 上传漏洞-白名单模式：" + fileName);
 
             if (!flag) {
                 redirectAttributes.addFlashAttribute("message",

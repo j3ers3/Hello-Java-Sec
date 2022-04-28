@@ -16,13 +16,27 @@
                 <span>组件漏洞 - XStream反序列化</span>
             </div>
             <hr>
-            <div class="dec shadow-sm p-3 mb-4 rounded">XStream是一个简单的基于Java库，Java对象序列化到XML，历史上存在多个反序列化漏洞。
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
+                    XStream是一个简单的基于Java库，Java对象序列化到XML，历史上存在多个反序列化漏洞。
+                </div>
+                <div class="tab-pane fade" id="bb">
+                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder" style="height: 180px;">
+方案一、对于第三方依赖组件，需要及时更新版本
+方案二、1.4.10后可启用默认安全配置，setupDefaultSecurity
+                    </textarea>
+                </div>
             </div>
 
-            <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
-            <textarea disabled="disabled" class="form-control p-3 mb-5 rounded" id="coder">
-对于第三方依赖组件，需要及时更新版本
-            </textarea>
             <hr>
 
             <div class="box-float">
@@ -47,7 +61,6 @@ public String vul(@RequestBody String content) {
                        href="/XStream/safe">运行</a>
                     <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
                     <textarea class="form-control" id="code2">
-// 尽量升级最新版本来解决漏洞，次方案是使用如下配置
 public String vul(@RequestBody String content) {
     XStream xs = new XStream();
     // 修复：1.4.10后可用，启用默认安全配置

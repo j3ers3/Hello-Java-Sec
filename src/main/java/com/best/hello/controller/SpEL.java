@@ -1,5 +1,8 @@
 package com.best.hello.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
@@ -14,8 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * SpEL Injection (Spring 表达式注入)
  * @date 2021/06/24
+ *
+ * 审计的函数
+ *      1. SpelExpressionParser
+ *      2. getValue
  */
 
+@Api("Spring 表达式注入")
+@Slf4j
 @RestController
 @RequestMapping("/SPEL")
 public class SpEL {
@@ -35,7 +44,7 @@ public class SpEL {
         // 2. 解析表达式: 使用ExpressionParser的parseExpression来解析相应的表达式为Expression对象
         // 3. 求值：通过 Expression 接口的 getValue 方法根据上下文获得表达式值
         String result = parser.parseExpression(ex).getValue(evaluationContext).toString();
-        System.out.println(result);
+        log.info("[vul] SPEL");
         return result;
     }
 

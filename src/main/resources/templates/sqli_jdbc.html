@@ -18,31 +18,45 @@
                 <a class="btn btn-sm btn-primary" target="_blank" href="">漏洞案例</a>
             </div>
             <hr>
-            <div class="dec shadow-sm p-3 mb-4   rounded">SQLI(SQL Injection)，
-                SQL注入是因为程序未能正确对用户的输入进行检查，将用户的输入以拼接的方式带入SQL语句，导致了SQL注入的产生。攻击者可通过SQL注入直接获取数据库信息，造成信息泄漏。<br>
-                JDBC有两个方法执行SQL语句，分别是PrepareStatement和Statement。
-            </div>
 
-            <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
-            <textarea disabled="disabled" class="form-control p-3 mb-5 rounded" id="coder">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
+                    SQLI(SQL Injection)，
+                    SQL注入是因为程序未能正确对用户的输入进行检查，将用户的输入以拼接的方式带入SQL语句，导致了SQL注入的产生。攻击者可通过SQL注入直接获取数据库信息，造成信息泄漏。<br>
+                    JDBC有两个方法执行SQL语句，分别是PrepareStatement和Statement。
+                </div>
+                <div class="tab-pane fade" id="bb">
+                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder"
+                              style="height: 180px;">
 【必须】SQL语句默认使用预编译并绑定变量
  Web后台系统应默认使用预编译绑定变量的形式创建sql语句，保持查询语句和数据相分离。以从本质上避免SQL注入风险。
 
 【必须】屏蔽异常栈
  应用程序出现异常时，禁止将数据库版本、数据库结构、操作系统版本、堆栈跟踪、文件名和路径信息、SQL 查询字符串等对攻击者有用的信息返回给客户端。建议重定向到一个统一、默认的错误提示页面，进行信息过滤。
-            </textarea>
+                    </textarea>
+                </div>
+            </div>
+
             <hr>
 
             <div class="box-float">
                 <div class="float1">
                     <a style="float:right" class="btn btn-sm btn-danger"
-                       href="/SQLI/jdbc?id=1' and updatexml(1,concat(0x7e,(SELECT user()),0x7e),1)--%20+">运行</a>
+                       href="/SQLI/JDBC/vul1?id=1' and updatexml(1,concat(0x7e,(SELECT user()),0x7e),1)--%20+">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - 语句拼接(Statement)</span></h5>
 
                     <textarea class="form-control" id="code1">
 // 采用原始的Statement拼接语句，导致漏洞产生
-// PoC： /SQLI/jdbc?id=1' and updatexml(1,concat(0x7e,(SELECT user()),0x7e),1)--%20+
-@RequestMapping("/jdbc")
+
 public String jdbcVul(String id) {
     StringBuilder result = new StringBuilder();
     try {
@@ -60,23 +74,15 @@ public String jdbcVul(String id) {
             String info = String.format("查询结果 %s: %s", res_name, res_pass);
             result.append(info);
         }
-        rs.close();
-        conn.close();
-
-    } catch (Exception e) {
-        // 输出错误页面，可被进行报错回显，更有利于攻击者注入
-        return e.toString();
-    }
-    return result.toString();
-}
                     </textarea><br><br>
 
                     <a style="float:right" class="btn btn-sm btn-danger"
-                       href="/SQLI/jdbc/vul/pre?id=2%20or%201=1">运行</a>
+                       href="/SQLI/JDBC/vul2?id=2%20or%201=1">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - 语句拼接(PrepareStatement)</span></h5>
 
                     <textarea class="form-control" id="code2">
 // PrepareStatement会对SQL语句进行预编译，但有时开发者为了便利，直接采取拼接的方式构造SQL，此时进行预编译也无用。
+
 Connection conn = DriverManager.getConnection(db_url, db_user, db_pass);
 String sql = "select * from users where id = " + id;
 PreparedStatement st = conn.prepareStatement(sql);
@@ -87,25 +93,13 @@ ResultSet rs = st.executeQuery();
 
                 <div class="float2">
                     <a style="float:right" class="btn btn-sm btn-success"
-                       href="/SQLI/jdbc/pre?id=1'">运行</a>
-                    <h5><span class="lnr lnr-smile"> 安全代码 - 正确预编译</span></h5>
-
-                    <textarea class="form-control" id="code3">
-// 正确的使用PrepareStatement可以有效避免SQL注入，使用？作为占位符
-Connection conn = DriverManager.getConnection(db_url, db_user, db_pass);
-Statement stmt = conn.createStatement();
-String sql = "select * from users where id = ?";
-PreparedStatement st = conn.prepareStatement(sql);
-st.setString(1, id);
-ResultSet rs = st.executeQuery();
-                    </textarea><br><br>
-
-                    <a style="float:right" class="btn btn-sm btn-success"
-                       href="/SQLI/jdbc/filter?id=1'">运行</a>
+                       href="/SQLI/JDBC/safe2?id=1'">运行</a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - 过滤方法</span></h5>
                     <textarea class="form-control" id="code4">
-public static boolean check_sql(String content) {
-    String black = "'|;|--|+|,|%|=|*|(|)|like|xor|and|or|exec|insert|select|delete|update|count|drop|chr|mid|master|truncate|char|declare";
+// 采用黑名单过滤危险字符，同时也容易误伤（次方案）
+
+public static boolean checkSql(String content) {
+    String black = "'|;|--|+|,|%|=|*|(|)|like|xor|and|or|exec|insert|select|delete|update|count|drop|chr|mid|master|truncate|char|declare｜sleep|abs|rand|union";
     String[] black_list = black.split("|");
     for (int i=0 ; i < black_list.length ; i++ ){
         if (content.contains(black_list[i])){
@@ -114,7 +108,35 @@ public static boolean check_sql(String content) {
     }
     return false;
 }
+                    </textarea><br><br>
+
+                    <a style="float:right" class="btn btn-sm btn-success"
+                       href="/SQLI/JDBC/safe1?id=1'">运行</a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 预编译</span></h5>
+
+                    <textarea class="form-control" id="code3">
+// 正确的使用PrepareStatement可以有效避免SQL注入，使用？作为占位符，进行参数化查询
+
+String sql = "select * from users where id = ?";
+PreparedStatement st = conn.prepareStatement(sql);
+st.setString(1, id);
+ResultSet rs = st.executeQuery();
+                    </textarea><br><br>
+
+                    <a style="float:right" class="btn btn-sm btn-success"
+                       href="/SQLI/JDBC/safe3?id=1'">运行</a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - ESAPI安全框架</span></h5>
+                    <textarea class="form-control" id="code5">
+// ESAPI (OWASP企业安全应用程序接口)是一个免费、开源的、网页应用程序安全控件库，它使程序员能够更容易写出更低风险的程序
+
+Codec<Character> oracleCodec = new OracleCodec();
+
+Statement stmt = conn.createStatement();
+String sql = "select * from users where id = '" + ESAPI.encoder().encodeForSQL(oracleCodec, id) + "'";
+
+ResultSet rs = stmt.executeQuery(sql);
                     </textarea>
+
                 </div>
             </div>
         </main>

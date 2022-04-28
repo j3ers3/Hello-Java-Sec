@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
+
+<body>
+<!-- 顶部导航栏 -->
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边栏 -->
+        <div th:replace="~{commons/commons::siderbar(active='xff.html')}"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div class="vul_header">
+                <span>X-Forwarded-For地址伪造</span>
+            </div>
+            <h3></h3>
+            <hr>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
+                    X-Forwarded-For地址伪造，很多Web应用需要获取用户的IP，通过IP伪造可以绕过一些安全限制。
+                </div>
+                <div class="tab-pane fade" id="bb">
+                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder" style="height: 180px;">
+没有使用代理的情况下，直接从 getRemoteAddr() 获取目标真实IP
+使用nginx等反向代理的情况下，由于在客户端和服务之间增加了中间层，因此服务器无法直接拿到客户端的 IP，这时取 X-Forwarded-For 中第一个IP
+                    </textarea>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="box-float">
+                <div class="float1">
+                    <a style="float:right" class="btn btn-sm btn-danger"
+                       th:href="@{/XFF/vul}">运行</a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
+
+                    <textarea class="form-control" id="code1">
+public static String vul(HttpServletRequest request) {
+    String ip2 = request.getHeader("X-Forwarded-For");
+    if(!Objects.equals(ip2, "127.0.0.1")) {
+        return  "禁止访问，只允许本地IP！";
+    } else {
+        return "success，你的IP：" + ip2;
+    }
+}
+                    </textarea><br><br>
+                </div>
+
+                <div class="float2">
+                    <a style="float:right" class="btn btn-sm btn-success text-right"
+                       th:href="@{/XFF/remote}">运行</a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 不使用代理</span></h5>
+
+                    <textarea class="form-control" id="code2">
+// 不使用代理情况下，RemoteAddr获取真实IP
+public static String remote(HttpServletRequest request) {
+    String ip = request.getRemoteAddr();
+    return "RemoteAddr: " + ip;
+}
+                    </textarea><br><br>
+
+                    <a style="float:right" class="btn btn-sm btn-success text-right"
+                       th:href="@{/XFF/proxy}">运行</a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 代理情况下</span></h5>
+                    <textarea class="form-control" id="code3">
+todo
+                    </textarea><br><br>
+
+
+                </div>
+
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- 引入script -->
+<div th:replace="~{commons/commons::script}"></div>
+
+
+</body>
+
+</html>

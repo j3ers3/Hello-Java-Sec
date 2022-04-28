@@ -1,5 +1,5 @@
 # ☕️ Hello Java Sec ![Stage](https://img.shields.io/badge/Release-DEV-brightgreen.svg)
-> Java漏洞平台，结合漏洞代码和安全编码，帮助研发同学理解和减少漏洞
+> Java漏洞平台，结合漏洞代码和安全编码，帮助研发同学理解和减少漏洞，代码仅供参考
 
 ![](media/16304933749187.jpg)
 
@@ -22,7 +22,10 @@
 - [x] Actuator
 - [x] Fastjson
 - [x] Xstream
-- [ ] 越权
+- [x] Log4shell
+- [x] JNDI
+- [x] 越权
+- [x] Dos
 - [ ] more
 
 ![](media/16304936834843.jpg)
@@ -44,6 +47,10 @@ mvn clean package -DskipTests
 java -jar target/hello-1.0.0-SNAPSHOT.jar
 ```
 
+### Docker
+```
+bash deploy.sh
+```
 
 ## 技术架构
 - Java 1.8

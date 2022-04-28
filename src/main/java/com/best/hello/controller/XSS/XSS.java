@@ -1,12 +1,16 @@
-package com.best.hello.controller;
+package com.best.hello.controller.XSS;
 
 import com.best.hello.util.Security;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.HtmlUtils;
+import org.owasp.esapi.ESAPI;
 
 /**
  * XSS漏洞
@@ -15,42 +19,37 @@ import org.springframework.web.util.HtmlUtils;
  * @date 2021/6/29
  */
 
+@Api("XSS漏洞")
+@Slf4j
 @RestController
 @RequestMapping("/XSS")
 public class XSS {
 
-    /**
-     * 反射型XSS
-     *
-     * @poc http://127.0.0.1:8888/XSS/reflect?content=<img/src=1 onerror=alert(1)>
-     */
+    @ApiOperation(value = "vul: 反射型XSS")
     @GetMapping("/reflect")
     public static String reflect(String content) {
-        System.out.println("[vul] 执行xss");
+        log.info("[vul] 反射型XSS：" + content);
         return content;
     }
 
 
-    /**
-     * @safe 方案一、采用自带函数HtmlUtils.htmlEscape()来过滤
-     */
+    @ApiOperation(value = "safe: 采用实体编码", notes = "采用自带函数HtmlUtils.htmlEscape()来过滤")
     @GetMapping("/escape")
     public static String safe1(String content) {
+        log.info("[safe] htmlEscape实体编码：" + content);
         return HtmlUtils.htmlEscape(content);
     }
 
 
-    /**
-     * @safe 方案二、自己做一个XssFilter, 基于转义的方式
-     */
+    @ApiOperation(value = "safe: 过滤特殊字符", notes = "做filterXss方法, 基于转义的方式")
     @GetMapping("/filter")
     public static String safe2(String content) {
+        log.info("[safe] xss过滤：" + content);
         return Security.filterXss(content);
     }
 
-    /**
-     * @safe 富文本情况下，做黑白名单
-     */
+
+    @ApiOperation(value = "safe: 富文本过滤", notes = "采用Jsoup做富文本过滤")
     @GetMapping("/whitelist")
     public static String safe3(String content) {
         Whitelist whitelist = (new Whitelist())
@@ -58,6 +57,16 @@ public class XSS {
                 .addAttributes("a", "href", "title") // 设置标签允许的属性, 避免如nmouseover属性
                 .addProtocols("img", "src", "http", "https")  // img的src属性只允许http和https开头
                 .addProtocols("a", "href", "http", "https");
+        log.info("[safe] 富文本过滤：" + content);
         return Jsoup.clean(content, whitelist);
     }
+
+
+    @ApiOperation(value = "safe: ESAPI", notes = "采用ESAPI过滤")
+    @GetMapping("/esapi")
+    public static String safe4(String content) {
+        log.info("[safe] ESAPI：" + content);
+        return ESAPI.encoder().encodeForHTML(content);
+    }
+
 }
