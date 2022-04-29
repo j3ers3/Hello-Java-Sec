@@ -49,16 +49,6 @@ public class SSTI {
         System.out.println("Retrieving " + document);
     }
 
-    /*
-     * velocity模板引擎被是springboot2.0已经遗弃
-     */
-    @GetMapping("/velocity")
-    public String velocity(Map map) {
-        map.put("message", "获取用户信息");
-        map.put("name", "张三");
-        map.put("age", "24");
-        return "velocity";
-    }
 
 
 }

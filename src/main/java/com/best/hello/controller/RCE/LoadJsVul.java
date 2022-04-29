@@ -28,9 +28,6 @@ public class LoadJsVul {
     @GetMapping("/vul")
     public String jsEngine(String url) {
         try {
-            // 通过脚本名称获取
-            // ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
-            // 通过文件扩展名获取
             ScriptEngine engine = new ScriptEngineManager().getEngineByExtension("js");
 
             // Bindings：用来存放数据的容器

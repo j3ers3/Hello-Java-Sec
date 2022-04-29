@@ -53,17 +53,4 @@ public class RuntimeVul {
         }
     }
 
-
-    @ApiOperation(value = "safe：这种方式不存在命令执行")
-    @RequestMapping("/safe")
-    public static void safe(String cmd) {
-        String test = ";echo 1 > 1.txt";
-        String Command = "ping 127.0.0.1" + test;
-
-        try {
-            Runtime.getRuntime().exec(Command);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

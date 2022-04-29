@@ -23,7 +23,7 @@ public class JNDI {
         log.info("[vul] JNDI注入：" + content);
 
         try {
-            //String payload = "rmi://127.0.0.1:1099/beu8rp";
+            // String payload = "rmi://127.0.0.1:1099/beu8rp";
             // lookup：通过名字检索执行的对象，当lookup()方法的参数可控时，攻击者便能提供一个恶意的url地址来加载恶意类。
 
             Context ctx = new InitialContext();

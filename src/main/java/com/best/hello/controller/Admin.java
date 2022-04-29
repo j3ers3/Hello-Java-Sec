@@ -18,7 +18,6 @@ import java.util.Map;
 @RequestMapping("/admin")
 public class Admin {
 
-
     @ApiOperation(value = "查询系统基本信息")
     @GetMapping("/info")
     @ResponseBody

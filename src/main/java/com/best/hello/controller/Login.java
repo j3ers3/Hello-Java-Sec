@@ -21,6 +21,8 @@ public class Login {
     @ApiOperation(value = "登录")
     @RequestMapping("/user/login")
     public String login(@RequestParam("username") String username, @RequestParam("password") String password, @RequestParam("captcha") String captcha, Model model, HttpSession session, HttpServletRequest request) {
+
+        // 验证码复用
         if (!CaptchaUtil.ver(captcha, request)) {
             CaptchaUtil.clear(request);
             model.addAttribute("msg", "验证码不正确");

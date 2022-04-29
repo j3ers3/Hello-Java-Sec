@@ -33,7 +33,6 @@ public class FastjsonVul {
             JSONObject jsonToObject = JSON.parseObject(content);
             log.info("[vul] Fastjson");
 
-            // 获取ob中name字段;
             return jsonToObject.get("name").toString();
 
         } catch (Exception e) {

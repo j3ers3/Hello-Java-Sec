@@ -27,20 +27,16 @@ public class Traversal {
     @ApiOperation(value = "vul：任意文件下载")
     @GetMapping("/download")
     public String download(String filename, HttpServletRequest request, HttpServletResponse response) {
-        // 下载的文件路径
         String filePath = System.getProperty("user.dir") + "/logs/" + filename;
         log.info("[vul] 目录遍历：" + filePath);
 
-        // 使用流的形式下载文件
         try {
-            // 加载文件
             File file = new File(filePath);
             InputStream fis = new BufferedInputStream(new FileInputStream(file));
             byte[] buffer = new byte[fis.available()];
             fis.read(buffer);
             fis.close();
 
-            // 设置response的Header
             response.reset();
             response.addHeader("Content-Disposition", "attachment;filename=" + filename);
             response.addHeader("Content-Length", "" + file.length());

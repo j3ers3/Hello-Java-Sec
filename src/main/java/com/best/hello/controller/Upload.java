@@ -18,7 +18,6 @@ import java.nio.file.Paths;
 @RequestMapping("/UPLOAD")
 public class Upload {
 
-    // 设置保存文件的路径，不安全的web路径下
     private static final String UPLOADED_FOLDER = System.getProperty("user.dir") + "/src/main/resources/static/file/";
 
 

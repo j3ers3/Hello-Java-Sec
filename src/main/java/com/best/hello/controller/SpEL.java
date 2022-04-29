@@ -29,9 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/SPEL")
 public class SpEL {
     /**
-     * 算数运算：http://127.0.0.1:8888/SPEL/vul?ex=100*2
-     * 对象实例化: http://127.0.0.1:8888/SPEL/vul?ex=new%20java.util.Date().getTime()
-     * T(Type): 使用“T(Type)”来表示java.lang.Class实例，同样，只有java.lang 下的类才可以省略包名
      * 执行命令：http://127.0.0.1:8888/SPEL/vul?ex=T(java.lang.Runtime).getRuntime().exec(%22open%20-a%20Calculator%22)
      */
     @GetMapping("/vul")

@@ -22,14 +22,6 @@ public class XMLDecoderVul {
      * XMLDecoder 是JDK的一个对象转XML的工具。所以本质上 XMLEncoder 与 XMLDecoder 也是一种序列化（编码）与反序列化（解码）的操作。
      * XMLDecoder在JDK 1.4~JDK 11中都存在反序列化漏洞安全风险。攻击者可以通过此漏洞远程执行恶意代码来入侵服务器。在项目中应禁止使用XMLDecoder方式解析XML内容
      * 在weblogic中多个包（wls-wast、wls9_async_response、_async）使用了该类
-     * <p>
-     * XML 标签属性介绍
-     * - java 标签：表示使用的 Java 版本信息 以及创建该 XML 文档所使用的类
-     * - object 标签：表示对象，class 指对象具体的类型
-     * - void 标签：表示函数调用、赋值等操作，method 指定具体的方法名称
-     * - int 标签：表示数值类型
-     * - string 标签：表示字符串
-     * - array 标签：表示数组，class 表示数组的类型，length 表示数组的长度，内部 void 标签的 index 属性表示数组的索引值
      */
 
     public static void main(String[] args) {
