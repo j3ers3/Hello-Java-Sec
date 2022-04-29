@@ -2,7 +2,7 @@ FROM java:8
 
 VOLUME /tmp
 
-ADD javasec.jar app.jar
+ADD ./target/javasec-1.7.jar app.jar
 
 EXPOSE 8888
 

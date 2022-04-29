@@ -39,6 +39,7 @@ spring.datasource.password=1234567
 ```
 
 ### Jar
+> JDK 1.8环境
 ```
 git clone https://github.com/j3ers3/Hello-Java-Sec
 cd Hello-Java-Sec
@@ -48,8 +49,11 @@ java -jar target/hello-1.0.0-SNAPSHOT.jar
 
 ### Docker
 ```
-bash deploy.sh
+mvn clean package
+./deploy.sh
 ```
+![](media/16512152886514.jpg)
+
 
 ## 技术架构
 - Java 1.8
