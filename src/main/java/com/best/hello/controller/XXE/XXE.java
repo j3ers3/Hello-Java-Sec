@@ -123,20 +123,18 @@ public class XXE {
      */
     @ApiOperation(value = "vul：DocumentBuilder类", notes = "带回显")
     @RequestMapping(value = "/DocumentBuilder")
-    public String DocumentBuilder(@RequestBody String content) {
+    public String DocumentBuilder(@RequestParam String content) {
         try {
             // DocumentBuilderFactory是用于创建DOM模式的解析器对象,newInstance方法会根据本地平台默认安装的解析器，自动创建一个工厂的对象并返回。
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            // dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            StringReader sr = new StringReader(content);
-            InputSource is = new InputSource(sr);
-            Document document = builder.parse(is);
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            // 修复：禁用外部实体
+            //docFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+            Document doc = docBuilder.parse(new InputSource(new StringReader(content)));
 
-            // 获取<person>标签名
-            NodeList nodeList = document.getElementsByTagName("person");
-            Element element = (Element) nodeList.item(0);
-            return String.format("姓名: %s", element.getElementsByTagName("name").item(0).getFirstChild().getNodeValue());
+            NodeList RegistrationNo = doc.getElementsByTagName("foo");
+
+            return RegistrationNo.item(0).getFirstChild().getNodeValue();
 
         } catch (Exception e) {
             return e.toString();
