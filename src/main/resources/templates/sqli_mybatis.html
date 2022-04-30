@@ -58,7 +58,7 @@
 
             <div class="box-float">
                 <div class="float1">
-                    <a style="float:right" class="btn btn-sm btn-danger"
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
                        href="/SQLI/MyBatis/vul/order?field=id%20and%20(updatexml(1,concat(0x7e,(select%20user())),0))&sort=desc">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - order by 注入</span></h5>
 
@@ -101,7 +101,7 @@ List<User> search(String q);
                 </div>
 
                 <div class="float2">
-                    <a style="float:right" class="btn btn-sm btn-success"
+                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
                        href="/SQLI/MyBatis/safe/order?field=id">运行</a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - 排序映射</span></h5>
                     <textarea class="form-control" id="code3">
@@ -121,7 +121,7 @@ List<User> search(String q);
 </select>
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-success"
+                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
                        href="/SQLI/MyBatis/safe/id/1">运行</a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - 强制类型</span></h5>
                     <textarea class="form-control" id="code4">
@@ -131,7 +131,7 @@ List<User> search(String q);
 List<User> queryById2(@Param("id") Integer id);
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-success"
+                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
                        href="/SQLI/MyBatis/safe/query?user=admin">运行</a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - #{}</span></h5>
                     <textarea class="form-control" id="code5">

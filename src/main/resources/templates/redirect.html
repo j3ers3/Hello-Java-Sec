@@ -44,7 +44,7 @@
 
             <div class="box-float">
                 <div class="float1">
-                    <a style="float:right" class="btn btn-sm btn-danger"
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
                        th:href="@{/Redirect/vul?url=https://www.baidu.com}">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
 
@@ -56,7 +56,7 @@ public String vul(String url) {
 }
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-danger"
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
                        th:href="@{/Redirect/vul2?url=www.baidu.com}">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
 
@@ -68,7 +68,7 @@ public ModelAndView vul2(String url) {
 }
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-danger"
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
                        th:href="@{/Redirect/vul3?url=https://www.baidu.com}">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
 
@@ -84,7 +84,7 @@ public void vul3(String url, HttpServletResponse response) throws IOException {
                 </div>
 
                 <div class="float2">
-                    <a style="float:right" class="btn btn-sm btn-success"
+                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
                        href="/Redirect/safe?url=http://www.evil.com">运行</a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - 白名单模式</span></h5>
                     <textarea class="form-control" name="code" id="code4">

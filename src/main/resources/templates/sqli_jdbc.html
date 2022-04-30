@@ -50,7 +50,7 @@
 
             <div class="box-float">
                 <div class="float1">
-                    <a style="float:right" class="btn btn-sm btn-danger"
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
                        href="/SQLI/JDBC/vul1?id=1' and updatexml(1,concat(0x7e,(SELECT user()),0x7e),1)--%20+">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - 语句拼接(Statement)</span></h5>
 
@@ -76,7 +76,7 @@ public String jdbcVul(String id) {
         }
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-danger"
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
                        href="/SQLI/JDBC/vul2?id=2%20or%201=1">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - 语句拼接(PrepareStatement)</span></h5>
 
@@ -92,7 +92,7 @@ ResultSet rs = st.executeQuery();
                 </div>
 
                 <div class="float2">
-                    <a style="float:right" class="btn btn-sm btn-success"
+                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
                        href="/SQLI/JDBC/safe2?id=1'">运行</a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - 过滤方法</span></h5>
                     <textarea class="form-control" id="code4">
@@ -110,7 +110,7 @@ public static boolean checkSql(String content) {
 }
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-success"
+                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
                        href="/SQLI/JDBC/safe1?id=1'">运行</a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - 预编译</span></h5>
 
@@ -123,7 +123,7 @@ st.setString(1, id);
 ResultSet rs = st.executeQuery();
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-success"
+                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
                        href="/SQLI/JDBC/safe3?id=1'">运行</a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - ESAPI安全框架</span></h5>
                     <textarea class="form-control" id="code5">
