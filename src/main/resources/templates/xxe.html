@@ -47,7 +47,7 @@
 
             <div class="box-float">
                 <div class="float1">
-                    <a style="float:right" class="btn btn-sm btn-danger"
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
                        th:href="@{/XXE/XMLReader}">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - XMLReader</span></h5>
                     <textarea class="form-control" id="code1">
@@ -65,7 +65,7 @@ public String XMLReader(@RequestBody String content) {
 }
                     </textarea> <br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-danger"
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
                        th:href="@{/XXE/SAXBuilder}">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - SAXReader</span></h5>
                     <textarea class="form-control" id="code2">
@@ -75,7 +75,7 @@ SAXReader sax = new SAXReader();
 sax.read(new InputSource(new StringReader(content)));
                     </textarea> <br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-danger"
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
                        th:href="@{/XXE/SAXBuilder}">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - SAXBuilder</span></h5>
                     <textarea class="form-control" id="code3">
@@ -95,16 +95,17 @@ public String SAXBuilder(@RequestBody String content) {
                 </div>
 
                 <div class="float2">
-                    <a style="float:right" class="btn btn-sm btn-danger"
-                       th:href="@{/XXE/DocumentBuilder}">运行</a>
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                       th:href="@{/XXE/DocumentBuilder?content=%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22ISO-8859-1%22%3F%3E%3C%21DOCTYPE%20foo%20%5B%20%20%20%3C%21ELEMENT%20foo%20ANY%20%3E%20%20%3C%21ENTITY%20xxe%20SYSTEM%20%22file%3A%2F%2F%2Fc%3A%2Fwindows%2Fsystem.ini%22%20%3E%5D%3E%3Cfoo%3E%26xxe%3B%3C%2Ffoo%3E}">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - DocumentBuilder</span></h5>
                     <textarea class="form-control" id="code4">
-DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-// 修复: dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-DocumentBuilder builder = factory.newDocumentBuilder();
+DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+// 修复：禁用外部实体
+//docFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-danger"
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
                        th:href="@{/XXE/unmarshaller}">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - Unmarshaller</span></h5>
                     <textarea class="form-control" id="code5">

@@ -43,7 +43,7 @@ null
             <div class="box-float">
                 <div class="float1">
 
-                    <a style="float:right" class="btn btn-sm btn-danger" href="/SSTI/doc/__${T(java.lang.Runtime).getRuntime().exec('open -a Calculator')}__::.x">运行</a>
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank" href="/SSTI/doc/__${T(java.lang.Runtime).getRuntime().exec('open -a Calculator')}__::.x">运行</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
                     <textarea class="form-control" name="code" id="code1">
  /**
@@ -61,7 +61,7 @@ null
                 </div>
 
                 <div class="float2">
-                    <a style="float:right" class="btn btn-sm btn-success" href="/SSTI/doc/safe/__${T(java.lang.Runtime).getRuntime().exec('open -a Calculator')}__::.x">运行</a>
+                    <a style="float:right" class="btn btn-sm btn-success" target="_blank" href="/SSTI/doc/safe/__${T(java.lang.Runtime).getRuntime().exec('open -a Calculator')}__::.x">运行</a>
                     <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
                     <textarea class="form-control" name="code" id="code2">
  // 由于controller的参数被设置为HttpServletResponse，Spring认为它已经处理了HTTP Response，因此不会发生视图名称解析
