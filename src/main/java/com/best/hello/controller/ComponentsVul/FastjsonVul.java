@@ -20,11 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/Fastjson")
 public class FastjsonVul {
 
-    /**
-     * 触发条件：Fastjson版本小于等于1.2.24、Java版本小于8u121(?)
-     * @poc {"@type":"java.net.Inet4Address","val":"a.8d5tv8.dnslog.cn"}
-     *
-     */
     @RequestMapping(value = "/vul", method = {RequestMethod.POST})
     public String vul(@RequestBody String content) {
 

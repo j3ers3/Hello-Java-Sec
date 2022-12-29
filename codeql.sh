@@ -1,0 +1,2 @@
+codeql database create javasec  --language="java"  --command="mvn clean install --file pom.xml" --source-root=./Hello-Java-Sec
+codeql database analyze javasec /CodeQL/ql/java/ql/src/codeql-suites/java-security-extended.qls --format=csv --output=codeql.csv

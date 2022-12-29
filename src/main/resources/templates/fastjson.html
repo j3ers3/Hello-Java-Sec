@@ -39,22 +39,27 @@
 
             <hr>
 
+
             <div class="box-float">
                 <div class="float1">
-                    <a style="float:right" class="btn btn-sm btn-danger"
-                       href="/Fastjson/vul">运行</a>
+                    <form style="float:right" onsubmit="submitJSON()">
+                        <input class="btn btn-sm btn-danger" type="submit" value="运行">
+                    </form>
                     <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
 
                     <textarea class="form-control" id="code1">
-// 使用了低版本，存在漏洞
-// poc: {"@type":"java.net.Inet4Address","val":"8d5tv8.dnslog.cn"}
+// 使用低版本并且用到反序列化
+
+public String vul(@RequestBody String content) {
+    Object obj = JSON.parse(content);
+    return obj.toString();
+}
 
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>fastjson</artifactId>
     <version>1.2.24</version>
 </dependency>
-
                     </textarea>
 
                 </div>
@@ -63,14 +68,20 @@
 
                     <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
                     <textarea class="form-control" id="code2">
-// 尽量升级最新版本来解决漏洞
+// 在1.2.68之后的版本，Fastjson增加了safeMode的支持，开启后可完全禁用autoType，注意评估对业务的影响。
+// https://github.com/alibaba/fastjson/wiki/fastjson_safemode
+
+public String safe1(@RequestBody String content) {
+    ParserConfig.getGlobalInstance().setSafeMode(true);
+    Object obj = JSON.parse(content);
+    return obj.toString()
+}
 
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>fastjson</artifactId>
     <version>最新版</version>
 </dependency>
-
                     </textarea>
                 </div>
 
@@ -81,6 +92,21 @@
 
 <!-- 引入script -->
 <div th:replace="~{commons/commons::script}"></div>
+
+<script>
+    function submitJSON() {
+        const json = JSON.stringify({
+            "@type": "com.best.hello.entity.Person",
+            "age": 19,
+            "id": 2,
+            "name": "test"
+        });
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/Fastjson/vul', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(json);
+    }
+</script>
 
 
 </body>

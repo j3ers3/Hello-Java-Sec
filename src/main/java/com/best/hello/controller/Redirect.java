@@ -3,7 +3,8 @@ package com.best.hello.controller;
 import com.best.hello.util.Security;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,10 +21,10 @@ import java.io.IOException;
  * 3. setHeader
  */
 @Api("重定向漏洞")
-@Slf4j
 @Controller
 @RequestMapping("/Redirect")
 public class Redirect {
+    Logger log = LoggerFactory.getLogger(Redirect.class);
 
     // http://127.0.0.1:8888/Redirect/vul?url=http://www.baidu.com
     @ApiOperation(value = "vul: Spring Redirect")
@@ -54,6 +55,7 @@ public class Redirect {
     @GetMapping("/safe")
     @ResponseBody
     public String safe(String url) {
+        log.info("[safe] 安全重定向");
         if (Security.isWhite(url)) {
             return "安全域名：" + url;
         } else {

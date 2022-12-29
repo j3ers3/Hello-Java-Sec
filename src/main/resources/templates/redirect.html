@@ -14,12 +14,12 @@
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
             <div class="vul_header">
                 <span>开放重定向</span>
-                <a class="btn btn-sm btn-primary" target="_blank" href="">漏洞案例</a>
             </div>
             <hr>
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span>
+                        漏洞描述</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
@@ -31,7 +31,8 @@
                     开放重定向漏洞，是指后台服务器在告知浏览器跳转时,未对客户端传入的重定向地址进行合法性校验,导致用户浏览器跳转到钓鱼页面的一种漏洞<br>出现场景：用户登录、统一身份认证等需要跳转的地方
                 </div>
                 <div class="tab-pane fade" id="bb">
-                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder" style="height: 180px;">
+                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder"
+                              style="height: 180px;">
 【必须】避免不可信域名的302跳转
  如果对外部传入域名进行302跳转，必须设置可信域名列表并对传入域名进行校验。
 
@@ -45,10 +46,15 @@
             <div class="box-float">
                 <div class="float1">
                     <a style="float:right" class="btn btn-sm btn-danger"
-                       th:href="@{/Redirect/vul?url=https://www.baidu.com}">运行</a>
+                       th:href="@{/Redirect/vul?url=https://www.baidu.com}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
 
-                    <textarea class="form-control" id="code1">
+                    <label for="code1"></label><textarea class="form-control" id="code1">
 // 满足参数url可控，且未做限制
 
 public String vul(String url) {
@@ -57,10 +63,15 @@ public String vul(String url) {
                     </textarea><br><br>
 
                     <a style="float:right" class="btn btn-sm btn-danger"
-                       th:href="@{/Redirect/vul2?url=www.baidu.com}">运行</a>
+                       th:href="@{/Redirect/vul2?url=www.baidu.com}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
 
-                    <textarea class="form-control" id="code2">
+                    <label for="code2"></label><textarea class="form-control" id="code2">
 // ModelAndView
 
 public ModelAndView vul2(String url) {
@@ -69,10 +80,15 @@ public ModelAndView vul2(String url) {
                     </textarea><br><br>
 
                     <a style="float:right" class="btn btn-sm btn-danger"
-                       th:href="@{/Redirect/vul3?url=https://www.baidu.com}">运行</a>
+                       th:href="@{/Redirect/vul3?url=https://www.baidu.com}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
 
-                    <textarea class="form-control" id="code3">
+                    <label for="code3"></label><textarea class="form-control" id="code3">
 // response.sendRedirect
 
 public void vul3(String url, HttpServletResponse response) throws IOException {
@@ -85,9 +101,14 @@ public void vul3(String url, HttpServletResponse response) throws IOException {
 
                 <div class="float2">
                     <a style="float:right" class="btn btn-sm btn-success"
-                       href="/Redirect/safe?url=http://www.evil.com">运行</a>
+                       href="/Redirect/safe?url=http://www.evil.com">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - 白名单模式</span></h5>
-                    <textarea class="form-control" name="code" id="code4">
+                    <label for="code4"></label><textarea class="form-control" name="code" id="code4">
 public static boolean isWhite(String url) {
     List<String> url_list = new ArrayList<String>();
     url_list.add("baidu.com");

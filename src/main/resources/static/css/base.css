@@ -23,7 +23,7 @@ body {
 .sidebar-sticky {
     #position: sticky;
     top: 48px; /* Height of navbar */
-    height: calc(100vh - 48px);
+    height: calc(100vh - 20px); /* 侧边栏底部 */
     padding-top: 48px;
     overflow-x: hidden;
     overflow-y: auto;
@@ -65,15 +65,16 @@ body {
     top: 5px;
     font-size: 12px;
     line-height: 1.1;
+}
+
+.sidebar .nav > li > a[aria-expanded="true"] .icon-submenu {
     transform: rotate(-90deg);
 }
 
-.sidebar .nav > li > a[data-toggle="collapse"].collapsed .icon-submenu {
-    -moz-transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
-    -webkit-transform: rotate(0deg);
+.sidebar .nav > li > a[aria-expanded="false"] .icon-submenu {
     transform: rotate(0deg);
 }
+
 
 /* 子菜单 */
 .sidebar .nav .nav {
@@ -89,7 +90,7 @@ body {
 }
 
 .sidebar .nav .nav > li > a:focus, .sidebar .nav .nav > li > a.active {
-    background-color: transparent;
+    #background-color: transparent;
     border-left-color: transparent;
 }
 
@@ -114,9 +115,10 @@ body {
     background-color: transparent;
 }
 
-.sidebar .nav .nav > li > a:hover, .sidebar .nav .nav > li > a:focus, .sidebar .nav .nav> li > a.active {
+.sidebar .nav .nav > li > a:hover, .sidebar .nav .nav > li > a:focus, .sidebar .nav .nav > li > a.active {
     color: #fff;
     background-color: transparent;
+    border-left-color: transparent;
 }
 
 /* 鼠标放上去图标变蓝 */
@@ -137,7 +139,6 @@ body {
 
 
 /* 面板 */
-
 .border-top {
     border-top: 1px solid #e5e5e5;
 }
@@ -149,24 +150,22 @@ body {
 .main {
     margin-left: 10px;
 }
+
 .box-float {
-    width: 1100px;
-    height: 1000px;
-    #border: 1px solid;
-    margin-top: 10px;
+    width: 100%;
+    margin-top: 40px;
 }
 
 .box-float .float1 {
-    width: 550px;
-    height: 500px;
-    #background-color: blue;
+    width: 47%;
     float: left;
+    margin-bottom: 120px
 }
 
 .box-float .float2 {
-    width: 500px;
-    height: 500px;
-    #background-color: green;
+    width: 47%;
+    margin-right: 15px;
+    margin-bottom: 120px;
     float: right;
 }
 
@@ -175,8 +174,9 @@ body {
     font-size: 20px;
     font-weight: 10;
 }
+
 .vul_header a {
-    float:right;
+    float: right;
     margin-right: 10px;
 }
 
@@ -185,14 +185,23 @@ body {
  */
 .dec {
     font-size: 15px;
-    background-color: #cee1f3;
+/ / background-color: #cee1f3;
+    background-color: #dce9f8;
 }
 
+/* 标签 */
+.nav-tabs .nav-link {
+    font-size: 15px;
+}
 
+.nav-tabs a.active.nav-link {
+/ / background-color: #dce9f8;
+}
+
+/* 编码建议 */
 #coder {
-    background-color: #cee1f3;
+    background-color: #dce9f8;
     border: 0;
-    height:130px;
-    font-size: 16px;
-
+    height: 180px;
+    font-size: 15px;
 }

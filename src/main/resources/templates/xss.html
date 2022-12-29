@@ -14,13 +14,13 @@
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
             <div class="vul_header">
                 <span>XSS漏洞</span>
-                <a class="btn btn-sm btn-primary" target="_blank" href="">漏洞案例</a>
             </div>
             <h3></h3>
             <hr>
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span>
+                        漏洞描述</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
@@ -33,7 +33,9 @@
                     Scripting) 跨站脚本攻击，攻击者插入恶意Script代码,当用户浏览该页之时,嵌入其中Web里面的Script代码会被执行,从而达到恶意攻击用户的目的。
                 </div>
                 <div class="tab-pane fade" id="bb">
-                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder" style="height: 260px;">
+                    <label for="coder"></label><textarea disabled="disabled"
+                                                         class="form-control shadow-sm p-3 mb-5 rounded" id="coder"
+                                                         style="height: 260px;">
 【必须】外部输入拼接到response页面前进行编码处理
  当响应“content-type”为“html”类型时，外部输入拼接到响应包中，需根据输出位置进行编码处理,需要对以下6个特殊字符进行HTML实体编码(&, <, >, ", ',/)，也可参考或直接使用业界已有成熟第三方库如ESAPI。
 
@@ -49,11 +51,16 @@
 
             <div class="box-float">
                 <div class="float1">
-                    <a style="float:right" class="btn btn-sm btn-danger"
-                       th:href="@{/XSS/reflect?content=test<script>alert(/xss/)</script>}">运行</a>
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                       th:href="@{/XSS/reflect?content=test<script>alert(/xss/)</script>}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
 
-                    <textarea class="form-control" id="code1">
+                    <label for="code1"></label><textarea class="form-control" id="code1">
 // 简单的反射型XSS，没对输出做处理。当攻击者输入恶意js语句时可触发
 
 @GetMapping("/reflect")
@@ -62,11 +69,16 @@ public static String input(String content) {
 }
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-success text-right"
-                       th:href="@{/XSS/escape?content=test<script>alert(1)</script>}">运行</a>
+                    <a style="float:right" class="btn btn-sm btn-success text-right" target="_blank"
+                       th:href="@{/XSS/escape?content=test<script>alert(1)</script>}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - htmlEscape方法</span></h5>
 
-                    <textarea class="form-control" id="code2">
+                    <label for="code2"></label><textarea class="form-control" id="code2">
 // 采用Spring自带的方法会对特殊字符全转义
 
 import org.springframework.web.util.HtmlUtils;
@@ -80,27 +92,37 @@ public static String safe1(String content) {
 
                 <div class="float2">
 
-                    <a style="float:right" class="btn btn-sm btn-success text-right"
-                       th:href="@{/XSS/filter?content=test<script>alert(1)</script>}">运行</a>
+                    <a style="float:right" class="btn btn-sm btn-success text-right" target="_blank"
+                       th:href="@{/XSS/filter?content=test<script>alert(1)</script>}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - 自定义过滤</span></h5>
-                    <textarea class="form-control" id="code3">
-// 将特殊字符做转义，（bug：这里被转义了）
+                    <label for="code3"></label><textarea class="form-control" id="code3">
+// 将特殊字符做转义
 
 private static String XssFilter(String content) {
-    content = StringUtils.replace(content, "&", "&amp;");
-    content = StringUtils.replace(content, "<", "&lt;");
-    content = StringUtils.replace(content, ">", "&gt;");
-    content = StringUtils.replace(content, "\"", "&quot;");
-    content = StringUtils.replace(content, "'", "&#x27;");
-    content = StringUtils.replace(content, "/", "&#x2F;");
+    content = StringUtils.replace(content, "&", "&ampamp;");
+    content = StringUtils.replace(content, "<", "&amplt;");
+    content = StringUtils.replace(content, ">", "&ampgt;");
+    content = StringUtils.replace(content, "\", "&ampquot;");
+    content = StringUtils.replace(content, "'", "&amp#x27;");
+    content = StringUtils.replace(content, "/", "&amp#x2F;");
     return content;
 }
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-success text-right"
-                       th:href="@{/XSS/whitelist?content=aaa<img%20src=1%20onerror=alert(1)>}">运行</a>
+                    <a style="float:right" class="btn btn-sm btn-success text-right" target="_blank"
+                       th:href="@{/XSS/whitelist?content=aaa<img%20src=1%20onerror=alert(1)>}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - 黑白名单</span></h5>
-                    <textarea class="form-control" id="code4">
+                    <label for="code4"></label><textarea class="form-control" id="code4">
 // 场景：针对富文本的处理方式，需保留部分标签
 
 import org.jsoup.Jsoup;
@@ -116,10 +138,18 @@ public static String safe3(String content) {
 }
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-success text-right"
-                       th:href="@{/XSS/esapi?content=aaa<img%20src=1%20onerror=alert(1)>}">运行</a>
+                    <a style="float:right" class="btn btn-sm btn-success text-right" target="_blank"
+                       th:href="@{/XSS/esapi?content=aaa<img%20src=1%20onerror=alert(1)>}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - ESAPI</span></h5>
-                    <textarea class="form-control" id="code5">
+                    <label for="code5"></label><textarea class="form-control" id="code5">
+// ESAPI 是一个免费、开源的、网页应用程序安全控件库，它使程序员能够更容易写出更低风险的程序
+// 官网：https://owasp.org/www-project-enterprise-security-api/
+
 public static String safe4(String content){
     return ESAPI.encoder().encodeForHTML(content);
 }

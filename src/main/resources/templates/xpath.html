@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
+
+<body>
+<!-- 顶部导航栏 -->
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边栏 -->
+        <div th:replace="~{commons/commons::siderbar(active='xpath.html')}"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div class="vul_header">
+                <span>XPath 注入</span>
+            </div>
+            <h3></h3>
+            <hr>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span>
+                        漏洞描述</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
+                    XPath 注入是一种应用程序安全漏洞，攻击者可以通过向应用程序提交恶意的 XPath 查询来控制程序的行为。
+                </div>
+                <div class="tab-pane fade" id="bb">
+                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder"
+                              style="height: 160px;">
+1. 对用户输入进行转义，以防止攻击者注入恶意内容。例如，可以使用 Apache Commons Text 库中的 StringEscapeUtils.escapeXml10() 方法来转义用户输入中的特殊字符。
+2. 使用白名单过滤用户输入，只允许用户提交特定的合法字符。例如，可以规定用户只能输入字母、数字和小数点，不能输入特殊字符或 XPath 关键字。
+3. 使用预编译的 XPath 查询来替代动态构造的查询。例如，可以预先编译一个 XPath 查询模板，然后使用参数来填充模板中的占位符，最终得到一个完整的查询。
+                    </textarea>
+                </div>
+            </div>
+            <hr>
+
+            <div class="box-float">
+                <div class="float1">
+                    <a style="float:right" class="btn btn-sm btn-danger"
+                       th:href="@{/XPath/vul?username=admin%27%20or%20%271%27=%271&password=1}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
+
+                    <label for="code1"></label><textarea class="form-control" id="code1">
+public String vul(@RequestParam("username") String username, @RequestParam("password") String password) {
+    try {
+        // 构造 XML 文档
+        Document doc = DocumentBuilderFactory.newInstance()
+            .newDocumentBuilder()
+            .parse(new InputSource(new StringReader("<users>"
+                    + "<user>"
+                    + "<username>admin</username>"
+                    + "<password>abc123123</password>"
+                    + "</user>"
+                    + "</users>")));
+
+        // 解析 XML 文档
+        XPath xpath = XPathFactory.newInstance().newXPath();
+        NodeList nodes = (NodeList) xpath.evaluate("/users/user[username='" + username + "' and password='" + password + "']", doc, XPathConstants.NODESET);
+
+        // 检查查询结果
+        if (nodes.getLength() > 0) {
+            return "用户名和密码验证通过！";
+        } else {
+            return "用户名或密码错误！";
+        }
+    } catch (Exception e) {
+        return "发生异常：" + e.getMessage();
+    }
+}
+                    </textarea><br><br>
+                </div>
+
+                <div class="float2">
+                    <a style="float:right" class="btn btn-sm btn-success text-right"
+                       th:href="@{/XPath/safe?username=admin%27%20or%20%271%27=%271&password=1}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 转义</span></h5>
+
+                    <label for="code2"></label><textarea class="form-control" id="code2">
+// StringEscapeUtils.escapeXml10() 是 Apache Commons Lang 库中的一个方法，该方法会将字符串中的 &、<、>、' 和 " 转换为实体引用，以便安全地在 XML 文档中使用这些字符。
+
+import org.apache.commons.text.StringEscapeUtils;
+String escapeUsername = StringEscapeUtils.escapeXml10(username);
+String escapePassword = StringEscapeUtils.escapeXml10(password);
+                    </textarea>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- 引入script -->
+<div th:replace="~{commons/commons::script}"></div>
+
+
+</body>
+
+</html>

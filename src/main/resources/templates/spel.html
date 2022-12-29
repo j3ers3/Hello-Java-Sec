@@ -14,12 +14,12 @@
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
             <div class="vul_header">
                 <span>表达式注入</span>
-                <a class="btn btn-sm btn-primary" target="_blank" href="">漏洞案例</a>
             </div>
             <hr>
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span>
+                        漏洞描述</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
@@ -44,30 +44,79 @@ web view层通常通过模板技术或者表达式引擎来实现界面与业务
 
             <div class="box-float">
                 <div class="float1">
-                    <a style="float:right" class="btn btn-sm btn-danger"
-                       href="/SPEL/vul?ex=100-1">运行</a>
+                    <a style="float:right" target="_blank" class="btn btn-sm btn-danger"
+                       href="/SPEL/vul?ex=100-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
 
-                    <textarea class="form-control" name="code" id="code1">
+                    <label for="code1"></label><textarea class="form-control" name="code" id="code1">
 // PoC: T(java.lang.Runtime).getRuntime().exec(%22open%20-a%20Calculator%22)
 
-@GetMapping("/vul")
-public String spelVul(String ex) {
+public String vul(String ex) {
     ExpressionParser parser = new SpelExpressionParser();
-    String result = parser.parseExpression(ex).getValue().toString();
-    System.out.println(result);
+
+    // StandardEvaluationContext权限过大，可以执行任意代码，默认使用
+    EvaluationContext evaluationContext = new StandardEvaluationContext();
+
+    Expression exp = parser.parseExpression(ex);
+    String result = exp.getValue(evaluationContext).toString();
     return result;
 }
-                    </textarea>
+                    </textarea><br><br>
+                    <a style="float:right" target="_blank" class="btn btn-sm btn-danger"
+                       href="/SPEL/vul2?ex=T(java.lang.Runtime).getRuntime().exec(%22open%20-a%20Calculator%22)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - 黑名单绕过</span></h5>
 
+                    <label for="code3"></label><textarea class="form-control" name="code" id="code3">
+// 黑名单正则，尝试绕过执行恶意代码
+
+public String vul2(String ex) {
+    String[] black_list = {"java.+lang", "Runtime", "exec.*\\("};
+    for (String s : black_list) {
+        Matcher matcher = Pattern.compile(s).matcher(ex);
+        if (matcher.find()) {
+            return "黑名单过滤";
+        }
+    }
+
+    ExpressionParser parser = new SpelExpressionParser();
+    Expression exp = parser.parseExpression(ex);
+    String result = exp.getValue().toString();
+    return result;
+}
+                    </textarea><br><br>
                 </div>
 
                 <div class="float2">
-                    <a style="float:right" class="btn btn-sm btn-success"
-                       href="">运行</a>
+                    <a style="float:right" target="_blank" class="btn btn-sm btn-success"
+                       href="/SPEL/safe?ex=100-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
-                    <textarea class="form-control" name="code" id="code2">
-todo
+                    <label for="code2"></label><textarea class="form-control" name="code" id="code2">
+// SimpleEvaluationContext 旨在仅支持 SpEL 语言语法的一个子集。它不包括 Java 类型引用，构造函数和 bean 引用
+
+public String spelSafe(String ex) {
+    ExpressionParser parser = new SpelExpressionParser();
+
+    EvaluationContext simpleContext = SimpleEvaluationContext.forReadOnlyDataBinding().build();
+
+    Expression exp = parser.parseExpression(ex);
+    String result = exp.getValue(simpleContext).toString();
+    return result;
+}
                     </textarea>
 
                 </div>

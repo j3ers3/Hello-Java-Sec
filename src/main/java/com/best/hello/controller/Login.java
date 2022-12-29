@@ -1,5 +1,6 @@
 package com.best.hello.controller;
 
+import com.best.hello.util.JwtUtils;
 import com.wf.captcha.utils.CaptchaUtil;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
@@ -8,19 +9,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @Controller
 public class Login {
-    // todo 密码明文写死
+    // 密码明文写死
     String user = "admin";
     String pass = "admin";
 
+    private static final String COOKIE_NAME = "JWT_TOKEN";
+
     @ApiOperation(value = "登录")
     @RequestMapping("/user/login")
-    public String login(@RequestParam("username") String username, @RequestParam("password") String password, @RequestParam("captcha") String captcha, Model model, HttpSession session, HttpServletRequest request) {
+    public String login(@RequestParam("username") String username, @RequestParam("password") String password, @RequestParam("captcha") String captcha, Model model, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
 
         // 验证码复用
         if (!CaptchaUtil.ver(captcha, request)) {
@@ -30,6 +34,13 @@ public class Login {
         }
 
         if (user.equals(username) && pass.equals(password)) {
+            // 创建JWT Token
+            String token = JwtUtils.generateToken(username);
+            Cookie cookie = new Cookie(COOKIE_NAME, token);
+            cookie.setHttpOnly(true);
+            cookie.setMaxAge(60 * 60 * 24);
+            cookie.setPath("/");
+            response.addCookie(cookie);
             session.setAttribute("LoginUser", username);
             return "redirect:/index";
         } else {

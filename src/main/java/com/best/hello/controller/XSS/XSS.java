@@ -3,7 +3,6 @@ package com.best.hello.controller.XSS;
 import com.best.hello.util.Security;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.HtmlUtils;
 import org.owasp.esapi.ESAPI;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * XSS漏洞
@@ -20,16 +25,29 @@ import org.owasp.esapi.ESAPI;
  */
 
 @Api("XSS漏洞")
-@Slf4j
 @RestController
 @RequestMapping("/XSS")
 public class XSS {
 
+    static Logger log = LoggerFactory.getLogger(XSS.class);
+
     @ApiOperation(value = "vul: 反射型XSS")
     @GetMapping("/reflect")
-    public static String reflect(String content) {
+    public static String vul1(String content) {
         log.info("[vul] 反射型XSS：" + content);
         return content;
+    }
+
+
+    @GetMapping("/vul2")
+    public static void vul2(String content, HttpServletResponse response) {
+        // 修复，设置ContentType类型：response.setContentType("text/plain;charset=utf-8");
+        try {
+            response.getWriter().println(content);
+            response.getWriter().flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

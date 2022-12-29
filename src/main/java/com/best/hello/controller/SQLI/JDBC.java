@@ -3,16 +3,20 @@ package com.best.hello.controller.SQLI;
 import com.best.hello.util.Security;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.codecs.Codec;
 import org.owasp.esapi.codecs.OracleCodec;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.*;
+import java.util.Map;
 
 /**
  * SQL注入 - JDBC注入
@@ -22,12 +26,16 @@ import java.sql.*;
  * 审计的函数
  * 1. executeQuery
  * 2. prepareStatement
+ * 3. queryForMap
+ * 4. query
  */
+
 @Api("SQL注入 - JDBC")
-@Slf4j
 @RestController
 @RequestMapping("/SQLI/JDBC")
 public class JDBC {
+
+    Logger log = LoggerFactory.getLogger(JDBC.class);
 
     @Value("${spring.datasource.url}")
     private String db_url;
@@ -78,7 +86,7 @@ public class JDBC {
     /**
      * @poc http://127.0.0.1:8888/SQLI/JDBC/vul2?id=2%20and%201=1
      */
-    @ApiOperation(value = "vul：JDBC预编译拼接", notes = "采用预编译的方法，但没使用?占位，开发者为方便会直接采取拼接的方式构造SQL语句，此时进行预编译也无法阻止SQL注入")
+    @ApiOperation(value = "vul：JDBC预编译拼接", notes = "采用预编译的方法，但没使用?占位，此时进行预编译也无法阻止SQL注入")
     @GetMapping("/vul2")
     public String vul2(String id) {
 
@@ -111,9 +119,24 @@ public class JDBC {
     }
 
 
-    /**
-     * @poc http://127.0.0.1:8888/SQLI/JDBC/safe1?id=1'
-     */
+    @ApiOperation(value = "vul：JdbcTemplate", notes = "JDBCTemplate是Spring对JDBC的封装，使其更易于使用")
+    @GetMapping("/vul3")
+    public Map<String, Object> vul3(String id) {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        dataSource.setUrl(db_url);
+        dataSource.setUsername(db_user);
+        dataSource.setPassword(db_pass);
+
+        JdbcTemplate jdbctemplate = new JdbcTemplate(dataSource);
+
+        String sql_vul = "select * from users where id = " + id;
+        String sql_safe = "select * from users where id = ?";
+
+        return jdbctemplate.queryForMap(sql_vul);
+    }
+
+
     @ApiOperation(value = "safe：JDBC预编译", notes = "采用预编译的方法，使用?占位，也叫参数化的SQL")
     @GetMapping("/safe1")
     public String safe1(String id) {
@@ -148,10 +171,7 @@ public class JDBC {
     }
 
 
-    /**
-     * @poc http://127.0.0.1:8888/SQLI/JDBC/safe2?id=1'
-     */
-    @ApiOperation(value = "safe：采用过滤的方式")
+    @ApiOperation(value = "safe：采用黑名单过滤的方式")
     @GetMapping("/safe2")
     public String safe2(String id) {
 
@@ -220,6 +240,23 @@ public class JDBC {
         } catch (Exception e) {
             return e.toString();
         }
+    }
+
+
+    @ApiOperation(value = "safe：强制数据类型")
+    @GetMapping("/safe4")
+    public Map<String, Object> safe4(Integer id) {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        dataSource.setUrl(db_url);
+        dataSource.setUsername(db_user);
+        dataSource.setPassword(db_pass);
+
+        JdbcTemplate jdbctemplate = new JdbcTemplate(dataSource);
+
+        String sql_vul = "select * from users where id = " + id;
+
+        return jdbctemplate.queryForMap(sql_vul);
     }
 
 }

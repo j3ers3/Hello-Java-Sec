@@ -24,12 +24,10 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addViewController("/index/deserialize").setViewName("deserialize");
         registry.addViewController("/index/redirect").setViewName("redirect");
         registry.addViewController("/index/actuator").setViewName("actuator");
-        registry.addViewController("/index/broken_access_control").setViewName("bac");
+        registry.addViewController("/index/idor").setViewName("idor");
         registry.addViewController("/index/upload").setViewName("upload");
-        registry.addViewController("/index/password").setViewName("password");
         registry.addViewController("/index/xstream").setViewName("xstream");
         registry.addViewController("/index/fastjson").setViewName("fastjson");
-        registry.addViewController("/index/admin").setViewName("logs");
         registry.addViewController("/index/xff").setViewName("xff");
         registry.addViewController("/index/unauth").setViewName("unauth");
         registry.addViewController("/index/jackson").setViewName("jackson");
@@ -39,6 +37,9 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addViewController("/index/dos").setViewName("dos");
         registry.addViewController("/index/cors").setViewName("cors");
         registry.addViewController("/index/captcha").setViewName("captcha_vul");
+        registry.addViewController("/index/swagger").setViewName("swagger");
+        registry.addViewController("/index/jwt").setViewName("jwt");
+        registry.addViewController("/index/xpath").setViewName("xpath");
 
     }
 

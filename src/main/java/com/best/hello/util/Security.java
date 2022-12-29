@@ -1,9 +1,11 @@
 package com.best.hello.util;
 
+import org.apache.http.conn.util.InetAddressUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -15,17 +17,18 @@ import java.util.regex.Pattern;
  * @date 2021/08/02
  */
 public class Security {
+    static Logger log = LoggerFactory.getLogger(Security.class);
 
     /**
-     * 判断是否为内网地址
+     * 判断是否为内网IP
      *
      * @return True or False
      */
-    public static boolean isIntranet(String url) {
-        Pattern reg = Pattern.compile("^(127\\.0\\.0\\.1)|(localhost)|(10\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})|(172\\.((1[6-9])|(2\\d)|(3[01]))\\.\\d{1,3}\\.\\d{1,3})|(192\\.168\\.\\d{1,3}\\.\\d{1,3})$");
-        Matcher match = reg.matcher(url);
-        boolean a = match.find();
-        return a;
+    public static boolean isIntranet(String ip) {
+        log.info("isIntranet: " + ip);
+        Pattern reg = Pattern.compile("^(127\\.0\\.0\\.1)|(localhost)|^(10\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})|^(172\\.((1[6-9])|(2\\d)|(3[01]))\\.\\d{1,3}\\.\\d{1,3})|^(192\\.168\\.\\d{1,3}\\.\\d{1,3})$");
+        Matcher match = reg.matcher(ip);
+        return match.find();
     }
 
     /**
@@ -57,9 +60,30 @@ public class Security {
         String host = uri.getHost().toLowerCase();
 
         return url_list.contains(host);
-
     }
 
+    /**
+     * url转IP
+     */
+    public static String urltoIp(String url) {
+        try {
+            URI uri = new URI(url);
+            String host = uri.getHost().toLowerCase();
+            // 判断 URL 是否是 IP 地址
+            if (InetAddressUtils.isIPv4Address(host)) {
+                return host;
+            } else {
+                InetAddress ip = Inet4Address.getByName(host);
+                return ip.getHostAddress();
+            }
+        } catch (Exception e) {
+            return "127.0.0.1";
+        }
+    }
+
+    /**
+     * XSS黑名单过滤
+     */
     public static String filterXss(String content) {
         content = StringUtils.replace(content, "&", "&amp;");
         content = StringUtils.replace(content, "<", "&lt;");
@@ -70,25 +94,41 @@ public class Security {
         return content;
     }
 
+    public static String filterXss2(String content) {
+        String[] black_list = {"&", "<", ">", "\"", "'", "/"};
+        String[] white_list = {"&amp;", "&lt;", "&gt;", "&quot;", "&#x27;", "&#x2F;"};
+        // 遍历非法字符集合，并使用replace 方法替换
+        for (int i = 0; i < black_list.length; i++) {
+            content = content.replace(black_list[i], white_list[i]);
+        }
+        return content;
+    }
 
+    /**
+     * SQL注入检测
+     */
     public static boolean checkSql(String content) {
-        String black = "'|;|--|+|,|%|=|>|<|*|(|)|and|or|exec|insert|select|delete|update|count|drop|chr|mid|master|truncate|char|declare";
-        String[] black_list = black.split("\\|");
+        String[] black_list = {"'", ";", "--", "+", ",", "%", "=", ">", "<", "*", "(", ")", "and", "or", "exec", "insert", "select", "delete", "update", "count", "drop", "chr", "mid", "master", "truncate", "char", "declare"};
         for (String s : black_list) {
-            if (content.contains(s)) {
+            if (content.toLowerCase().contains(s)) {
                 return true;
             }
         }
         return false;
     }
 
+    /**
+     * 目录遍历检测
+     */
     public static boolean checkTraversal(String content) {
         return content.contains("..") || content.contains("/");
     }
 
+    /**
+     * 命令执行检测
+     */
     public static boolean checkOs(String content) {
-        String black = "|,&,&&,;,||";
-        String[] black_list = black.split(",");
+        String[] black_list = {"|", ",", "&", "&&", ";", "||"};
         for (String s : black_list) {
             if (content.contains(s)) {
                 return true;
@@ -97,9 +137,17 @@ public class Security {
         return false;
     }
 
+    /**
+     * XXE检测
+     */
     public static boolean checkXXE(String content) {
-        String black = "ENTITY";
-        return content.toUpperCase().contains(black);
+        String[] black_list = {"ENTITY", "DOCTYPE"};
+        for (String s : black_list) {
+            if (content.toUpperCase().contains(s)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

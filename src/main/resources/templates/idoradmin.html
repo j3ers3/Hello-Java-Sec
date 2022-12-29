@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
+
+<body>
+<!-- 顶部导航栏 -->
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边栏 -->
+        <div th:replace="~{commons/commons::siderbar(active='idor.html')}"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div class="vul_header">
+                <span>系统管理页面</span>
+            </div>
+            <hr>
+            <div class="shadow-sm p-3 mb-4 rounded">利用垂直越权漏洞，访问系统管理页面</div>
+            <br><br>
+
+            <table class="table table-striped table-bordered table-sm">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>用户名</th>
+                    <th>密码</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th>1</th>
+                    <th>admin</th>
+                    <th>123456</th>
+                </tr>
+                <tr>
+                    <th>2</th>
+                    <th>zhangwei</th>
+                    <th>22333</th>
+                </tr>
+                <tr>
+                    <th>3</th>
+                    <th>wangwei</th>
+                    <th>123456</th>
+                </tr>
+                </tbody>
+            </table>
+
+        </main>
+    </div>
+</div>
+
+<!-- 引入script -->
+<div th:replace="~{commons/commons::script}"></div>
+
+
+</body>
+</html>

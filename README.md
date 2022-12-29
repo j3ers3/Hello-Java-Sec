@@ -1,4 +1,4 @@
-# ☕️ Hello Java Sec ![Stage](https://img.shields.io/badge/Release-DEV-brightgreen.svg)
+# ☕️ Hello Java Sec ![Stage](https://img.shields.io/badge/Release-DEV-brightgreen.svg) ![Build Status](https://img.shields.io/badge/Version-1.10-red.svg)
 > Java漏洞平台，结合漏洞代码和安全编码，帮助研发同学理解和减少漏洞，代码仅供参考
 
 ![](media/16304933749187.jpg)
@@ -25,6 +25,8 @@
 - [x] Log4shell
 - [x] JNDI
 - [x] Dos
+- [x] Xpath
+- [x] Jwt
 - [ ] more
 
 ![](media/16304936834843.jpg)
@@ -38,7 +40,7 @@ spring.datasource.username=root
 spring.datasource.password=1234567
 ```
 
-### Jar
+### Jar运行
 > JDK 1.8环境
 ```
 git clone https://github.com/j3ers3/Hello-Java-Sec
@@ -47,7 +49,7 @@ mvn clean package -DskipTests
 java -jar target/hello-1.0.0-SNAPSHOT.jar
 ```
 
-### Docker
+### Docker运行
 ```
 mvn clean package
 ./deploy.sh

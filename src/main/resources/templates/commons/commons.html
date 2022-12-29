@@ -15,6 +15,30 @@
     <link rel="stylesheet" th:href="@{/css/signin.css}">
     <link rel="stylesheet" th:href="@{/css/linearicons.css}">
     <link rel="stylesheet" th:href="@{/css/mdn-like.css}">
+    <!--
+                      ...
+                    ;::::;
+                  ;::::; :;
+                ;:::::'   :;
+               ;:::::;     ;.
+              ,:::::'       ;           OOO\
+              ::::::;       ;          OOOOO\
+              ;:::::;       ;         OOOOOOOO
+             ,;::::::;     ;'         / OOOOOOO
+           ;:::::::::`. ,,,;.        /  / DOOOOOO
+         .';:::::::::::::::::;,     /  /     DOOOO
+        ,::::::;::::::;;;;::::;,   /  /        DOOO
+       ;`::::::`'::::::;;;::::: ,#/  /          DOOO
+       :`:::::::`;::::::;;::: ;::#  /            DOOO
+       ::`:::::::`;:::::::: ;::::# /              DOO
+       `:`:::::::`;:::::: ;::::::#/               DOO
+        :::`:::::::`;; ;:::::::::##                OO
+        ::::`:::::::`;::::::::;:::#                OO
+        `:::::`::::::::::::;'`:;::#                O
+         `:::::`::::::::;' /  / `:#
+          ::::::`:::::;'  /  /   `#
+
+    -->
 </head>
 
 <nav class="navbar navbar-dark sticky-top p-0" th:fragment="topbar">
@@ -42,13 +66,13 @@
         <ul class="nav flex-column flex-sm-column">
 
             <li class="nav-item">
-                <a href="#sqlMeun"
-                   th:class="${((active=='sqli_jdbc.html')||(active=='sqli_mybatis.html')) ? 'nav-link active':'nav-link'}"
+                <a href="#sql_submenu"
+                   th:class="${((active=='sqli_jdbc.html') || (active=='sqli_mybatis.html')) ? 'nav-link active':'nav-link'}"
                    data-toggle="collapse">
-                    <i class="lnr lnr-code"></i><span>SQL注入</span><i class="icon-submenu lnr lnr-chevron-left"></i></a>
-
-                <div id="sqlMeun"
-                     th:class="${((active=='sqli_jdbc.html')||(active=='sqli_mybatis.html')) ? 'collapsed':'collapse'}">
+                    <i class="lnr lnr-code"></i><span>SQL注入</span><i
+                        class="icon-submenu lnr lnr-chevron-left"></i></a>
+                <div id="sql_submenu"
+                     th:class="${((active=='sqli_jdbc.html') || (active=='sqli_mybatis.html')) ? 'collapsed':'collapse'}">
                     <ul class="nav flex-column">
                         <li>
                             <a th:class="${active=='sqli_jdbc.html' ? 'nav-link active':'nav-link'}"
@@ -65,22 +89,22 @@
             </li>
 
             <li class="nav-item">
-                <a href="#fileMeun"
-                   th:class="${((active=='upload.html')||(active=='traversal.html')) ? 'nav-link active':'nav-link'}"
+                <a href="#file_submenu"
+                   th:class="${((active=='upload.html') || (active=='traversal.html')) ? 'nav-link active':'nav-link'}"
                    data-toggle="collapse">
-                    <i class="lnr lnr-layers"></i><span>文件操作漏洞</span><i
+                    <i class="lnr lnr-layers"></i><span>任意文件操作</span><i
                         class="icon-submenu lnr lnr-chevron-left"></i></a>
-                <div id="fileMeun"
-                     th:class="${((active=='upload.html')||(active=='traversal.html')) ? 'collapsed':'collapse'}">
+                <div id="file_submenu"
+                     th:class="${((active=='upload.html') || (active=='traversal.html')) ? 'collapsed':'collapse'}">
                     <ul class="nav flex-column">
                         <li>
-                            <a th:class="${active=='upload.html'?'nav-link active':'nav-link'}"
+                            <a th:class="${active=='upload.html' ? 'nav-link active':'nav-link'}"
                                th:href="@{/index/upload}">
                                 <i class="lnr lnr-bug"></i><span>文件上传</span>
                             </a>
                         </li>
                         <li>
-                            <a th:class="${active=='traversal.html'?'nav-link active':'nav-link'}"
+                            <a th:class="${active=='traversal.html' ? 'nav-link active':'nav-link'}"
                                th:href="@{/index/traversal}">
                                 <i class="lnr lnr-bug"></i><span>目录遍历</span>
                             </a>
@@ -90,103 +114,123 @@
             </li>
 
             <li class="nav-item">
-                <a th:class="${(active=='xss.html')?'nav-link active':'nav-link'}" th:href="@{/index/xss}">
+                <a href="#auth_submenu" data-toggle="collapse"
+                   th:class="${(active=='captcha_vul.html' || active=='jwt.html')?'nav-link active':'nav-link'}"><i
+                        class="lnr lnr-diamond"></i>
+                    <span>失效的身份认证</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+                <div id="auth_submenu"
+                     th:class="${(active=='captcha_vul.html' || active=='jwt.html') ? 'collapsed':'collapse'}">
+                    <ul class="nav flex-column">
+                        <li>
+                            <a th:class="${active=='jwt.html' ? 'nav-link active':'nav-link'}"
+                               th:href="@{/index/jwt}">
+                                <i class="lnr lnr-bug"></i><span>JWT弱加密</span></a>
+                        </li>
+                        <li>
+                            <a th:class="${active=='captcha_vul.html' ? 'nav-link active':'nav-link'}"
+                               th:href="@{/index/captcha}"><i
+                                    class="lnr lnr-bug"></i><span>验证码复用</span></a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a th:class="${(active=='xss.html') ? 'nav-link active':'nav-link'}" th:href="@{/index/xss}">
                     <i class="lnr lnr-cross"></i><span>XSS</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a th:class="${(active=='ssrf.html')?'nav-link active':'nav-link'}" th:href="@{/index/ssrf}">
+                <a th:class="${(active=='ssrf.html') ? 'nav-link active':'nav-link'}" th:href="@{/index/ssrf}">
                     <i class="lnr lnr-rocket"></i><span>SSRF</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a th:class="${(active=='rce.html')?'nav-link active':'nav-link'}" th:href="@{/index/rce}">
+                <a th:class="${(active=='rce.html') ? 'nav-link active':'nav-link'}" th:href="@{/index/rce}">
                     <i class="lnr lnr-star"></i><span>远程代码执行</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a th:class="${(active=='deserialize.html')?'nav-link active':'nav-link'}"
+                <a th:class="${(active=='deserialize.html') ? 'nav-link active':'nav-link'}"
                    th:href="@{/index/deserialize}">
                     <i class="lnr lnr-lock"></i><span>反序列化漏洞</span>
                 </a>
             </li>
 
-
             <li class="nav-item">
-                <a th:class="${active=='password.html'?'nav-link active':'nav-link'}"
-                   th:href="@{/index/password}">
-                    <i class="lnr lnr-diamond"></i><span>失效的身份认证</span>
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a th:class="${active=='spel.html'?'nav-link active':'nav-link'}" th:href="@{/index/spel}">
+                <a th:class="${active=='spel.html' ? 'nav-link active':'nav-link'}" th:href="@{/index/spel}">
                     <i class="lnr lnr-poop"></i><span>表达式注入</span>
                 </a>
             </li>
 
 
             <li class="nav-item">
-                <a th:class="${active=='xxe.html'?'nav-link active':'nav-link'}" th:href="@{/index/xxe}">
+                <a th:class="${active=='xxe.html' ? 'nav-link active':'nav-link'}" th:href="@{/index/xxe}">
                     <i class="lnr lnr-book"></i><span>XML外部实体</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a th:class="${active=='bac.html'?'nav-link active':'nav-link'}"
-                   th:href="@{/index/broken_access_control}">
+                <a th:class="${active=='idor.html' ? 'nav-link active':'nav-link'}"
+                   th:href="@{/index/idor}">
                     <i class="lnr lnr-screen"></i><span>越权访问</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a th:class="${active=='unauth.html'?'nav-link active':'nav-link'}"
+                <a th:class="${active=='unauth.html' ? 'nav-link active':'nav-link'}"
                    th:href="@{/index/unauth}">
                     <i class="lnr lnr-leaf"></i><span>接口未授权访问</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a th:class="${active=='ssti.html'?'nav-link active':'nav-link'}" th:href="@{/index/ssti}">
+                <a th:class="${active=='ssti.html' ? 'nav-link active':'nav-link'}" th:href="@{/index/ssti}">
                     <i class="lnr lnr-cloud"></i><span>SSTI模版注入</span>
                 </a>
             </li>
 
+            <li class="nav-item">
+                <a th:class="${active=='jndi.html' ? 'nav-link active':'nav-link'}"
+                   th:href="@{/index/jndi}">
+                    <i class="lnr lnr-magic-wand"></i><span>JNDI注入</span>
+                </a>
+            </li>
 
             <li class="nav-item">
-                <a href="#sub_mid" data-toggle="collapse"
-                   th:class="${(active=='xstream.html'||active=='shiro.html'||active=='fastjson.html'||active=='log4j.html'||active=='jackson.html')?'nav-link active':'nav-link'}"><i
+                <a href="#middle_submenu" data-toggle="collapse"
+                   th:class="${(active=='xstream.html' || active=='shiro.html' || active=='fastjson.html' || active=='log4j.html' || active=='jackson.html') ? 'nav-link active':'nav-link'}"><i
                         class="lnr lnr-drop"></i>
-                    <span>漏洞组件</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+                    <span>组件漏洞</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
 
-                <div id="sub_mid"
-                     th:class="${(active=='xstream.html'||active=='shiro.html'||active=='fastjson.html'||active=='log4j.html')||active=='jackson.html' ? 'collapsed':'collapse'}">
+                <div id="middle_submenu"
+                     th:class="${(active=='xstream.html' || active=='shiro.html' || active=='fastjson.html' || active=='log4j.html' || active=='jackson.html') ? 'collapsed':'collapse'}">
                     <ul class="nav flex-column">
                         <li>
-                            <a th:class="${active=='xstream.html'?'nav-link active':'nav-link'}"
+                            <a th:class="${active=='xstream.html' ? 'nav-link active':'nav-link'}"
                                th:href="@{/index/xstream}">
                                 <i class="lnr lnr-bug"></i><span>XStream</span></a>
                         </li>
                         <li>
-                            <a th:class="${active=='fastjson.html'?'nav-link active':'nav-link'}"
+                            <a th:class="${active=='fastjson.html' ? 'nav-link active':'nav-link'}"
                                th:href="@{/index/fastjson}">
                                 <i class="lnr lnr-bug"></i><span>Fastjson</span></a>
                         </li>
                         <li>
-                            <a th:class="${active=='jackson.html'?'nav-link active':'nav-link'}"
+                            <a th:class="${active=='jackson.html' ? 'nav-link active':'nav-link'}"
                                th:href="@{/index/jackson}">
                                 <i class="lnr lnr-bug"></i><span>Jackson</span></a>
                         </li>
                         <li>
-                            <a th:class="${active=='log4j.html'?'nav-link active':'nav-link'}"
+                            <a th:class="${active=='log4j.html' ? 'nav-link active':'nav-link'}"
                                th:href="@{/index/log4j}">
                                 <i class="lnr lnr-bug"></i><span>Log4j2</span></a>
                         </li>
                         <li>
-                            <a th:class="${active=='shiro.html'?'nav-link active':'nav-link'}"
+                            <a th:class="${active=='shiro.html' ? 'nav-link active':'nav-link'}"
                                href="#">
                                 <i class="lnr lnr-bug"></i><span>Shiro</span></a>
                         </li>
@@ -195,14 +239,13 @@
                 </div>
             </li>
 
-
             <li class="nav-item">
-                <a href="#sub_other" data-toggle="collapse"
-                   th:class="${(active=='actuator.html'||active=='redirect.html'||active=='xff.html'||active=='jndi.html'||active=='dos.html'||active=='cors.html'||active=='captcha_vul.html')?'nav-link active':'nav-link'}"><i
+                <a href="#other_submenu" data-toggle="collapse"
+                   th:class="${(active=='actuator.html' || active=='redirect.html' || active=='xff.html' || active=='dos.html' || active=='cors.html' || active=='swagger.html' || active=='xpath.html') ? 'nav-link active':'nav-link'}"><i
                         class="lnr lnr-location"></i>
                     <span>其他漏洞</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
-                <div id="sub_other"
-                     th:class="${(active=='actuator.html'||active=='redirect.html'||active=='xff.html'||active=='jndi.html'||active=='dos.html'||active=='cors.html'||active=='captcha_vul.html') ? 'collapsed':'collapse'}">
+                <div id="other_submenu"
+                     th:class="${(active=='actuator.html' || active=='redirect.html' || active=='xff.html' || active=='dos.html' || active=='cors.html' || active=='swagger.html' || active=='xpath.html') ? 'collapsed':'collapse'}">
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <a th:class="${active=='redirect.html' ? 'nav-link active':'nav-link'}"
@@ -210,71 +253,44 @@
                                 <i class="lnr lnr-bug"></i><span>开放重定向</span></a>
                         </li>
                         <li class="nav-item">
-                            <a th:class="${active=='actuator.html'?'nav-link active':'nav-link'}"
+                            <a th:class="${active=='actuator.html' ? 'nav-link active':'nav-link'}"
                                th:href="@{/index/actuator}">
                                 <i class="lnr lnr-bug"></i><span>Actuator</span>
                             </a>
                         </li>
                         <li>
-                            <a th:class="${active=='xff.html'?'nav-link active':'nav-link'}" th:href="@{/index/xff}">
+                            <a th:class="${active=='xff.html' ? 'nav-link active':'nav-link'}" th:href="@{/index/xff}">
                                 <i class="lnr lnr-bug"></i><span>IP地址伪造</span>
                             </a>
                         </li>
                         <li>
-                            <a th:class="nav-link" th:href="@{/swagger-ui.html}">
+                            <a th:class="${active=='swagger.html' ? 'nav-link active':'nav-link'}"
+                               th:href="@{/index/swagger}">
                                 <i class="lnr lnr-bug"></i><span>Swagger未授权</span>
                             </a>
                         </li>
                         <li>
-                            <a th:class="${active=='cors.html'?'nav-link active':'nav-link'}" th:href="@{/index/cors}">
+                            <a th:class="${active=='cors.html' ? 'nav-link active':'nav-link'}"
+                               th:href="@{/index/cors}">
                                 <i class="lnr lnr-bug"></i><span>CORS</span>
                             </a>
                         </li>
+
                         <li>
-                            <a th:class="${active=='jndi.html'?'nav-link active':'nav-link'}"
-                               th:href="@{/index/jndi}">
-                                <i class="lnr lnr-bug"></i><span>JNDI注入</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a th:class="${active=='dos.html'?'nav-link active':'nav-link'}" th:href="@{/index/dos}"><i
+                            <a th:class="${active=='dos.html' ? 'nav-link active':'nav-link'}"
+                               th:href="@{/index/dos}"><i
                                     class="lnr lnr-bug"></i><span>DoS攻击</span></a>
                         </li>
 
                         <li>
-                            <a th:class="${active=='captcha_vul.html'?'nav-link active':'nav-link'}"
-                               th:href="@{/index/captcha}"><i
-                                    class="lnr lnr-bug"></i><span>验证码复用</span></a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-
-
-            <li class="nav-item">
-                <a th:if="${session.LoginUser=='admin'}" href="#sub_sys" data-toggle="collapse"
-                   th:class="${(active=='logs.html')?'nav-link active':'nav-link'}"><i
-                        class="lnr lnr-cog"></i>
-                    <span>系统管理</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
-
-                <a th:if="${session.LoginUser!='admin'}" th:href="@{/admin/logs/list}" th:class="nav-link"><i
-                        class="lnr lnr-cog"></i>
-                    <span>系统管理</span></a>
-
-                <div th:if="${session.LoginUser=='admin'}" id="sub_sys"
-                     th:class="${(active=='logs.html') ? 'collapsed':'collapse'}">
-                    <ul class="nav flex-column">
-                        <li>
-                            <a th:class="${active=='logs.html'?'nav-link active':'nav-link'}"
-                               th:href="@{/admin/logs/list}">
-                                <span>登录日志</span>
-                            </a>
+                            <a th:class="${active=='xpath.html' ? 'nav-link active':'nav-link'}"
+                               th:href="@{/index/xpath}"><i
+                                    class="lnr lnr-bug"></i><span>XPath注入</span></a>
                         </li>
 
                     </ul>
                 </div>
             </li>
-
 
         </ul>
     </div>
@@ -290,60 +306,27 @@
 
 <div th:fragment="codemirror">
     <script>
-        var editor1 = CodeMirror.fromTextArea(document.getElementById("code1"), {
+        const editorConfig = {
             mode: "groovy",
             indentUnit: 4,
             indentWithTabs: true,
             lineNumbers: true,
-            theme: "mdn-like",
-        });
-        $("#code1").text(editor1.getValue());
-        editor1.setSize('550px', '400px');
+            theme: "mdn-like"
+        };
 
+        function createEditor(id) {
+            const editor = CodeMirror.fromTextArea(document.getElementById(id), editorConfig);
+            $("#" + id).text(editor.getValue());
+            editor.setSize('', '450px');
+        }
 
-        var editor2 = CodeMirror.fromTextArea(document.getElementById("code2"), {
-            mode: "groovy",
-            indentUnit: 4,
-            lineNumbers: true,
-            theme: "mdn-like",
-        });
-        $("#code2").text(editor2.getTextArea().value);
-        editor2.setSize('550px', '400px');
-
-        var editor3 = CodeMirror.fromTextArea(document.getElementById("code3"), {
-            mode: "groovy",
-            lineNumbers: true,
-            theme: "mdn-like",
-        });
-        $("#code3").text(editor3.getTextArea().value);
-        editor3.setSize('550px', '400px');
-
-
-        var editor4 = CodeMirror.fromTextArea(document.getElementById("code4"), {
-            mode: "groovy",
-            lineNumbers: true,
-            theme: "mdn-like",
-        });
-        $("#code4").text(editor4.getTextArea().value);
-        editor4.setSize('550px', '400px');
-
-        var editor5 = CodeMirror.fromTextArea(document.getElementById("code5"), {
-            mode: "groovy",
-            lineNumbers: true,
-            theme: "mdn-like",
-        });
-        $("#code5").text(editor5.getTextArea().value);
-        editor5.setSize('550px', '400px');
-
-        var editor6 = CodeMirror.fromTextArea(document.getElementById("code6"), {
-            mode: "groovy",
-            lineNumbers: true,
-            theme: "mdn-like",
-        });
-        $("#code6").text(editor6.getTextArea().value);
-        editor6.setSize('550px', '400px');
-
-
+        createEditor("code1");
+        createEditor("code2");
+        createEditor("code3");
+        createEditor("code4");
+        createEditor("code5");
+        createEditor("code6");
+        createEditor("code7");
     </script>
 </div>
 

@@ -39,7 +39,7 @@ public class Swagger2 {
                 .title("Swagger2 RESTful API")
                 //创建人
                 .contact(new Contact("nul1", "https://www.github.com/j3ers3", "hahah@gmail.com"))
-                .version("1.1")
+                .version("1.10")
                 .description("Hello Java Sec API")
                 .build();
     }

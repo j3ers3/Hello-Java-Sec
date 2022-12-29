@@ -6,15 +6,27 @@
     align-items: center;
     -webkit-box-pack: center;
     justify-content: center;
+    background: rgb(251, 251, 253);
     #background-image: url("/img/banner.png");
 }
 
 .form-signin {
     width: 100%;
     #max-width: 400px;
-    padding: 20px;
+    padding: 45px;
     #margin: 0 auto;
-    margin-top: 70px;
+    margin-top: 100px;
+    box-shadow: 0 0 15px 12px #ececec;
+    border-radius: 20px;
+}
+
+.form-signin .form-group i {
+    position: absolute;
+    top: 12px;
+    left: 60px;
+    font-size: 17px;
+    color: #c8c8c8;
+    transition: all 0.5s ease 0s;
 }
 
 .form-signin .checkbox {
@@ -27,7 +39,7 @@
     box-sizing: border-box;
     height: auto;
     padding: 10px;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 
@@ -42,8 +54,8 @@
 
 
 .form-signin img {
-    width: 62px;
-    height: 56px;
+    width: 48px;
+    height: 44px;
 }
 
 .form-signin p {

@@ -14,12 +14,12 @@
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
             <div class="vul_header">
                 <span>SSTI</span>
-                <a class="btn btn-sm btn-primary" target="_blank" href="">漏洞案例</a>
             </div>
             <hr>
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span>
+                        漏洞描述</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
@@ -32,22 +32,43 @@
                     应用模板内容的一部分，在进行目标编译渲染的过程中，执行了用户插入的恶意内容。
                 </div>
                 <div class="tab-pane fade" id="bb">
-                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder" style="height: 100px;">
+                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder"
+                              style="height: 100px;">
 null
                     </textarea>
                 </div>
             </div>
-
             <hr>
 
             <div class="box-float">
                 <div class="float1">
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                       href="/SSTI/thymeleaf/vul?lang=__$%7bnew%20java.util.Scanner(T(java.lang.Runtime).getRuntime().exec('whoami').getInputStream()).next()%7d__::.x">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - thymeleaf模版注入</span></h5>
+                    <label for="code1"></label><textarea class="form-control" name="code" id="code1">
+ @GetMapping("/thymeleaf/vul")
+ public String thymeleafVul(@RequestParam String lang) {
+     // 模版文件参数可控
+     return "lang/" + lang;
+ }
+                    </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-danger" href="/SSTI/doc/__${T(java.lang.Runtime).getRuntime().exec('open -a Calculator')}__::.x">运行</a>
-                    <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
-                    <textarea class="form-control" name="code" id="code1">
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                       href="/SSTI/doc/vul/__${T(java.lang.Runtime).getRuntime().exec('open -a Calculator')}__::.x">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - url作为视图</span></h5>
+                    <label for="code2"></label><textarea class="form-control" name="code" id="code2">
  /**
-   * 将请求的url作为视图名称，调用模板引擎去解析
+   * 如果controller无返回值，则以GetMapping的路由为视图名称，即将请求的url作为视图名称，调用模板引擎去解析
    * 在这种情况下，我们只要可以控制请求的controller的参数，一样可以造成RCE漏洞
    * payload: __${T(java.lang.Runtime).getRuntime().exec("open -a Calculator")}__::.x
    */
@@ -61,14 +82,42 @@ null
                 </div>
 
                 <div class="float2">
-                    <a style="float:right" class="btn btn-sm btn-success" href="/SSTI/doc/safe/__${T(java.lang.Runtime).getRuntime().exec('open -a Calculator')}__::.x">运行</a>
+                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
+                       href="/SSTI/thymeleaf/safe?lang=payload">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 白名单</span></h5>
+                    <label for="code3"></label><textarea class="form-control" name="code" id="code3">
+ public String thymeleafSafe(@RequestParam String lang) {
+     List<String> white_list = new ArrayList<String>();
+     white_list.add("en");
+     white_list.add("zh");
+
+     if (white_list.contains(lang)){
+         return "lang/" + lang;
+     } else{
+         return "commons/401";
+     }
+ }
+                    </textarea><br><br>
+
+                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
+                       href="/SSTI/doc/safe/__${T(java.lang.Runtime).getRuntime().exec('open -a Calculator')}__::.x">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
-                    <textarea class="form-control" name="code" id="code2">
+                    <label for="code4"></label><textarea class="form-control" name="code" id="code4">
  // 由于controller的参数被设置为HttpServletResponse，Spring认为它已经处理了HTTP Response，因此不会发生视图名称解析
 
  @GetMapping("/doc/safe/{document}")
  public void getDocument(@PathVariable String document, HttpServletResponse response) {
-     System.out.println("Retrieving " + document);
+     System.out.println(document);
  }
                     </textarea>
 
