@@ -23,7 +23,7 @@ public class IDOR2 {
     // 只允许admin用户可以访问管理页面
     @GetMapping(value = "/safe/admin")
     public String safe(HttpSession session) {
-        if (session.getAttribute("LoginUser").equals("admin.")) {
+        if (session.getAttribute("LoginUser").equals("admin")) {
             return "idoradmin";
         } else {
             return "commons/403";
