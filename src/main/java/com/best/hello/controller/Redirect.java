@@ -51,6 +51,15 @@ public class Redirect {
     }
 
 
+    // http://127.0.0.1:8888/Redirect/vul4?url=http://www.baidu.com
+    @ApiOperation(value = "vul: response.setStatus&response.setHeader")
+    @GetMapping("/vul4")
+    public void vul4(String url, HttpServletResponse response) throws IOException {
+        response.setStatus(HttpServletResponse.SC_FOUND);
+        response.setHeader("Location", url);
+    }
+
+
     @ApiOperation(value = "safe: 白名单模式")
     @GetMapping("/safe")
     @ResponseBody
