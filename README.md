@@ -1,4 +1,4 @@
-# ☕️ Hello Java Sec ![Stage](https://img.shields.io/badge/Release-DEV-brightgreen.svg) ![Build Status](https://img.shields.io/badge/Version-1.10-red.svg)
+# ☕️ Hello Java Sec ![Stage](https://img.shields.io/badge/Release-DEV-brightgreen.svg) ![Build Status](https://img.shields.io/badge/Version-1.11-red.svg)
 > Java漏洞平台，结合漏洞代码和安全编码，帮助研发同学理解和减少漏洞，代码仅供参考
 
 ![](media/16304933749187.jpg)
