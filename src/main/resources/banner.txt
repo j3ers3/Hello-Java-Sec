@@ -11,6 +11,6 @@
 
 		       ->>[======================]->>
 		       MMMMMM---==[=Program : Hello Java Sec
-	           MMMMMM---==[=Version : 1.10
-	           MMMMMM---==[=Update : 2022/12/30
+	           MMMMMM---==[=Version : 1.11
+	           MMMMMM---==[=Update : 2023/10/18
 	           MMMMMM---==[=Powered By : nul1

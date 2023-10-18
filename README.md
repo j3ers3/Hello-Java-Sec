@@ -16,7 +16,7 @@
 - [x] SSRF
 - [x] Directory Traversal
 - [x] Redirect
-- [ ] CSRF
+- [x] CSRF
 - [x] File Upload
 - [x] XXE
 - [x] Actuator
@@ -27,13 +27,13 @@
 - [x] Dos
 - [x] Xpath
 - [x] Jwt
-- [ ] more
+- [ ] more and more
 
 ![](media/16304936834843.jpg)
 
 ## Run
 ### IDEA
-配置数据库连接，数据库文件`db.sql`
+配置数据库连接，数据库文件`src/main/resources/db.sql`
 ```
 spring.datasource.url=jdbc:mysql://127.0.0.1:3306/test
 spring.datasource.username=root

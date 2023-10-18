@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
+
+<body>
+<!-- 顶部导航栏 -->
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边栏 -->
+        <div th:replace="~{commons/commons::siderbar(active='csv_injection.html')}"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div class="vul_header">
+                <span>CSV注入</span>
+            </div>
+            <h3></h3>
+            <hr>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span>
+                        漏洞描述</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
+                    CSV注入（CSV Injection）也称为公式注入，是指在CSV文件中嵌入不受信任的输入时发生的情况。
+                    当使用诸如Microsoft Excel或LibreOffice Calc等电子表格程序打开CSV文件时，以=开头的单元格将被解释为公式，造成命令执行。
+                </div>
+                <div class="tab-pane fade" id="bb">
+                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder"
+                              style="height: 100px;">
+单元格不以特殊字符开头：+,-,@,=
+或黑名单过滤=,-,cmd,@
+                    </textarea>
+                </div>
+            </div>
+            <hr>
+
+            <div class="box-float">
+                <div class="float1">
+                    <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
+                    <div class="container">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="content" name="content"
+                                           value="=1+cmd|'/C calc'!A0" style="color: #b5babb">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="submitForm()">提交
+                                        </button>
+                                        <a class="btn btn-sm btn-primary" th:href="@{/CSVInjection/exportVul}">导出</a>
+                                    </div>
+                                </div>
+                                <hr>
+
+                                <div class="form-group">
+                                    <table class="table table-striped table-bordered table-sm" id="xssTableSafe">
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Data</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <label for="code1"></label><textarea class="form-control" id="code1">
+public void exportCSV(HttpServletResponse response) throws Exception {
+    List<XSSEntity> data = xssMapper.list();
+
+    String fileName = "csv_injection.csv";
+    response.setContentType("text/csv");
+    response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+
+    CSVPrinter csvPrinter = new CSVPrinter(response.getWriter(), CSVFormat.DEFAULT
+        .withHeader("ID", "用户名", "内容", "时间"));
+
+    for (XSSEntity x : data) {
+        csvPrinter.printRecord(x.getId(), x.getUser(), x.getContent(), x.getDate());
+    }
+
+    csvPrinter.flush();
+    csvPrinter.close();
+}
+                    </textarea><br><br>
+                </div>
+
+                <div class="float2">
+                    <a style="float:right" class="btn btn-sm btn-primary"
+                       href="/CSVInjection/exportSafe">
+                        <span class="align-middle"> 导出</span></a>
+                    <h5><span class="lnr lnr-bug"> 安全代码</span></h5>
+
+                    <label for="code2"></label><textarea class="form-control" id="code2">
+private String filterCSVInjection(String input) {
+    // 定义需要过滤的特殊字符
+    String[] forbiddenChars = {"=", "+", "-", "@"};
+
+    // 遍历特殊字符，将其替换为空字符串
+    for (String forbiddenChar : forbiddenChars) {
+       input = input.replace(forbiddenChar, "");
+    }
+
+    return input;
+}
+                    </textarea><br><br>
+
+
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- 引入script -->
+<div th:replace="~{commons/commons::script}"></div>
+<script>
+    function submitForm() {
+        const content = document.getElementById("content").value || document.getElementById("content2").value;
+        const xhr = new XMLHttpRequest();
+
+        xhr.open("POST", "/CSVInjection/save");
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.send("content=" + encodeURIComponent(content));
+
+        // 处理响应
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                alert("提交成功")
+                location.reload();
+            }
+        };
+    }
+
+    $(document).ready(function () {
+        $.ajax({
+            url: '/CSVInjection/getData',
+            method: 'GET',
+            success: function (data) {
+                $.each(data, function (index, item) {
+                    $('#xssTableSafe tbody').append('<tr><td>' + item.id + '</td><td>' + $('<div/>').text(item.content).html() + '</td><td><button class="btn btn-sm" onclick="deleteRow(' + item.id + ')"><span class="lnr lnr-trash"></span></button></td></tr>');
+                });
+            }
+        });
+    });
+
+    function deleteRow(id) {
+        $.ajax({
+            url: '/CSVInjection/delete?id=' + id,
+            method: 'GET',
+            success: function () {
+                location.reload();
+            }
+        });
+    }
+</script>
+</body>
+</html>

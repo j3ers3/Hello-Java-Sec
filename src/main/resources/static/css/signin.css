@@ -6,14 +6,15 @@
     align-items: center;
     -webkit-box-pack: center;
     justify-content: center;
-    #background-image: url("/img/banner.png");
+}
+
+.form-control:focus {
+    box-shadow: none;
 }
 
 .form-signin {
     width: 100%;
-    #max-width: 400px;
     padding: 45px;
-    #margin: 0 auto;
     margin-top: 100px;
     box-shadow: 0 0 15px 12px #ececec;
     border-radius: 20px;

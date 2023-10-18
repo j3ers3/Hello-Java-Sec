@@ -2,9 +2,7 @@ body {
     font-size: .875rem;
 }
 
-/*
- * Sidebar
- */
+/* Sidebar */
 .sidebar {
     position: fixed;
     top: 0;
@@ -37,9 +35,9 @@ body {
 
 /* 侧边栏样式 */
 .sidebar .nav > li > a {
-    padding: 9px 25px; /* 上下内边距是 10px，左右内边距是 30px*/
+    padding: 9px 15px;
     color: #AEB7C2;
-    border-left: 4px solid transparent; /* 左边样式 */
+    border-left: 4px solid transparent;
 }
 
 /* 侧边栏图标 */
@@ -76,17 +74,17 @@ body {
 }
 
 
-/* 子菜单 */
+/* Submenu */
 .sidebar .nav .nav {
     background-color: #252c35;
 }
 
-/* 子菜单布局 */
+/* Submenu layout */
 .sidebar .nav .nav > li > a {
-    padding-left: 50px;
+    padding-left: 30px;
     padding-top: 4px;
     padding-bottom: 6px;
-    border-left: 4px solid transparent; /* 左边样式 */
+    border-left: 4px solid transparent;
 }
 
 .sidebar .nav .nav > li > a:focus, .sidebar .nav .nav > li > a.active {
@@ -180,25 +178,18 @@ body {
     margin-right: 10px;
 }
 
-/*
- * 漏洞描述
- */
 .dec {
     font-size: 15px;
-/ / background-color: #cee1f3;
     background-color: #dce9f8;
 }
 
-/* 标签 */
 .nav-tabs .nav-link {
     font-size: 15px;
 }
 
 .nav-tabs a.active.nav-link {
-/ / background-color: #dce9f8;
 }
 
-/* 编码建议 */
 #coder {
     background-color: #dce9f8;
     border: 0;

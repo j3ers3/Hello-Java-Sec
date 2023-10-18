@@ -12,7 +12,8 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addViewController("/").setViewName("index");
         registry.addViewController("/login").setViewName("login");
         registry.addViewController("/index").setViewName("index");
-        registry.addViewController("/index/xss").setViewName("xss");
+        registry.addViewController("/index/xss").setViewName("xss_reflect");
+        registry.addViewController("/index/xss/store").setViewName("xss_store");
         registry.addViewController("/index/rce").setViewName("rce");
         registry.addViewController("/index/spel").setViewName("spel");
         registry.addViewController("/index/ssti").setViewName("ssti");
@@ -40,6 +41,7 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addViewController("/index/swagger").setViewName("swagger");
         registry.addViewController("/index/jwt").setViewName("jwt");
         registry.addViewController("/index/xpath").setViewName("xpath");
+        registry.addViewController("/index/csv").setViewName("csv_injection");
 
     }
 

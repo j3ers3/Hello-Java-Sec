@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
+
+<body>
+<!-- 顶部导航栏 -->
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边栏 -->
+        <div th:replace="~{commons/commons::siderbar(active='xss_store.html')}"></div>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div class="vul_header">
+                <span>XSS漏洞</span>
+            </div>
+            <h3></h3>
+            <hr>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span>
+                        漏洞描述</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
+                    XSS (Cross-Site Scripting)
+                    跨站脚本攻击是一种Web安全漏洞，攻击者通过在Web页面中注入恶意代码，如JavaScript脚本，来攻击用户，利用Web应用程序对用户输入数据的信任，以盗取用户信息、会话信息或在用户浏览器上执行其他恶意操作。<br><br>
+                    存储型 XSS 是将恶意代码存储到 Web 应用程序的数据库或文件系统中，并在 Web 页面中展示，当用户访问这个页面时，恶意代码会被执行。
+                </div>
+                <div class="tab-pane fade" id="bb">
+                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder"
+                              style="height: 260px;">
+【必须】外部输入拼接到response页面前进行编码处理
+ 当响应“content-type”为“html”类型时，外部输入拼接到响应包中，需根据输出位置进行编码处理,需要对以下6个特殊字符进行HTML实体编码(&, <, >, ", ',/)，也可参考或直接使用业界已有成熟第三方库如ESAPI。
+
+【必须】设置正确的HTTP响应包类型
+ 响应包的HTTP头“Content-Type”必须正确配置响应包的类型，禁止非HTML类型的响应包设置为“text/html”。此举会使浏览器在直接访问链接时，将非HTML格式的返回报文当做HTML解析，增加反射型XSS的触发几率。
+
+【建议】设置安全的HTTP响应头
+ 控制用户登录鉴权的Cookie字段 应当设置HttpOnly属性以防止被XSS漏洞/JavaScript操纵泄漏。
+                    </textarea>
+                </div>
+            </div>
+            <hr>
+
+            <div class="box-float">
+                <div class="float1">
+                    <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
+                    <div class="container">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="content" name="content"
+                                           value="<script>alert(1)</script>" style="color: #b5babb">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="submitForm()">提交
+                                        </button>
+                                    </div>
+                                </div>
+                                <hr>
+
+                                <div class="form-group">
+                                    <table class="table table-striped table-bordered table-sm" id="xssTableVul">
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Data</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <label for="code1"></label><textarea class="form-control" id="code1">
+public String save(HttpServletRequest request) {
+    String content = request.getParameter("content");
+    xssMapper.add(content);
+    return "success";
+ }
+                    </textarea><br><br>
+                </div>
+
+                <div class="float2">
+                    <h5><span class="lnr lnr-bug"> 安全代码</span></h5>
+                    <div class="container">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="content2" name="content">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-sm btn-success" onclick="submitForm()"
+                                                placeholder="<script>alert(1)</script>">提交
+                                        </button>
+                                    </div>
+                                </div>
+                                <hr>
+
+                                <div class="form-group">
+                                    <table class="table table-striped table-bordered table-sm" id="xssTableSafe">
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Data</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <label for="code2"></label><textarea class="form-control" id="code2">
+// 方案一、后端输入转义
+public String safeStore(HttpServletRequest request) {
+    String content = request.getParameter("content");
+    String safe_content = HtmlUtils.htmlEscape(content);
+    xssMapper.add(safe_content);
+    return "success";
+}
+
+// 方案二、前端输出转义
+$('#xssTableSafe tbody').append('<tr><td>' + item.id + '</td><td>' + $('<div/>').text(item.content).html() + '</td></tr>');
+                    </textarea><br><br>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- 引入script -->
+<div th:replace="~{commons/commons::script}"></div>
+<script>
+    function submitForm() {
+        const content = document.getElementById("content").value || document.getElementById("content2").value;
+        const xhr = new XMLHttpRequest();
+
+        xhr.open("POST", "/XSS/save");
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.send("content=" + encodeURIComponent(content));
+
+        // 处理响应
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                alert("提交成功")
+                location.reload();
+            }
+        };
+    }
+
+    $(document).ready(function () {
+        $.ajax({
+            url: '/XSS/getStored',
+            method: 'GET',
+            success: function (data) {
+                $.each(data, function (index, item) {
+                    $('#xssTableVul tbody').append('<tr><td>' + item.id + '</td><td>' + item.content + '</td><td><button class="btn btn-sm" onclick="deleteRow(' + item.id + ')"><span class="lnr lnr-trash"></span></button></td></tr>');
+                    $('#xssTableSafe tbody').append('<tr><td>' + item.id + '</td><td>' + $('<div/>').text(item.content).html() + '</td><td><button class="btn btn-sm" onclick="deleteRow(' + item.id + ')"><span class="lnr lnr-trash"></span></button></td></tr>');
+                });
+            }
+        });
+    });
+
+    function deleteRow(id) {
+        $.ajax({
+            url: '/XSS/delete?id=' + id,
+            method: 'GET',
+            success: function () {
+                location.reload();
+            }
+        });
+    }
+</script>
+</body>
+</html>

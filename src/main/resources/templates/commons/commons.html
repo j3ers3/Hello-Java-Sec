@@ -136,9 +136,26 @@
             </li>
 
             <li class="nav-item">
-                <a th:class="${(active=='xss.html') ? 'nav-link active':'nav-link'}" th:href="@{/index/xss}">
-                    <i class="lnr lnr-cross"></i><span>XSS</span>
-                </a>
+                <a href="#xss_submenu"
+                   th:class="${((active=='xss_store.html') || (active=='xss_reflect.html')) ? 'nav-link active':'nav-link'}"
+                   data-toggle="collapse">
+                    <i class="lnr lnr-cross"></i><span>跨站脚本</span><i
+                        class="icon-submenu lnr lnr-chevron-left"></i></a>
+                <div id="xss_submenu"
+                     th:class="${((active=='xss_reflect.html') || (active=='xss_store.html')) ? 'collapsed':'collapse'}">
+                    <ul class="nav flex-column">
+                        <li>
+                            <a th:class="${active=='xss_reflect.html' ? 'nav-link active':'nav-link'}"
+                               th:href="@{/index/xss}">
+                                <i class="lnr lnr-bug"></i><span>反射型</span></a>
+                        </li>
+                        <li>
+                            <a th:class="${active=='xss_store.html' ? 'nav-link active':'nav-link'}"
+                               th:href="@{/index/xss/store}">
+                                <i class="lnr lnr-bug"></i><span>存储型</span></a>
+                        </li>
+                    </ul>
+                </div>
             </li>
 
             <li class="nav-item">
@@ -241,11 +258,11 @@
 
             <li class="nav-item">
                 <a href="#other_submenu" data-toggle="collapse"
-                   th:class="${(active=='actuator.html' || active=='redirect.html' || active=='xff.html' || active=='dos.html' || active=='cors.html' || active=='swagger.html' || active=='xpath.html') ? 'nav-link active':'nav-link'}"><i
+                   th:class="${(active=='actuator.html' || active=='redirect.html' || active=='xff.html' || active=='dos.html' || active=='cors.html' || active=='swagger.html' || active=='xpath.html' || active=='csrf.html' || active=='csv_injection.html') ? 'nav-link active':'nav-link'}"><i
                         class="lnr lnr-location"></i>
                     <span>其他漏洞</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
                 <div id="other_submenu"
-                     th:class="${(active=='actuator.html' || active=='redirect.html' || active=='xff.html' || active=='dos.html' || active=='cors.html' || active=='swagger.html' || active=='xpath.html') ? 'collapsed':'collapse'}">
+                     th:class="${(active=='actuator.html' || active=='redirect.html' || active=='xff.html' || active=='dos.html' || active=='cors.html' || active=='swagger.html' || active=='xpath.html' || active=='csrf.html' || active=='csv_injection.html') ? 'collapsed':'collapse'}">
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <a th:class="${active=='redirect.html' ? 'nav-link active':'nav-link'}"
@@ -286,6 +303,18 @@
                             <a th:class="${active=='xpath.html' ? 'nav-link active':'nav-link'}"
                                th:href="@{/index/xpath}"><i
                                     class="lnr lnr-bug"></i><span>XPath注入</span></a>
+                        </li>
+
+                        <li>
+                            <a th:class="${active=='csv_injection.html' ? 'nav-link active':'nav-link'}"
+                               th:href="@{/index/csv}"><i
+                                    class="lnr lnr-bug"></i><span>CSV注入</span></a>
+                        </li>
+
+                        <li>
+                            <a th:class="${active=='csrf.html' ? 'nav-link active':'nav-link'}"
+                               th:href="@{/index/csrf}"><i
+                                    class="lnr lnr-bug"></i><span>CSRF</span></a>
                         </li>
 
                     </ul>

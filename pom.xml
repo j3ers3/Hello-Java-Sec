@@ -11,7 +11,7 @@
 
     <groupId>com.best</groupId>
     <artifactId>javasec</artifactId>
-    <version>1.10</version>
+    <version>1.11</version>
     <name>hello java sec</name>
     <description>Java Sec</description>
     <packaging>jar</packaging>
@@ -149,7 +149,7 @@
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.12.2</version>
+            <version>1.15.4</version>
         </dependency>
 
         <!-- LDAP -->
@@ -209,6 +209,12 @@
             <groupId>org.owasp.esapi</groupId>
             <artifactId>esapi</artifactId>
             <version>2.2.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.owasp.encoder</groupId>
+            <artifactId>encoder</artifactId>
+            <version>1.2.3</version>
         </dependency>
 
         <!-- log4Shell -->
@@ -273,6 +279,19 @@
             <groupId>com.mchange</groupId>
             <artifactId>c3p0</artifactId>
             <version>0.9.5.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.9.0</version>
+        </dependency>
+
+        <!-- 解决JDK高版本JAXB API依赖缺失 -->
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.1</version>
         </dependency>
 
     </dependencies>
