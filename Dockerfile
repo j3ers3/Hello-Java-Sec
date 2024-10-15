@@ -2,7 +2,7 @@ FROM openjdk:8-jdk
 
 VOLUME /tmp
 
-ADD ./target/javasec-1.7.jar app.jar
+ADD ./target/javasec-1.11.jar app.jar
 
 EXPOSE 8888
 
