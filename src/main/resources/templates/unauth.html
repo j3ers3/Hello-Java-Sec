@@ -11,56 +11,66 @@
         <!-- 侧边栏 -->
         <div th:replace="~{commons/commons::siderbar(active='unauth.html')}"></div>
 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <div class="vul_header">
-                <span>接口未授权访问</span>
-            </div>
-            <hr>
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span>
-                        漏洞描述</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
-                </li>
-            </ul>
-
-            <div class="tab-content">
-                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
-                    接口未授权访问（Unauthorized
-                    Access），在不进行请求授权的情况下，能够直接对相应的业务逻辑功能进行访问、操作等。通常是由于认证页面存在缺陷或者无认证、安全配置不当等导致的。
+        <main role="main" class="col-md-10 offset-md-2 pt-3 main">
+            <div class="card">
+                <div class="card-header py-1">
+                    <div class="vul_header">
+                        <span>接口未授权访问</span>
+                        <span class="header_link">
+                            <a class="btn btn-sm btn-primary" href="#">漏洞案例</a>
+                            <a class="btn btn-sm btn-primary" href="#">wiki</a>
+                        </span>
+                    </div>
                 </div>
-                <div class="tab-pane fade" id="bb">
-                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder"
-                              style="height: 130px;">
-【必须】权限校验
- 对于非公共操作，应当校验当前访问账号进行操作权限和数据权限校验。
- 确保所有非公共的API接口先经过登录控制器。
-                    </textarea>
+
+                <div class="card-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#vulDescription">
+                                漏洞描述</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#secureCoding"> 安全编码</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="vulDescription">
+                            <div class="alert alert-desc"><i class="lnr lnr-alarm"></i>
+                                接口未授权访问（Unauthorized
+                                Access），在不进行请求授权的情况下，能够直接对相应的业务逻辑功能进行访问、操作等。通常是由于认证页面存在缺陷或者无认证、安全配置不当等导致的。
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="secureCoding">
+                            <div class="alert alert-desc">
+                                <li>【必须】权限校验</li>
+                                对于非公共操作，应当校验当前访问账号进行操作权限和数据权限校验。 确保所有非公共的API接口先经过登录控制器。
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <hr>
 
             <div class="box-float">
                 <div class="float1">
                     <a style="float:right" class="btn btn-sm btn-danger"
-                       href="/Unauth/api/info">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       href="/vulnapi/unauth/api/info">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
 
-                    <label for="code1"></label><textarea class="form-control" id="code1">
-// 对部分接口未做鉴权拦截，导致可未授权访问
+                    <textarea class="form-control" id="code1">
+/**
+ * 在部分接口中未进行鉴权拦截，导致可能存在未授权访问的问题
+ */
 @Override
 public void addInterceptors(InterceptorRegistry registry) {
     registry.addInterceptor(new LoginHandlerInterceptor())
     .addPathPatterns("/**")
-    .excludePathPatterns("/Unauth/**", "/css/**", "/js/**", "/img/**");
+    .excludePathPatterns("/vulnapi/unauth/**", "/css/**", "/js/**", "/img/**");
 }
                     </textarea>
                 </div>
@@ -68,13 +78,16 @@ public void addInterceptors(InterceptorRegistry registry) {
                 <div class="float2">
                     <a style="float:right" class="btn btn-sm btn-success"
                        href="#">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
-                    <label for="code2"></label><textarea class="form-control" id="code2">
+                    <textarea class="form-control" id="code2">
+/**
+ * 确保所有需要鉴权的请求都能通过拦截器进行处理，从而保护系统的安全
+ */
 @Override
 public void addInterceptors(InterceptorRegistry registry) {
     registry.addInterceptor(new LoginHandlerInterceptor())

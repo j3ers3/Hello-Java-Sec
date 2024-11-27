@@ -45,7 +45,7 @@ import java.io.StringReader;
 
 @Api("Xml外部实体注入")
 @RestController
-@RequestMapping("/XXE")
+@RequestMapping("/vulnapi/XXE")
 public class XXE {
     Logger log = LoggerFactory.getLogger(XXE.class);
 

@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
-@RequestMapping("/RCE/Groovy")
+@RequestMapping("/vulnapi/RCE/Groovy")
 public class GroovyVul {
 
     /**

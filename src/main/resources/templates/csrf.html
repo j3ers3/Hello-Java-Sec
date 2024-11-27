@@ -11,63 +11,72 @@
         <!-- 侧边栏 -->
         <div th:replace="~{commons/commons::siderbar(active='csrf.html')}"></div>
 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <div class="vul_header">
-                <span>CSRF</span>
-            </div>
-            <hr>
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span>
-                        漏洞描述</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
-                </li>
-            </ul>
-            <div class="tab-content">
-                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
-                    CSRF（Cross-site request forgery），跨站请求伪造，是指利用受害者尚未失效的身份认证信息（cookie、会话等），诱骗其点击恶意链接或者访问包含攻击代码的页面，在受害人不知情的情况下以受害者的身份向（身份认证信息所对应的）服务器发送请求，从而完成非法操作（如转账、改密等）。CSRF与XSS最大的区别就在于，CSRF并没有盗取cookie而是直接利用。
-
+        <main role="main" class="col-md-10 offset-md-2 pt-3 main">
+            <div class="card">
+                <div class="card-header py-1">
+                    <div class="vul_header">
+                        <span>CSRF</span>
+                    </div>
                 </div>
-                <div class="tab-pane fade" id="bb">
-                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder"
-                              style="height: 250px;">
-【必须】CSRF Token
- 服务端为每个客户端生成一个随机的CSRF Token，并将其存储在Session中。
- 每次客户端向服务端发送请求时，需要携带这个CSRF Token，以供服务端进行验证。
- 在服务端验证CSRF Token时，如果请求中携带的Token与Session中存储的Token不一致，则认为请求是非法的。
+                <div class="card-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#vulDescription">
+                                漏洞描述</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#secureCoding"> 安全编码</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="vulDescription">
+                            <div class="alert alert-desc"><i class="lnr lnr-alarm"></i>
+                                CSRF（Cross-site request
+                                forgery），跨站请求伪造，是指利用受害者尚未失效的身份认证信息（cookie、会话等），诱骗其点击恶意链接或者访问包含攻击代码的页面，在受害人不知情的情况下以受害者的身份向（身份认证信息所对应的）服务器发送请求，从而完成非法操作（如转账、改密等）。CSRF与XSS最大的区别就在于，CSRF并没有盗取cookie而是直接利用。
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="secureCoding">
+                            <div class="alert alert-desc">
+                                <li>【必须】CSRF Token</li>
+                                服务端为每个客户端生成一个随机的CSRF Token，并将其存储在Session中。<br>
+                                每次客户端向服务端发送请求时，需要携带这个CSRF Token，以供服务端进行验证。<br>
+                                在服务端验证CSRF Token时，如果请求中携带的Token与Session中存储的Token不一致，则认为请求是非法的。<br><br>
 
- 校验Referer头
- 通过检查HTTP请求的Referer字段是否属于本站域名，非本站域名的请求进行拒绝。
- 这种校验方式需要注意两点：
- 1.要需要处理Referer为空的情况，当Referer为空则拒绝请求
- 2.注意避免例如qq.com.evil.com 部分匹配的情况。
-                    </textarea>
+                                <li>【建议】校验Referer头</li>
+                                通过检查HTTP请求的Referer字段是否属于本站域名，非本站域名的请求进行拒绝。<br>
+                                这种校验方式需要注意两点：<br>
+                                1.要需要处理Referer为空的情况，当Referer为空则拒绝请求<br>
+                                2.注意避免例如qq.com.evil.com 部分匹配的情况。
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <hr>
 
             <div class="box-float">
                 <div class="float1">
-                    <div class="container">
-                        <div class="card">
-                            <div class="card-header">危险转账</div>
-                            <div class="card-body">
-                                <form action="/CSRF/transfer/vul" method="GET" target="_blank">
-                                    <div class="form-group">
-                                        <label for="amount">转账金额：</label>
+
+                    <div class="card">
+                        <div class="card-header py-1">危险转账</div>
+                        <div class="card-body">
+                            <form action="/vulnapi/CSRF/transfer/vul" method="GET" target="_blank">
+                                <div class="form-group row">
+                                    <label for="amount" class="col-sm-2 col-form-label">转账金额</label>
+                                    <div class="col-sm-10">
                                         <input type="text" class="form-control" id="amount" name="amount">
                                     </div>
-                                    <div class="form-group">
-                                        <label for="receiver">收款人：</label>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="receiver" class="col-sm-2 col-form-label">收款人</label>
+                                    <div class="col-sm-10">
                                         <input type="text" class="form-control" id="receiver" name="receiver">
                                     </div>
-                                    <button type="submit" class="btn btn-sm btn-danger">确认转账</button>
-                                </form>
-                            </div>
+                                </div>
+                                <button type="submit" class="btn btn-sm btn-danger">确认转账</button>
+                            </form>
                         </div>
-                    </div><br>
+                    </div>
+                    <br>
                     <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
 
 
@@ -90,25 +99,29 @@
                 </div>
 
                 <div class="float2">
-                    <div class="container">
-                        <div class="card">
-                            <div class="card-header">安全转账</div>
-                            <div class="card-body">
-                                <form action="/CSRF/transfer/doTransferToken" method="POST" target="_blank">
-                                    <input type="hidden" name="csrfToken" th:value="${csrfToken}"/>
-                                    <div class="form-group">
-                                        <label for="amount">转账金额：</label>
+
+                    <div class="card">
+                        <div class="card-header py-1">安全转账</div>
+                        <div class="card-body">
+                            <form action="/vulnapi/CSRF/transfer/doTransferToken" method="POST" target="_blank">
+                                <input type="hidden" name="csrfToken" th:value="${csrfToken}"/>
+                                <div class="form-group row">
+                                    <label for="amount" class="col-sm-2 col-form-label">转账金额</label>
+                                    <div class="col-sm-10">
                                         <input type="text" class="form-control" name="amount">
                                     </div>
-                                    <div class="form-group">
-                                        <label for="receiver">收款人：</label>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="receiver" class="col-sm-2 col-form-label">收款人</label>
+                                    <div class="col-sm-10">
                                         <input type="text" class="form-control" name="receiver">
                                     </div>
-                                    <button type="submit" class="btn btn-sm btn-success">确认转账</button>
-                                </form>
-                            </div>
+                                </div>
+                                <button type="submit" class="btn btn-sm btn-success">确认转账</button>
+                            </form>
                         </div>
-                    </div><br>
+                    </div>
+                    <br>
 
                     <h5><span class="lnr lnr-smile"> 安全代码 - csrfToken</span></h5>
                     <textarea class="form-control" id="code2">
@@ -124,7 +137,7 @@
                     </textarea><br><br>
 
                     <a style="float:right" class="btn btn-sm btn-success text-right"
-                       th:href="@{/CSRF/transfer/referer?amount=100&receiver=zhangwei}">运行</a>
+                       th:href="@{/vulnapi/CSRF/transfer/referer?amount=100&receiver=zhangwei}">运行</a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - referer</span></h5>
                     <textarea class="form-control" id="code3">
  // 校验Referer 判断请求是否来自本站
@@ -147,14 +160,14 @@
 <!-- 引入script -->
 <div th:replace="~{commons/commons::script}"></div>
 <script>
-    $(function() {
+    $(function () {
         $.ajax({
-            url: '/CSRF/transfer/genCSRFToken',
+            url: '/vulnapi/CSRF/transfer/genCSRFToken',
             type: 'GET',
-            success: function(data) {
+            success: function (data) {
                 $('input[name="csrfToken"]').val(data.csrfToken);
             },
-            error: function() {
+            error: function () {
                 console.error('获取csrfToken失败');
             }
         });

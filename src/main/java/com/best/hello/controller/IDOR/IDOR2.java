@@ -1,7 +1,9 @@
 package com.best.hello.controller.IDOR;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,20 +13,20 @@ import javax.servlet.http.HttpSession;
 @Api("垂直越权")
 @Slf4j
 @Controller
-@RequestMapping("/IDOR")
+@RequestMapping("/vulnapi/IDOR")
 public class IDOR2 {
 
 
     @GetMapping(value = "/vul/admin")
     public String vul() {
-        return "idoradmin";
+        return "idor/idoradmin";
     }
 
-    // 只允许admin用户可以访问管理页面
+    @ApiOperation(value = "权限控制", notes = "只允许admin用户可以访问管理页面")
     @GetMapping(value = "/safe/admin")
     public String safe(HttpSession session) {
         if (session.getAttribute("LoginUser").equals("admin")) {
-            return "idoradmin";
+            return "idor/idoradmin";
         } else {
             return "commons/403";
         }

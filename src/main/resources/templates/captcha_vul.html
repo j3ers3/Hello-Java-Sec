@@ -11,47 +11,66 @@
         <!-- 侧边栏 -->
         <div th:replace="~{commons/commons::siderbar(active='captcha_vul.html')}"></div>
 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <div class="vul_header">
-                <span>验证码复用</span>
-            </div>
-            <hr>
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
-                </li>
-            </ul>
-
-            <div class="tab-content">
-                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
-                    验证码反复利用，可以直接进行暴力破解。（这是一类常见的安全问题）<br>
-                    一般来说，验证码是与Session绑定的，Session生成时，也伴随着验证码的生成和绑定，在访问页面时，接口的请求和验证码的生成通常是异步进行的，这使得两个功能变得相对独立。也就意味着我们如果仅请求接口，而不触发验证码的生成，那么验证码就不会变化。
-
-                    并且在考虑安全时，开发人员的关注点往往在 验证码校验 是否通过，通过则进入业务流程，不通过则重新填写，而忽视了这个用户是否按照既定的业务流程在走（接口访问与验证码生成是否同时进行），验证码是否被多次使用了。
+        <main role="main" class="col-md-10 offset-md-2 pt-3 main">
+            <div class="card">
+                <div class="card-header py-1">
+                    <div class="vul_header">
+                        <span>验证码复用</span>
+                        <span class="header_link">
+                            <a class="btn btn-sm btn-primary" href="#">漏洞案例</a>
+                            <a class="btn btn-sm btn-primary" href="#">wiki</a>
+                        </span>
+                    </div>
                 </div>
-                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded fade" id="bb">
-                    不管验证码是不是输入正确，都应该及时销毁验证码。
+                <div class="card-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#vulDescription">
+                                漏洞描述</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#secureCoding"> 安全编码</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="vulDescription">
+                            <div class="alert alert-desc"><i class="lnr lnr-alarm"></i>
+                                验证码反复利用是指攻击者利用已经获取的验证码进行暴力破解或者恶意访问，从而绕过验证码的验证机制。<br>
+                                一般来说，验证码是与Session绑定的，Session生成时，也伴随着验证码的生成和绑定，在访问页面时，接口的请求和验证码的生成通常是异步进行的，这使得两个功能变得相对独立。也就意味着我们如果仅请求接口，而不触发验证码的生成，那么验证码就不会变化。
+
+                                并且在考虑安全时，开发人员的关注点往往在验证码校验
+                                是否通过，通过则进入业务流程，不通过则重新填写，而忽视了这个用户是否按照既定的业务流程在走（接口访问与验证码生成是否同时进行），验证码是否被多次使用了。
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="secureCoding">
+                            <div class="alert alert-desc">
+                                不管验证码是不是输入正确，都应该及时销毁验证码。
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <hr>
 
             <div class="box-float">
                 <div class="float1">
                     <a style="float:right" class="btn btn-sm btn-danger"
-                       href="#">运行</a>
+                       href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
 
                     <textarea class="form-control" id="code1">
- // 未清除session中的验证码，导致可复用
-
- if (!CaptchaUtil.ver(captcha, request)) {
-     model.addAttribute("msg", "验证码不正确");
-     return "login";
- }
+/**
+ * 产生原因：未在验证后清除 session 中的验证码，可能导致验证码可复用的问题
+ */
+if (!CaptchaUtil.ver(captcha, request)) {
+    model.addAttribute("msg", "验证码不正确");
+    return "login";
+}
                     </textarea>
 
                 </div>
@@ -59,11 +78,17 @@
                 <div class="float2">
 
                     <a style="float:right" class="btn btn-sm btn-success"
-                       href="#">运行</a>
+                       href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
                     <textarea class="form-control" id="code2">
-// 不管账号正确与否，一次请求后都清掉验证码
-
+/**
+ * 不管账号正确与否，一次请求后都清掉验证码
+ */
 request.getSession().removeAttribute("captcha");
                     </textarea>
                 </div>

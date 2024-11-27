@@ -11,55 +11,66 @@
         <!-- 侧边栏 -->
         <div th:replace="~{commons/commons::siderbar(active='traversal.html')}"></div>
 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <div class="vul_header">
-                <span>文件操作 - 目录遍历</span>
-            </div>
-            <hr>
-
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span>
-                        漏洞描述</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
-                </li>
-            </ul>
-
-            <div class="tab-content">
-                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
-                    目录遍历,
-                    应用系统在处理下载文件时未对文件进行过滤，系统后台程序程序中如果不能正确地过滤客户端提交的../和./之类的目录跳转符，攻击者可以通过输入../进行目录跳转，从而下载、删除任意文件。
+        <main role="main" class="col-md-10 offset-md-2 pt-3 main">
+            <div class="card">
+                <div class="card-header py-1">
+                    <div class="vul_header">
+                        <span>文件操作 - 目录遍历</span>
+                        <span class="header_link">
+                            <a class="btn btn-sm btn-primary" href="#">漏洞案例</a>
+                            <a class="btn btn-sm btn-primary" href="#">wiki</a>
+                        </span>
+                    </div>
                 </div>
-                <div class="tab-pane fade" id="bb">
-                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder"
-                              style="height: 160px;">
-【必须】避免路径拼接
- 1. 文件目录避免外部参数拼接。
- 2. 保存文件目录建议后台写死并对文件名进行校验（字符类型、长度）。
- 3. 建议文件保存时，将文件名替换为随机字符串。
- 如因业务需要不能满足1.2.3的要求，需判断请求文件名和文件路径参数中是否存在../或..\(windows)， 如存在应判定路径非法并拒绝请求。
-                    </textarea>
+
+                <div class="card-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#vulDescription">
+                                漏洞描述</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#secureCoding"> 安全编码</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="vulDescription">
+                            <div class="alert alert-desc"><i class="lnr lnr-alarm"></i>
+                                目录遍历攻击（Path Traversal Attack），
+                                应用系统在处理文件时未对文件路径进行有效过滤，攻击者可以利用"../"和"./"目录跳转拼接路径，绕过安全限制，从而可下载、读取、写入或删除任意文件。
+
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="secureCoding">
+                            <div class="alert alert-desc">
+                                <li>【必须】避免路径拼接</li>
+                                1. 文件目录避免外部参数拼接。<br>
+                                2. 保存文件目录建议后台写死并对文件名进行校验（字符类型、长度）。<br>
+                                3. 建议文件保存时，将文件名替换为随机字符串。<br><br>
+                                如因业务需要不能满足上述要求，需判断请求文件名和文件路径参数中是否存在../或..\(windows)，
+                                如存在应判定路径非法并拒绝请求。
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <hr>
 
             <div class="box-float">
                 <div class="float1">
-
-                    <a style="float:right" class="btn btn-sm btn-danger"
-                       th:href="@{/Traversal/download?filename=../../../../../../../etc/passwd}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                       th:href="@{/vulnapi/Traversal/download?filename=dog.jpg}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - 任意文件下载</span></h5>
-                    <label for="code1"></label><textarea class="form-control" id="code1">
-// 文件路径没做限制，通过../递归下载任意文件，如下载../../../../../../../etc/passwd文件
-
+                    <textarea class="form-control" id="code1">
+/**
+ * 产生原因：文件路径没做限制，可通过../递归下载任意文件
+ * 如下载 filename=../../etc/passwd
+ */
 public String download(String filename, HttpServletResponse response) {
     String filePath = System.getProperty("user.dir") + "/logs/" + filename;
     try (InputStream inputStream = new BufferedInputStream(Files.newInputStream(Paths.get(filePath)))) {
@@ -67,28 +78,26 @@ public String download(String filename, HttpServletResponse response) {
         response.setContentLength((int) Files.size(Paths.get(filePath)));
         response.setContentType("application/octet-stream");
 
-        // 使用 Apache Commons IO 库的工具方法将输入流中的数据拷贝到输出流中
         IOUtils.copy(inputStream, response.getOutputStream());
-        log.info("文件 {} 下载成功，路径：{}", filename, filePath);
         return "下载文件成功：" + filePath;
     } catch (IOException e) {
-        log.error("下载文件失败，路径：{}", filePath, e);
         return "未找到文件：" + filePath;
     }
 }
                     </textarea><br><br>
 
                     <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
-                       th:href="@{/Traversal/list?filename=../}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       th:href="@{/vulnapi/Traversal/list?filename=../}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - 任意路径遍历</span></h5>
-                    <label for="code2"></label><textarea class="form-control" id="code2">
-// 攻击者可能会传入 "../../" 来访问项目目录以外的文件
-
+                    <textarea class="form-control" id="code4">
+/**
+ * 攻击者可以传入 "../../" 来访问项目目录以外的文件
+ */
 public String fileList(String filename) {
     String filePath = System.getProperty("user.dir") + "/logs/" + filename;
     StringBuilder sb = new StringBuilder();
@@ -109,30 +118,59 @@ public String fileList(String filename) {
 
                 <div class="float2">
                     <a style="float:right" class="btn btn-sm btn-success" target="_blank"
-                       th:href="@{/Traversal/download/safe?filename=../}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       th:href="@{/vulnapi/Traversal/download/safe?filename=../}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - 过滤</span></h5>
-                    <label for="code3"></label><textarea class="form-control" id="code3">
-// 过滤..和/ ，可以防止遍历操作
-
-public String safe(String filename) {
-    if (!Security.checkTraversal(filename)) {
-        String filePath = System.getProperty("user.dir") + "/logs/" + filename;
-        return "安全路径：" + filePath;
-    } else {
-        return "检测到非法遍历";
-    }
-}
-
+                    <textarea class="form-control" id="code2">
+/**
+ * 通过检测路径中是否包含 '../' 或 './' 来进行基本的目录遍历防护
+ */
 public static boolean checkTraversal(String content) {
-    return content.contains("..") || content.contains("/");
+    return content.contains("../") || content.contains("./");
 }
                     </textarea><br><br>
 
+                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
+                       th:href="@{/vulnapi/Traversal/download/safe2?filename=../../etc/passwd}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - normalize()方法</span></h5>
+                    <textarea class="form-control" id="code5">
+/**
+ * 使用normalize()方法进行路径规范化，可以将路径中的特殊字符转义
+ */
+public String safe2(String filename) {
+    String filePath = System.getProperty("user.dir") + "/logs/" + filename;
+    String filePathSafe = Paths.get(filePath).normalize().toString();
+    ...
+}
+                    </textarea><br><br>
+
+                    <a style="float:right"
+                       href="#"></a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - ID参数化</span></h5>
+                    <textarea class="form-control" id="code3">
+/**
+ * 对文件名做映射生成id值，通过参数化下载文件可以有效防止遍历问题
+ * 需要注意：控制用户权限，避免通过遍历下载文件（越权）
+ */
+public void download(@RequestParam("id") String id, HttpServletResponse response) {
+    try {
+        String fileName = fileMappingService.getFileNameById(id);
+        fileStorageService.download(id, fileName, response);
+    } catch (Exception e) {
+        log.error("下载文件失败", e);
+        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+    }
+}
+                    </textarea>
                 </div>
             </div>
         </main>
@@ -142,7 +180,6 @@ public static boolean checkTraversal(String content) {
 
 <!-- 引入script -->
 <div th:replace="~{commons/commons::script}"></div>
-
 
 </body>
 

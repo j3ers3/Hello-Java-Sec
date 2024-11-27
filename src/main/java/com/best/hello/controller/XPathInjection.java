@@ -21,7 +21,7 @@ import java.io.StringReader;
 
 @Api("XPath 注入")
 @RestController
-@RequestMapping("/XPath")
+@RequestMapping("/vulnapi/XPath")
 public class XPathInjection {
 
     Logger log = LoggerFactory.getLogger(XPathInjection.class);

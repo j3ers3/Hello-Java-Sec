@@ -22,11 +22,10 @@ import java.io.IOException;
  */
 @Api("重定向漏洞")
 @Controller
-@RequestMapping("/Redirect")
+@RequestMapping("/vulnapi/redirect")
 public class Redirect {
     Logger log = LoggerFactory.getLogger(Redirect.class);
 
-    // http://127.0.0.1:8888/Redirect/vul?url=http://www.baidu.com
     @ApiOperation(value = "vul: Spring Redirect")
     @GetMapping("/vul")
     public String vul(String url) {
@@ -35,7 +34,6 @@ public class Redirect {
     }
 
 
-    // http://127.0.0.1:8888/Redirect/vul2?url=www.baidu.com
     @ApiOperation(value = "vul: Servlet Redirect")
     @GetMapping("/vul2")
     public ModelAndView vul2(String url) {
@@ -43,7 +41,6 @@ public class Redirect {
     }
 
 
-    // http://127.0.0.1:8888/Redirect/vul3?url=http://www.baidu.com
     @ApiOperation(value = "vul: response.sendRedirect")
     @GetMapping("/vul3")
     public void vul3(String url, HttpServletResponse response) throws IOException {

@@ -118,6 +118,17 @@ public class Security {
     }
 
     /**
+     * 白名单正则字符串过滤
+     */
+    public static boolean isValidOrder(String content) {
+        return content.matches("[0-9a-zA-Z+_]+");
+    }
+
+    public static boolean isValidSort(String sort) {
+        return "desc".equalsIgnoreCase(sort) || "asc".equalsIgnoreCase(sort);
+    }
+
+    /**
      * 目录遍历检测
      */
     public static boolean checkTraversal(String content) {
@@ -144,6 +155,36 @@ public class Security {
         String[] black_list = {"ENTITY", "DOCTYPE"};
         for (String s : black_list) {
             if (content.toUpperCase().contains(s)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 文件上传检测
+     */
+    public static boolean isValidFileType(String fileName) {
+        String[] allowedTypes = {"jpg", "jpeg", "png", "gif", "bmp", "ico"};
+        String extension = StringUtils.getFilenameExtension(fileName);
+        if (extension != null) {
+            for (String allowedType : allowedTypes) {
+                if (allowedType.equalsIgnoreCase(extension)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * RCE黑名单正则表达式检测
+     */
+    public static boolean checkRCE(String content) {
+        String[] black_list = {"java.+lang", "Runtime", "getRuntime", "ProcessBuilder", "exec.*\\("};
+
+        for (String regex : black_list) {
+            if (Pattern.compile(regex).matcher(content).find()) {
                 return true;
             }
         }

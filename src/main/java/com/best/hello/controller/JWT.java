@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Api("JWT")
 @RestController
-@RequestMapping("/JWT")
+@RequestMapping("/vulnapi/JWT")
 public class JWT {
     Logger log = LoggerFactory.getLogger(JWT.class);
 
@@ -22,7 +22,7 @@ public class JWT {
     @GetMapping("/getName")
     public String getNickname(@CookieValue("JWT_TOKEN") String jwt_cookie) {
         String username = JwtUtils.getUsernameByJwt(jwt_cookie);
-        log.info("当前JWT用户是：" + username);
+        log.info("当前JWT用户是：{}", username);
         return "当前JWT用户是：" + username;
     }
 

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
+
+<body>
+<!-- 顶部导航栏 -->
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边栏 -->
+        <div th:replace="~{commons/commons::siderbar(active='shiro.html')}"></div>
+
+        <main role="main" class="col-md-10 offset-md-2 pt-3 main">
+            <div class="card">
+                <div class="card-header py-1">
+                    <div class="vul_header">
+                        <span>组件漏洞 - Shiro反序列化</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#vulDescription">
+                                漏洞描述</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#secureCoding"> 安全编码</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="vulDescription">
+                            <div class="alert alert-desc"><i class="lnr lnr-alarm"></i>
+                                Apache Shiro
+                                是一个开源的Java安全框架，提供身份验证、授权、密码学等功能。在Shiro的RememberMe功能中，用户登录成功后，可以在下一次访问时自动登录，此时会通过Cookie存储用户的身份信息。该Cookie使用了Java序列化机制，攻击者可通过构造恶意的序列化数据，通过反序列化的方式，实现任意代码执行的攻击。
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="secureCoding">
+                            <div class="alert alert-desc">
+                                <li>方案一、升级 shiro 到最新版本，不采用硬编码的方式</li>
+                                <li>方案二、使用官方提供的方法生成一个密钥</li>
+                                <li>方案二、自定义一个base64 AES密钥</li>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box-float">
+                <div class="float1">
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                       href="/vulnapi/shiro/vul">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
+                    <textarea class="form-control" id="code1">
+/**
+ * 使用默认或网上公开的key，导致反序列化
+ */
+public class ShiroVul {
+    private static final Logger log = LoggerFactory.getLogger(ShiroVul.class);
+    private static final String shirokey = "kPH+bIxk5D2deZiIxcaaaA==";
+    private static final byte[] DEFAULT_CIPHER_KEY_BYTES = Base64.decode(shirokey);
+    private final AesCipherService acs = new AesCipherService();
+    ...
+}
+                    </textarea>
+
+                </div>
+
+                <div class="float2">
+                    <a target="_blank" style="float:right" class="btn btn-sm btn-success"
+                       href="/vulnapi/shiro/genkey">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 生成key</span></h5>
+                    <textarea class="form-control" id="code2">
+/**
+ * 使用官方生成的方法提供密钥
+ */
+public String genkey() {
+    KeyGenerator keygen = null;
+    try {
+        keygen = KeyGenerator.getInstance("AES");
+    } catch (NoSuchAlgorithmException e) {
+        e.printStackTrace();
+    }
+    SecretKey deskey = keygen.generateKey();
+    System.out.println(Base64.encodeToString(deskey.getEncoded()));
+}
+                    </textarea>
+                </div>
+
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- 引入script -->
+<div th:replace="~{commons/commons::script}"></div>
+
+
+</body>
+
+</html>

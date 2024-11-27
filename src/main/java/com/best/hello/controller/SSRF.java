@@ -26,7 +26,7 @@ import java.net.URL;
 
 @Api("SSRF")
 @RestController
-@RequestMapping("/SSRF")
+@RequestMapping("/vulnapi/SSRF")
 public class SSRF {
     Logger log = LoggerFactory.getLogger(SSRF.class);
 

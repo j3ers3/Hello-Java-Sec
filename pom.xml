@@ -11,7 +11,7 @@
 
     <groupId>com.best</groupId>
     <artifactId>javasec</artifactId>
-    <version>1.11</version>
+    <version>1.15</version>
     <name>hello java sec</name>
     <description>Java Sec</description>
     <packaging>jar</packaging>
@@ -314,25 +314,6 @@
                     <propertiesEncoding>${project.build.sourceEncoding}</propertiesEncoding>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <!-- OWASP 生成物料清单SBOM，提供Dependency Track分析 -->
-                <groupId>org.cyclonedx</groupId>
-                <artifactId>cyclonedx-maven-plugin</artifactId>
-                <version>2.7.2</version>
-                <executions>
-                    <execution>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>makeAggregateBom</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <outputFormat>xml</outputFormat>
-                </configuration>
-            </plugin>
-
 
         </plugins>
     </build>

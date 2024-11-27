@@ -11,47 +11,101 @@
         <!-- 侧边栏 -->
         <div th:replace="~{commons/commons::siderbar(active='dos.html')}"></div>
 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <div class="vul_header">
-                <span>DoS漏洞</span>
-            </div>
-            <hr>
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
-                </li>
-            </ul>
-
-            <div class="tab-content">
-                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
-                    DoS是Denial of Service的简称，即拒绝服务，造成DoS的攻击行为被称为DoS攻击，其目的是使计算机或网络无法提供正常的服务。
+        <main role="main" class="col-md-10 offset-md-2 pt-3 main">
+            <div class="card">
+                <div class="card-header py-1">
+                    <div class="vul_header">
+                        <span>拒绝服务</span>
+                        <span class="header_link">
+                            <a class="btn btn-sm btn-primary"
+                               href="#">漏洞案例</a>
+                            <a class="btn btn-sm btn-primary"
+                               href="#">wiki</a>
+                        </span>
+                    </div>
                 </div>
-                <div class="tab-pane fade" id="bb">
-                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder" style="height: 100px;">
+                <div class="card-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#vulDescription">
+                                漏洞描述</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#secureCoding"> 安全编码</a>
+                        </li>
+                    </ul>
 
-                    </textarea>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="vulDescription">
+                            <div class="alert alert-desc"><i class="lnr lnr-alarm"></i>
+                                DoS（Denial of Service，即拒绝服务），造成DoS的攻击行为被称为DoS攻击，其目的是使计算机或网络无法提供正常的服务。
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="secureCoding">
+                            <div class="alert alert-desc">
+                                对长时间运行的操作设置合理的超时，避免服务器资源长时间占用<br>
+                                通过负载均衡技术，将流量分散到多个服务器，减少单点压力<br>
+                                使用WAF（Web应用防火墙）和DDoS防护服务，过滤恶意流量<br>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <hr>
 
             <div class="box-float">
                 <div class="float1">
-                    <a style="float:right" class="btn btn-sm btn-danger"
-                       href="/DoS/redos/vul?content=aaaaaaaaaaaaaaaaaaaa">运行</a>
-                    <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                       href="/vulnapi/DoS/redos/vul?content=aaaaaaaaaaaaaaaaaaaa">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - 正则DoS</span></h5>
 
                     <textarea class="form-control" id="code1">
-// Pattern.matches造成的ReDoS
-// PoC: vul?contnet=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab
-
-public String vul(String content) {
-
+/**
+ * ReDoS (Regular Expression Denial of Service)
+ * 正则表达式 (a|aa)+ 可能对输入的字符串长度和结构敏感，导致正则表达式的执行时间过长产生拒绝服务攻击
+ */
+public String reDosVul(String content) {
     boolean match = Pattern.matches("(a|aa)+", content);
     return String.format("正则匹配：%s，正则表达式拒绝服务攻击", match);
+}
+                    </textarea><br><br>
+
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                       href="/vulnapi/DoS/imagedos/vul?width=1000&height=1000">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - 图片DoS</span></h5>
+
+                    <textarea class="form-control" id="code2">
+/**
+ * 攻击者可以通过发送大量请求，要求服务器放大图片，从而使服务器资源耗尽
+ */
+public ResponseEntity<byte[]> resizeImageVul(int width, int height) {
+    try {
+        String picpath = System.getProperty("user.dir") + "/src/main/resources/static/img/logo.png";
+        BufferedImage originalImage = ImageIO.read(new File(picpath));
+
+        BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        resizedImage.getGraphics().drawImage(originalImage.getScaledInstance(width, height, BufferedImage.SCALE_SMOOTH), 0, 0, null);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(resizedImage, "jpg", baos);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG);
+
+        return new ResponseEntity< >(baos.toByteArray(), headers, HttpStatus.OK);
+    } catch (Exception e) {
+        e.printStackTrace();
+        return new ResponseEntity< >(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
                     </textarea>
 
@@ -59,13 +113,40 @@ public String vul(String content) {
 
                 <div class="float2">
 
-                    <a style="float:right" class="btn btn-sm btn-success"
-                       href="/DoS/redos/safe?content=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab">运行</a>
+                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
+                       href="/vulnapi/DoS/redos/safe?content=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
-                    <textarea class="form-control" id="code2">
-public String safe(String content) {
+                    <textarea class="form-control" id="code3">
+/**
+ * com.google.re2j 包中的正则表达式引擎采用了贪婪匹配，避免了无限匹配的情况
+ */
+public String reDosSafe(String content) {
     boolean match = com.google.re2j.Pattern.matches("(a|aa)+", content);
     return String.format("正则匹配：%s，安全正则表达式", match);
+}
+                    </textarea><br><br>
+
+                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
+                       href="/vulnapi/DoS/imagedos/safe?width=1000&height=1000">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
+                    <textarea class="form-control" id="code4">
+/**
+ * 限制图片的最大尺寸
+ */
+public ResponseEntity<byte[]> resizeImageSafe(int width, int height) {
+    width = Math.min(width, 200);
+    height = Math.min(height, 200);
+    return getImageEntity(width, height);
 }
                     </textarea>
                 </div>

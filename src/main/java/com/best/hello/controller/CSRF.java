@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @Api("跨站请求伪造")
 @RestController
-@RequestMapping("/CSRF")
+@RequestMapping("/vulnapi/CSRF")
 public class CSRF {
     @ApiOperation(value = "vul: 危险的转账")
     @GetMapping("/transfer/vul")

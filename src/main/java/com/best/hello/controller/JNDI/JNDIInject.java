@@ -17,7 +17,7 @@ import java.util.Arrays;
 
 @Api("JNDI注入")
 @RestController
-@RequestMapping("/JNDI")
+@RequestMapping("/vulnapi/JNDI")
 public class JNDIInject {
     Logger log = LoggerFactory.getLogger(JNDIInject.class);
 

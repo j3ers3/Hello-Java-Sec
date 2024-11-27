@@ -11,7 +11,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 @RestController
-@RequestMapping("/RCE/ProcessBuilder")
+@RequestMapping("/vulnapi/RCE/ProcessBuilder")
 public class ProcessBuilderVul {
 
     /**

@@ -1,4 +1,4 @@
-package com.best.hello.controller.Deserialize;
+package com.best.hello.controller.Deserialization;
 
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +11,7 @@ import java.io.*;
 import java.util.HashMap;
 
 @RestController
-@RequestMapping("/Deserialize/XMLDecoder")
+@RequestMapping("/vulnapi/Deserialization/XMLDecoder")
 public class XMLDecoderVul {
 
     private final String path = "src/main/resources/payload/payload3.xml";

@@ -13,7 +13,7 @@ import javax.script.ScriptEngineManager;
 
 
 @RestController
-@RequestMapping("/RCE/ScriptEngine")
+@RequestMapping("/vulnapi/RCE/ScriptEngine")
 public class LoadJsVul {
 
     /**

@@ -16,7 +16,7 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class Login {
-    // 密码明文写死
+    // 密码明文写死漏洞，请及时修改
     String user = "admin";
     String pass = "admin";
 

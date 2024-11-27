@@ -11,45 +11,62 @@
         <!-- 侧边栏 -->
         <div th:replace="~{commons/commons::siderbar(active='jwt.html')}"></div>
 
-        <main role="main" class="col-md-10 ml-sm-auto pt-3 px-4">
-            <div class="vul_header">
-                <span>JWT弱加密</span>
-            </div>
-            <hr>
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span>
-                        漏洞描述</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
-                </li>
-            </ul>
-
-            <div class="tab-content">
-                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
-                    JSON Web Token 为开发人员提供了几种对有效负载声明进行数字签名的方法。这确保了数据完整性和强大的用户身份验证，每当开发人员使用
-                    HMAC 签名时，他们都需要提供一个密钥，用于签名和验证令牌。如果这个密钥不够强大，整个签名可能会被泄露，造成越权操作等危害。
+        <main role="main" class="col-md-10 offset-md-2 pt-3 main">
+            <div class="card">
+                <div class="card-header py-1">
+                    <div class="vul_header">
+                        <span>JWT弱加密</span>
+                        <span class="header_link">
+                            <a class="btn btn-sm btn-primary" href="#">漏洞案例</a>
+                            <a class="btn btn-sm btn-primary" href="#">wiki</a>
+                        </span>
+                    </div>
                 </div>
-                <div class="tab-pane fade" id="bb">
-                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder"
-                              style="height: 100px;">
-确保使用强大的、不可预测的密钥来计算服务器上的 HMAC 签名。我们建议使用长度至少为 32 字节的随机生成值。
-                    </textarea>
+                <div class="card-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#vulDescription">
+                                漏洞描述</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#secureCoding"> 安全编码</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="vulDescription">
+                            <div class="alert alert-desc"><i class="lnr lnr-alarm"></i>
+                                JSON Web Token 为开发人员提供了几种对有效负载声明进行数字签名的方法。这确保了数据完整性和强大的用户身份验证，每当开发人员使用
+                                HMAC 签名时，他们都需要提供一个密钥，用于签名和验证令牌。如果这个密钥不够强大，整个签名可能会被泄露，造成越权操作等危害。
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="secureCoding">
+                            <div class="alert alert-desc">
+                                <li>【必须】</li>
+                                确保使用强大的、不可预测的密钥来计算服务器上的 HMAC 签名。我们建议使用长度至少为 32
+                                字节的随机生成值。
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <hr>
 
             <div class="box-float">
                 <div class="float1">
                     <a style="float:right" target="_blank" class="btn btn-sm btn-danger"
-                       href="/JWT/getName">运行</a>
+                       href="/vulnapi/JWT/getName">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span>
+                    </a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
 
                     <textarea class="form-control" id="code1">
-// 设置了简单的密钥，可爆破从而进行伪造jwt
-
+/**
+ * 产生原因：设置了简单的密钥，可爆破从而进行伪造jwt
+ */
 private static final String SECRET = "123456";
 private static final String B64_SECRET = Base64.getEncoder().encodeToString(SECRET.getBytes(StandardCharsets.UTF_8));
 
@@ -71,9 +88,11 @@ public static String generateTokenByJjwt(String userId) {
 
                     <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
                     <textarea class="form-control" id="code2">
-// 设置复杂的密钥
-
+/**
+ * 设置复杂的密钥
+ */
 private static final String SECRET = "17245b290622c65bcc785ce3dd97dab3";
+private static final String B64_SECRET = Base64.getEncoder().encodeToString(SECRET.getBytes(StandardCharsets.UTF_8
                     </textarea>
                 </div>
 
@@ -84,7 +103,6 @@ private static final String SECRET = "17245b290622c65bcc785ce3dd97dab3";
 
 <!-- 引入script -->
 <div th:replace="~{commons/commons::script}"></div>
-
 
 </body>
 

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Api("Xstream反序列化漏洞")
 @RestController
-@RequestMapping("/XStream")
+@RequestMapping("/vulnapi/XStream")
 public class XStreamVul {
 
     @RequestMapping("/vul")

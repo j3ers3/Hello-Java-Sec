@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/RCE/Runtime")
+@RequestMapping("/vulnapi/RCE/Runtime")
 public class RuntimeVul {
 
     /**
@@ -86,47 +86,6 @@ public class RuntimeVul {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-
-    /**
-     * 本地测试
-     */
-    public static void main(String[] args) {
-        StringBuilder sb = new StringBuilder();
-        String line;
-
-        // Runtime.getRuntime().exec(String command）
-        // java.lang.Runtime#exec 中 StringTokenizer 会对字符串的处理，利用数组和编码可以成功执行命令
-        String cmd1 = "ping baidu.com -c 1;whoami";
-
-        // 可执行
-        String cmd2 = "/bin/sh -c uname&whoami";
-
-        // 不可执行
-        String cmd3 = "uname&whoami";
-
-        // Runtime.getRuntime().exec(String cmdarray[])
-        // 直接传入的是数组，没有经过 StringTokenizer 对字符串的处理，可执行
-        String[] cmd4 = new String[]{"/bin/sh", "-c", "ping baidu.com -c 1;whoami"};
-
-        // 编码方式
-        String cmd5 = "bash -c {echo,cGluZyBiYWlkdS5jb20gLWMgMTt3aG9hbWk=}|{base64,-d}|{bash,-i}";
-
-        try {
-            Process process = Runtime.getRuntime().exec(cmd5);
-
-            InputStream fis = process.getInputStream();
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader br = new BufferedReader(isr);
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-            }
-            System.out.println(sb.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
 
 }

@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Api("跨域资源伪造漏洞")
 @RestController
-@RequestMapping("/CORS")
+@RequestMapping("/vulnapi/cors")
 public class CORS {
 
     /**
@@ -34,9 +34,9 @@ public class CORS {
     @ApiOperation(value = "safe：白名单判断Origin")
     @CrossOrigin(origins = {"127.0.0.1", "http://127.0.0.1", "https://127.0.0.1"})
     @GetMapping("/safe")
-    public String corsSafe(HttpServletRequest request, HttpServletResponse response) {
+    public String corsSafe(HttpServletResponse response) {
         response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("Access-Control-Allow-Methods", "GET,POST");
         return "cors safe";
     }
-
 }

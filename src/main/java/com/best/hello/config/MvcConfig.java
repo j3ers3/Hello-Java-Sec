@@ -22,14 +22,16 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addViewController("/index/ssrf").setViewName("ssrf");
         registry.addViewController("/index/traversal").setViewName("traversal");
         registry.addViewController("/index/xxe").setViewName("xxe");
-        registry.addViewController("/index/deserialize").setViewName("deserialize");
+        registry.addViewController("/index/deserialization").setViewName("deserialization");
         registry.addViewController("/index/redirect").setViewName("redirect");
         registry.addViewController("/index/actuator").setViewName("actuator");
-        registry.addViewController("/index/idor").setViewName("idor");
+        registry.addViewController("/index/idor").setViewName("idor/idor_horizontal");
+        registry.addViewController("/index/idor/horizontal").setViewName("idor/idor_horizontal");
+        registry.addViewController("/index/idor/vertical").setViewName("idor/idor_vertical");
         registry.addViewController("/index/upload").setViewName("upload");
         registry.addViewController("/index/xstream").setViewName("xstream");
         registry.addViewController("/index/fastjson").setViewName("fastjson");
-        registry.addViewController("/index/xff").setViewName("xff");
+        registry.addViewController("/index/ipforgery").setViewName("ip_forgery");
         registry.addViewController("/index/unauth").setViewName("unauth");
         registry.addViewController("/index/jackson").setViewName("jackson");
         registry.addViewController("/index/log4j").setViewName("log4j");
@@ -42,6 +44,8 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addViewController("/index/jwt").setViewName("jwt");
         registry.addViewController("/index/xpath").setViewName("xpath");
         registry.addViewController("/index/csv").setViewName("csv_injection");
+        registry.addViewController("/index/shiro").setViewName("shiro");
+        registry.addViewController("/index/passwordreset").setViewName("logicflaw/passwordreset");
 
     }
 
@@ -50,6 +54,6 @@ public class MvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginHandlerInterceptor())
                 .addPathPatterns("/**")
-                .excludePathPatterns("/user/login", "/user/ldap", "/login", "/css/**", "/js/**", "/img/**", "/Unauth/**", "/captcha");
+                .excludePathPatterns("/user/login", "/user/ldap", "/login", "/css/**", "/js/**", "/img/**", "/video/**", "/vulnapi/unauth/**", "/captcha");
     }
 }

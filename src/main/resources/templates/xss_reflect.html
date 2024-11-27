@@ -8,60 +8,71 @@
 
 <div class="container-fluid">
     <div class="row">
+        <!-- 侧边栏 -->
         <div th:replace="~{commons/commons::siderbar(active='xss_reflect.html')}"></div>
 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <div class="vul_header">
-                <span>XSS漏洞</span>
-            </div>
-            <h3></h3>
-            <hr>
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span>
-                        漏洞描述</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
-                </li>
-            </ul>
-
-            <div class="tab-content">
-                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
-                    XSS (Cross-Site Scripting)
-                    跨站脚本攻击是一种Web安全漏洞，攻击者通过在Web页面中注入恶意代码，如JavaScript脚本，来攻击用户，利用Web应用程序对用户输入数据的信任，以盗取用户信息、会话信息或在用户浏览器上执行其他恶意操作。<br><br>
-                    反射型 XSS 是将恶意代码通过 URL 参数等输入方式注入到 Web 页面中，并在用户访问这个页面时，恶意代码被执行。
+        <main role="main" class="col-md-10 offset-md-2 pt-3 main">
+            <div class="card">
+                <div class="card-header py-1">
+                    <div class="vul_header">
+                        <span>XSS漏洞 - 反射型</span>
+                        <span class="header_link">
+                            <a class="btn btn-sm btn-primary" href="#">漏洞案例</a>
+                            <a class="btn btn-sm btn-primary" href="#">wiki</a>
+                        </span>
+                    </div>
                 </div>
-                <div class="tab-pane fade" id="bb">
-                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder"
-                              style="height: 260px;">
-【必须】外部输入拼接到response页面前进行编码处理
- 当响应“content-type”为“html”类型时，外部输入拼接到响应包中，需根据输出位置进行编码处理,需要对以下6个特殊字符进行HTML实体编码(&, <, >, ", ',/)，也可参考或直接使用业界已有成熟第三方库如ESAPI。
+                <div class="card-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#vulDescription">
+                                漏洞描述</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#secureCoding"> 安全编码</a>
+                        </li>
+                    </ul>
 
-【必须】设置正确的HTTP响应包类型
- 响应包的HTTP头“Content-Type”必须正确配置响应包的类型，禁止非HTML类型的响应包设置为“text/html”。此举会使浏览器在直接访问链接时，将非HTML格式的返回报文当做HTML解析，增加反射型XSS的触发几率。
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="vulDescription">
+                            <div class="alert alert-desc"><i class="lnr lnr-alarm"></i>
+                                XSS (Cross-Site Scripting)
+                                跨站脚本攻击是一种Web安全漏洞，攻击者通过在Web页面中注入恶意代码，如JavaScript脚本，来攻击用户，利用Web应用程序对用户输入数据的信任，以盗取用户信息、会话信息或在用户浏览器上执行其他恶意操作。<br><br>
+                                反射型 XSS 是将恶意代码通过 URL 参数等输入方式注入到 Web 页面中，并在用户访问这个页面时，恶意代码被执行。
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="secureCoding">
+                            <div class="alert alert-desc">
+                                <li>【必须】外部输入拼接到response页面前进行编码处理</li>
+                                当响应“content-type”为“html”类型时，外部输入拼接到响应包中，需根据输出位置进行编码处理,需要对以下6个特殊字符进行HTML实体编码(&,
+                                <, >, ", ',/)，也可参考或直接使用业界已有成熟第三方库如ESAPI。<br>
 
-【建议】设置安全的HTTP响应头
- 控制用户登录鉴权的Cookie字段 应当设置HttpOnly属性以防止被XSS漏洞/JavaScript操纵泄漏。
-                    </textarea>
+                                <li>【必须】设置正确的HTTP响应包类型</li>
+                                响应包的HTTP头“Content-Type”必须正确配置响应包的类型，禁止非HTML类型的响应包设置为“text/html”。此举会使浏览器在直接访问链接时，将非HTML格式的返回报文当做HTML解析，增加反射型XSS的触发几率。<br>
+
+                                <li>【建议】设置安全的HTTP响应头</li>
+                                控制用户登录鉴权的Cookie字段 应当设置HttpOnly属性以防止被XSS漏洞/JavaScript操纵泄漏。
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <hr>
 
             <div class="box-float">
                 <div class="float1">
                     <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
-                       th:href="@{/XSS/reflect?content=test%3Cscript%3E%0A%20%20%20%20window.onload=function()%20%7B%0A%20%20%20%20%20%20%20%20document.bgColor%20=%20%22black%22;%0A%20%20%20%20%20%20%20%20document.body.innerHTML=%22%3Cfont%20color=white%20size=40%3E%E4%BD%A0%E8%A2%ABXSS%E9%BB%91%E4%BA%86%EF%BC%81%3C/font%3E%22%0A%20%20%20%20%7D%0A%3C/script%3E}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       th:href="@{/vulnapi/XSS/reflect?content=test%3Cscript%3E%0A%20%20%20%20window.onload=function()%20%7B%0A%20%20%20%20%20%20%20%20document.bgColor%20=%20%22black%22;%0A%20%20%20%20%20%20%20%20document.body.innerHTML=%22%3Cfont%20color=white%20size=40%3E%E4%BD%A0%E8%A2%ABXSS%E9%BB%91%E4%BA%86%EF%BC%81%3C/font%3E%22%0A%20%20%20%20%7D%0A%3C/script%3E}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
 
-                    <label for="code1"></label><textarea class="form-control" id="code1">
-// 简单的反射型XSS，没对输出做处理。当攻击者输入恶意js语句时可触发
-
+                    <textarea class="form-control" id="code1">
+/**
+ * 简单的反射型XSS，没对输出做处理，当攻击者输入恶意js语句时可触发
+ */
 @GetMapping("/reflect")
 public static String input(String content) {
     return content;
@@ -70,17 +81,18 @@ public static String input(String content) {
 
 
                     <a style="float:right" class="btn btn-sm btn-success text-right" target="_blank"
-                       th:href="@{/XSS/escape?content=test<script>alert(1)</script>}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       th:href="@{/vulnapi/XSS/escape?content=test<script>alert(1)</script>}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - htmlEscape方法</span></h5>
 
-                    <label for="code2"></label><textarea class="form-control" id="code2">
-// 采用Spring自带的方法会对特殊字符全转义
-
+                    <textarea class="form-control" id="code2">
+/**
+ * 采用Spring自带的方法会对特殊字符全转义
+ */
 import org.springframework.web.util.HtmlUtils;
 
 @GetMapping("/safe1")
@@ -90,17 +102,18 @@ public static String safe1(String content) {
                     </textarea><br><br>
 
                     <a style="float:right" class="btn btn-sm btn-success text-right" target="_blank"
-                       th:href="@{/XSS/owaspEncoder?content=test<script>alert(1)</script>}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       th:href="@{/vulnapi/XSS/owaspEncoder?content=test<script>alert(1)</script>}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - OWASP Java Encoder</span></h5>
 
-                    <label for="code2"></label><textarea class="form-control" id="code6">
-// 采用OWASP Java Encoder会对特殊字符全转义
-
+                    <textarea class="form-control" id="code6">
+/**
+ * 采用OWASP Java Encoder会对特殊字符全转义
+ */
 import org.owasp.encoder.Encode;
 public static String safe5(String content){
     return Encode.forHtml(content);
@@ -112,16 +125,17 @@ public static String safe5(String content){
                 <div class="float2">
 
                     <a style="float:right" class="btn btn-sm btn-success text-right" target="_blank"
-                       th:href="@{/XSS/filter?content=test<script>alert(1)</script>}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       th:href="@{/vulnapi/XSS/filter?content=test<script>alert(1)</script>}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - 自定义过滤</span></h5>
-                    <label for="code3"></label><textarea class="form-control" id="code3">
-// 将特殊字符做转义
-
+                    <textarea class="form-control" id="code3">
+/**
+ * 用于对输入内容进行 XSS 过滤，将特殊字符进行转义
+ */
 private static String XssFilter(String content) {
     content = StringUtils.replace(content, "&", "&ampamp;");
     content = StringUtils.replace(content, "<", "&amplt;");
@@ -134,16 +148,21 @@ private static String XssFilter(String content) {
                     </textarea><br><br>
 
                     <a style="float:right" class="btn btn-sm btn-success text-right" target="_blank"
-                       th:href="@{/XSS/whitelist?content=aaa<img%20src=1%20onerror=alert(1)>}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       th:href="@{/vulnapi/XSS/whitelist?content=aaa<img%20src=1%20onerror=alert(1)>}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
+                        <i class="glyphicon glyphicon-play"></i>
                         <span class="align-middle"> Run</span></a>
-                    <h5><span class="lnr lnr-smile"> 安全代码 - 黑白名单</span></h5>
-                    <label for="code4"></label><textarea class="form-control" id="code4">
-// 场景：针对富文本的处理方式，需保留部分标签
-
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 富文本处理</span></h5>
+                    <textarea class="form-control" id="code4">
+/**
+ * 针对富文本的处理方式，需保留部分标签
+ * Jsoup 提供了一些预定义的 Safelist，帮助减少配置的工作量：
+ *     Safelist.basic(): 允许基本的 HTML 标签（如 b、i、a、ul、li 等），但禁用了潜在危险的标签和属性
+ *     Safelist.relaxed(): 允许更多富文本标签，如 img、table、div、span，适合较复杂的内容
+ */
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
 
@@ -152,23 +171,24 @@ public static String safe3(String content) {
            .addTags("p", "hr", "div", "img", "span", "textarea")  // 设置允许的标签
            .addAttributes("a", "href", "title")          // 设置标签允许的属性, 避免如nmouseover属性
            .addProtocols("img", "src", "http", "https")  // img的src属性只允许http和https开头
+           .addAttributes("span", "style")
            .addProtocols("a", "href", "http", "https");
     return Jsoup.clean(content, whitelist);
 }
                     </textarea><br><br>
 
                     <a style="float:right" class="btn btn-sm btn-success text-right" target="_blank"
-                       th:href="@{/XSS/esapi?content=aaa<img%20src=1%20onerror=alert(1)>}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       th:href="@{/vulnapi/XSS/esapi?content=aaa<img%20src=1%20onerror=alert(1)>}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - ESAPI</span></h5>
-                    <label for="code5"></label><textarea class="form-control" id="code5">
-// ESAPI 是一个免费、开源的、网页应用程序安全控件库，它使程序员能够更容易写出更低风险的程序
-// 官网：https://owasp.org/www-project-enterprise-security-api/
-
+                    <textarea class="form-control" id="code5">
+/**
+ * ESAPISafeCode 类，用于处理安全相关的代码操作
+ */
 import org.owasp.esapi.ESAPI;
 public static String safe4(String content){
     return ESAPI.encoder().encodeForHTML(content);
@@ -184,7 +204,5 @@ public static String safe4(String content){
 <!-- 引入script -->
 <div th:replace="~{commons/commons::script}"></div>
 
-
 </body>
-
 </html>

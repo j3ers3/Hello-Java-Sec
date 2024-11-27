@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Api("接口未授权")
 @RestController
-@RequestMapping("/Unauth")
+@RequestMapping("/vulnapi/unauth")
 public class Unauth {
 
     @GetMapping("/api/info")

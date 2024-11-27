@@ -5,16 +5,22 @@ use test;
 CREATE TABLE `users`
 (
     `id`   int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `uuid` CHAR(36)         NOT NULL DEFAULT (UUID()) UNIQUE,
     `user` varchar(50)      NOT NULL,
     `pass` varchar(128)     NOT NULL,
-    PRIMARY KEY (`id`)
+    `flag` varchar(128)     NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uuid_unique` (`uuid`)
 );
 
 INSERT INTO `users`
-values (1, 'zhangwei', '123456');
+values (1, UUID(), 'zhangwei', '123456');
 
 INSERT INTO `users`
-values (2, 'admin', 'password');
+values (2, UUID(), 'Admin', 'password');
+
+INSERT INTO `users`
+values (3, UUID(), 'wangwei', '123123');
 
 -- 登录日志记录
 CREATE TABLE `auth`

@@ -1,4 +1,4 @@
-package com.best.hello.controller.Deserialize;
+package com.best.hello.controller.Deserialization;
 
 import com.best.hello.controller.XXE.Student;
 import io.swagger.annotations.ApiOperation;
@@ -31,7 +31,7 @@ import java.util.Base64;
  */
 
 @RestController
-@RequestMapping("/Deserialize/readObject")
+@RequestMapping("/vulnapi/Deserialization")
 public class Deserialization {
     Logger log = LoggerFactory.getLogger(Deserialization.class);
 
@@ -40,7 +40,7 @@ public class Deserialization {
      * payload：java -jar ysoserial-0.0.6-SNAPSHOT-BETA-all.jar CommonsCollections5 "open -a Calculator" | base64
      */
     @ApiOperation(value = "vul：readObject反序列化")
-    @RequestMapping("/vul")
+    @RequestMapping("/readObject/vul")
     public String readObject(String base64) {
         try {
             log.info("[vul] 执行反序列化：" + base64);
@@ -63,7 +63,7 @@ public class Deserialization {
 
 
     @ApiOperation(value = "safe：反序列化类白/黑名单控制", notes = "Apache Commons IO的ValidatingObjectInputStream来校验反序列化的类")
-    @RequestMapping("/safe")
+    @RequestMapping("/readObject/safe")
     public String safe(String base64) {
         try {
             log.info("[safe] 执行反序列化");
@@ -83,21 +83,15 @@ public class Deserialization {
         }
     }
 
-    /**
-     * ObjectInputStream.readUnshared 方法并不会执行任意代码，而是只会将序列化数据恢复为原始对象.
-     */
-    @RequestMapping("/safe2")
+    @ApiOperation(value = "vul：readUnshared反序列化")
+    @RequestMapping("/readUnshared/vul")
     public String readUnshared(String base64) {
         try {
             log.info("[safe] 执行反序列化：" + base64);
             base64 = base64.replace(" ", "+");
 
             byte[] bytes = Base64.getDecoder().decode(base64);
-
-            // 将字节转为输入流
             ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
-
-            // 反序列化流，将序列化的原始数据恢复为对象
             java.io.ObjectInputStream in = new java.io.ObjectInputStream(stream);
             in.readUnshared();
             in.close();

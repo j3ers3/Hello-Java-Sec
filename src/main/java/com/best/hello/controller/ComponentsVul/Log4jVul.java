@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Api("Log4j2 反序列化漏洞")
 @RestController
-@RequestMapping("/Log4j")
+@RequestMapping("/vulnapi/Log4j")
 public class Log4jVul {
 
     private static final Logger logger = LogManager.getLogger(Log4jVul.class);

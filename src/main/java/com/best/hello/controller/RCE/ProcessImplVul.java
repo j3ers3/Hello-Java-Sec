@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/RCE/ProcessImpl")
+@RequestMapping("/vulnapi/RCE/ProcessImpl")
 public class ProcessImplVul {
 
     @ApiOperation(value = "vul：命令执行 - ProcessImpl", notes = "ProcessImpl是更为底层的实现，Runtime和ProcessBuilder执行命令实际上也是调用了ProcessImpl这个类")

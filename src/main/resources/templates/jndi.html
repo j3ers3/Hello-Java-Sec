@@ -11,52 +11,63 @@
         <!-- 侧边栏 -->
         <div th:replace="~{commons/commons::siderbar(active='jndi.html')}"></div>
 
-        <main role="main" class="col-md-10 ml-sm-auto pt-3 px-4">
-            <div class="vul_header">
-                <span>JNDI注入</span>
-            </div>
-            <hr>
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span>
-                        漏洞描述</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
-                </li>
-            </ul>
-
-            <div class="tab-content">
-                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
-                    Java 命名和目录接口（Java Naming and Directory Interface，JNDI）是一种Java
-                    API，类似于一个索引中心，它允许客户端通过name发现和查找数据和对象。JNDI注入就是当上文代码中jndiName这个变量可控时，引发的漏洞，它将导致远程class文件加载，从而导致远程代码执行。
+        <main role="main" class="col-md-10 offset-md-2 pt-3 main">
+            <div class="card">
+                <div class="card-header py-1">
+                    <div class="vul_header">
+                        <span>JNDI Injection</span>
+                        <span class="header_link">
+                            <a class="btn btn-sm btn-primary" href="#">漏洞案例</a>
+                            <a class="btn btn-sm btn-primary" href="#">wiki</a>
+                        </span>
+                    </div>
                 </div>
-                <div class="tab-pane fade" id="bb">
-                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder"
-                              style="height: 100px;">
-一、针对lookup()方法的参数不可从外部可控。
-二、通过正则或白名单等方式过滤
-三、及时更新jdk版本
-                    </textarea>
+
+                <div class="card-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#vulDescription">
+                                漏洞描述</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#secureCoding"> 安全编码</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="vulDescription">
+                            <div class="alert alert-desc"><i class="lnr lnr-alarm"></i>
+                                Java 命名和目录接口（Java Naming and Directory Interface，JNDI）是一种Java
+                                API，类似于一个索引中心，它允许客户端通过name发现和查找数据和对象。<br>
+                                JNDI注入就是当上文代码中jndiName这个变量可控时，引发的漏洞，它将导致远程class文件加载，从而导致远程代码执行。
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="secureCoding">
+                            <div class="alert alert-desc">
+                                <li>方案一、针对lookup()方法的参数不可从外部可控</li>
+                                <li>方案二、通过正则或白名单等方式过滤</li>
+                                <li>方案三、及时更新jdk版本</li>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <hr>
 
             <div class="box-float">
                 <div class="float1">
-                    <a style="float:right" class="btn btn-sm btn-danger"
-                       href="/JNDI/vul?content=rmi://127.0.0.1:1099/Exp">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                       href="/vulnapi/JNDI/vul?content=rmi://127.0.0.1:1099/Exp">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
 
-                    <label for="code1"></label><textarea class="form-control" id="code1">
-// lookup是通过名字检索执行的对象，当lookup()方法的参数可控时，攻击者便能提供一个恶意的url地址来加载恶意类。
-
+                    <textarea class="form-control" id="code1">
+/**
+ * 产生原因：当lookup()方法的参数可控时，攻击者便能提供一个恶意的url地址来加载恶意类。
+ */
 public void vul(String content) {
     try {
         Context ctx = new InitialContext();
@@ -65,23 +76,29 @@ public void vul(String content) {
         log.warn("JNDI错误消息");
     }
 }
+                    </textarea><br><br>
+
+                    <h5><span class="lnr lnr-smile"> 安全代码 - JDK版本</span></h5>
+                    <textarea class="form-control" id="code2">
+更新jdk版本，能起到一定的防御作用，但不能完全有效，最终还是在于编写安全代码
+JDK 6u211、7u201、8u191之后：增加了com.sun.jndi.ldap.object.trustURLCodebase选项，默认为false。但依然可被绕过
                     </textarea>
 
                 </div>
 
                 <div class="float2">
-                    <a style="float:right" class="btn btn-sm btn-success"
-                       href="/JNDI/safe1?content=rmi://127.0.0.1:1099/Exp">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
+                       href="/vulnapi/JNDI/safe1?content=rmi://127.0.0.1:1099/Exp">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - 正则拦截</span></h5>
-                    <label for="code3"></label><textarea class="form-control" id="code3">
+                    <textarea class="form-control" id="code3">
 public String safe(String content) {
     // 使用正则表达式限制参数
-    if (content.matches("^[\\w\\.-]+$")) {
+    if (content.matches("^[\\w.-]+$")) {
         try {
             Context ctx = new InitialContext();
             ctx.lookup(content);
@@ -95,15 +112,15 @@ public String safe(String content) {
 }
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-success"
-                       href="/JNDI/safe2?content=rmi://127.0.0.1:1099/Exp">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
+                       href="/vulnapi/JNDI/safe2?content=rmi://127.0.0.1:1099/Exp">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - 白名单拦截</span></h5>
-                    <label for="code4"></label><textarea class="form-control" id="code4">
+                    <textarea class="form-control" id="code4">
 public String safe2(String content) {
     List<String> whiteList = Arrays.asList("java:comp/env/jdbc/mydb", "java:comp/env/mail/mymail");
     if (whiteList.contains(content)) {
@@ -118,12 +135,6 @@ public String safe2(String content) {
         return "JNDI 白名单拦截";
     }
 }
-                    </textarea><br><br>
-
-                    <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
-                    <label for="code2"></label><textarea class="form-control" id="code2">
-更新jdk版本，能起到一定的防御作用，但不能完全有效，最终还是在于编写安全代码
-JDK 6u211、7u201、8u191之后：增加了com.sun.jndi.ldap.object.trustURLCodebase选项，默认为false，禁止LDAP协议使用远程codebase的选项，把LDAP协议的攻击途径也给禁了。
                     </textarea>
                 </div>
 

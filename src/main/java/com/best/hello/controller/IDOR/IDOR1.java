@@ -2,6 +2,7 @@ package com.best.hello.controller.IDOR;
 
 import com.alibaba.fastjson.JSON;
 import com.best.hello.entity.User;
+import com.best.hello.entity.UserIDOR;
 import com.best.hello.mapper.UserMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
@@ -19,7 +21,7 @@ import java.util.Map;
 @Api("水平越权")
 @Slf4j
 @RestController
-@RequestMapping("/IDOR")
+@RequestMapping("/vulnapi/IDOR")
 public class IDOR1 {
 
     @Autowired
@@ -28,21 +30,22 @@ public class IDOR1 {
     // http://127.0.0.1:8888/IDOR/vul/info?name=admin
     @ApiOperation(value = "vul：根据name查询用户信息")
     @GetMapping("/vul/info")
-    public List<User> vul(String name) {
-        log.info("[vul] 水平越权查询：" + name);
-        return userMapper.queryByUser(name);
+    public List<UserIDOR> vul(String name) {
+        log.info("[vul] 基于用户身份越权查询：{}", name);
+        return userMapper.queryByUser2(name);
     }
 
-    @GetMapping(value = "/vul/qid")
-    public List<User> vul(Integer id) {
-        log.info("[vul] 水平id越权查询：" + id);
-        return userMapper.queryById2(id);
+    @ApiOperation(value = "vul：基于对象ID越权查询")
+    @GetMapping(value = "/vul/userid")
+    public List<User> vul2(Integer id) {
+        log.info("[vul] 基于对象ID越权查询：{}", id);
+        return userMapper.queryByIdAsInterger(id);
     }
 
     @ApiOperation(value = "safe：只允许查询自己信息")
     @GetMapping("/safe/info")
     public Object safe(String name, HttpSession session) {
-        log.info("[safe] 水平越权查询：" + name);
+        log.info("[safe] 水平越权查询：{}", name);
         String loginUser = (String) session.getAttribute("LoginUser");
         Map<String, String> m = new HashMap<>();
 
@@ -55,5 +58,11 @@ public class IDOR1 {
         return JSON.toJSONString(m);
     }
 
+    @ApiOperation(value = "safe：通过UUID查询用户信息")
+    @GetMapping("/safe/userid")
+    public List<User> safe2(@RequestParam("uuid") String uuid) {
+        log.info("[safe] 查询UUID {}", uuid);
+        return userMapper.queryByUuid(uuid);
+    }
 
 }

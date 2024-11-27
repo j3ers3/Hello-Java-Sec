@@ -11,80 +11,93 @@
         <!-- 侧边栏 -->
         <div th:replace="~{commons/commons::siderbar(active='sqli_jdbc.html')}"></div>
 
-        <main role="main" class="col-md-10 ml-sm-auto pt-3 px-4">
-            <div class="vul_header">
-                <span>SQL Injection - JDBC</span>
-            </div>
-            <hr>
-
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span>
-                        漏洞描述</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
-                </li>
-            </ul>
-
-            <div class="tab-content">
-                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
-                    SQLI(SQL Injection)，
-                    SQL注入是因为程序未能正确对用户的输入进行检查，将用户的输入以拼接的方式带入SQL语句，导致了SQL注入的产生。攻击者可通过SQL注入直接获取数据库信息，造成信息泄漏。<br>
-                    JDBC有两个方法执行SQL语句，分别是PrepareStatement和Statement。
+        <main role="main" class="col-md-10 offset-md-2 pt-3 main">
+            <!-- 描述模块 -->
+            <div class="card">
+                <div class="card-header py-1">
+                    <div class="vul_header">
+                        <span>SQL Injection - JDBC</span>
+                        <span class="header_link">
+                            <a class="btn btn-sm btn-primary"
+                               href="#">漏洞案例</a>
+                            <a class="btn btn-sm btn-primary"
+                               href="#">wiki</a>
+                        </span>
+                    </div>
                 </div>
-                <div class="tab-pane fade" id="bb">
-                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder"
-                              style="height: 180px;">
-【必须】SQL语句默认使用预编译并绑定变量
- Web后台系统应默认使用预编译绑定变量的形式创建sql语句，保持查询语句和数据相分离。以从本质上避免SQL注入风险。
+                <div class="card-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#vulDescription">
+                                漏洞描述</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#secureCoding">安全编码</a>
+                        </li>
+                    </ul>
 
-【必须】屏蔽异常栈
- 应用程序出现异常时，禁止将数据库版本、数据库结构、操作系统版本、堆栈跟踪、文件名和路径信息、SQL 查询字符串等对攻击者有用的信息返回给客户端。建议重定向到一个统一、默认的错误提示页面，进行信息过滤。
-                    </textarea>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="vulDescription">
+                            <div class="alert alert-desc"><i class="lnr lnr-alarm"></i>
+                                SQL 注入（SQL Injection）是一种常见且危险的安全漏洞，是由于应用程序没有正确地检查用户输入而导致的。攻击者通过构造恶意的
+                                SQL 语句，并将其作为用户输入提交，从而成功地执行对数据库的攻击。这种攻击方式可能导致敏感数据泄露、数据篡改，甚至完全控制数据库。<br><br>
+                                JDBC提供的PreparedStatement、Statement以及JdbcTemplate等框架都可能会导致SQL注入。
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="secureCoding">
+                            <div class="alert alert-desc">
+                                <li>【必须】SQL语句默认使用预编译并绑定变量</li>
+                                Web后台系统应默认使用预编译绑定变量的形式创建sql语句，保持查询语句和数据相分离。以从本质上避免SQL注入风险。
+                                <br><br>
+                                <li>【必须】屏蔽异常栈</li>
+                                应用程序出现异常时，禁止将数据库版本、数据库结构、操作系统版本、堆栈跟踪、文件名和路径信息、SQL
+                                查询字符串等对攻击者有用的信息返回给客户端。建议重定向到一个统一、默认的错误提示页面，进行信息过滤。
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="testCase">
+                            <div class="alert alert-desc"><i class="lnr lnr-alarm"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <hr>
 
             <div class="box-float">
                 <div class="float1">
                     <a target="_blank" style="float:right" class="btn btn-sm btn-danger"
-                       href="/SQLI/JDBC/vul1?id=1' and updatexml(1,concat(0x7e,(SELECT user()),0x7e),1)--%20+">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       href="/vulnapi/sqli/jdbc/vul1?id=1' and updatexml(1,concat(0x7e,(SELECT user()),0x7e),1)--%20+">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
-                    <h5><span class="lnr lnr-bug"> 漏洞代码 - 语句拼接(Statement)</span></h5>
-
-                    <label for="code1"></label><textarea class="form-control" id="code1">
-// 采用Statement方法拼接SQL语句，导致注入产生
-
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - 语句拼接 (Statement)</span></h5>
+                    <textarea id="code1" class="code-textarea">
+/**
+ * 产生原因：采用 Statement 方法拼接了SQL语句，导致注入
+ */
 public String vul1(String id) {
     Class.forName("com.mysql.cj.jdbc.Driver");
     Connection conn = DriverManager.getConnection(db_url, db_user, db_pass);
 
     Statement stmt = conn.createStatement();
-    // 拼接语句产生SQL注入
     String sql = "select * from users where id = '" + id + "'";
     ResultSet rs = stmt.executeQuery(sql);
-    ...
 }
-
                     </textarea><br><br>
 
                     <a target="_blank" style="float:right" class="btn btn-sm btn-danger"
-                       href="/SQLI/JDBC/vul2?id=2%20or%201=1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       href="/vulnapi/sqli/jdbc/vul2?id=2%20or%201=1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
-                    <h5><span class="lnr lnr-bug"> 漏洞代码 - 语句拼接(PrepareStatement)</span></h5>
-                    <label for="code2"></label><textarea class="form-control" id="code2">
-// PrepareStatement会对SQL语句进行预编译，但如果直接采取拼接的方式构造SQL，此时进行预编译也无用。
-
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - 语句拼接（PrepareStatement）</span></h5>
+                    <textarea class="form-control" id="code2">
+/**
+ * 产生原因：PrepareStatement会对SQL语句进行预编译，但如果直接采取拼接的方式构造SQL，此时进行预编译也无用
+ */
 public String vul2(String id) {
     Class.forName("com.mysql.cj.jdbc.Driver");
     Connection conn = DriverManager.getConnection(db_url, db_user, db_pass);
@@ -95,26 +108,62 @@ public String vul2(String id) {
                     </textarea><br><br>
 
                     <a target="_blank" style="float:right" class="btn btn-sm btn-danger"
-                       href="/SQLI/JDBC/vul3?id=2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       href="/vulnapi/sqli/jdbc/vul3?id=2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - JdbcTemplate</span></h5>
-                    <label for="code6"></label><textarea class="form-control" id="code6">
-// JDBCTemplate是Spring对JDBC的封装，如果使用拼接语句便会产生注入
-
+                    <textarea class="form-control" id="code6">
+/**
+ * 产生原因：JDBCTemplate是Spring对JDBC的封装，如果使用拼接语句便会产生注入。
+ */
 public Map<String, Object> vul3(String id) {
     DriverManagerDataSource dataSource = new DriverManagerDataSource();
-    ...
+    dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+    dataSource.setUrl(db_url);
+    dataSource.setUsername(db_user);
+    dataSource.setPassword(db_pass);
+
     JdbcTemplate jdbctemplate = new JdbcTemplate(dataSource);
 
-    String sql_vul = "select * from users where id = " + id;
-    // 安全语句
-    // String sql_safe = "select * from users where id = ?";
+    String sql = "select * from users where id = " + id;
 
-    return jdbctemplate.queryForMap(sql_vul);
+    // 安全代码：使用参数化查询，避免SQL注入风险
+    // String sql = "select * from users where id = ?";
+
+    return jdbctemplate.queryForMap(sql);
+}
+                    </textarea><br><br>
+
+                    <a target="_blank" style="float:right" class="btn btn-sm btn-success"
+                       href="/vulnapi/sqli/jdbc/safe5?name=admin">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 正则过滤</span></h5>
+                    <textarea class="form-control" id="code8">
+/**
+ * 正则表达式只匹配字母和数字
+ */
+public String safe5(String name) {
+    StringBuilder result = new StringBuilder();
+    String pattern = "^[a-zA-Z0-9]+$";
+    boolean isValid = Pattern.matches(pattern, name);
+
+    if (isValid) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(db_url, db_user, db_pass);
+            Statement stmt = conn.createStatement();
+            String sql = "select * from users where user = '" + name + "'";
+            ResultSet rs = stmt.executeQuery(sql);
+    } else {
+        return "非法正则匹配！";
+    }
 }
                     </textarea>
 
@@ -122,18 +171,19 @@ public Map<String, Object> vul3(String id) {
 
                 <div class="float2">
                     <a target="_blank" style="float:right" class="btn btn-sm btn-success"
-                       href="/SQLI/JDBC/safe2?id=1'">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       href="/vulnapi/sqli/jdbc/safe2?id=1'">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
-                    <h5><span class="lnr lnr-smile"> 安全代码 - 过滤方法</span></h5>
-                    <label for="code4"></label><textarea class="form-control" id="code4">
-// 采用黑名单过滤危险字符，同时也容易误伤（次方案）
-
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 黑名单过滤</span></h5>
+                    <textarea class="form-control" id="code4">
+/**
+ * 采用黑名单过滤危险字符，会存在绕过同时也容易误伤（并不推荐）
+ */
 public static boolean checkSql(String content) {
-    String[] black_list = {"'", ";", "--", "+", ",", "%", "=", ">", "*", "(", ")", "and", "or", "exec", "insert", "select", "delete", "update", "count", "drop", "chr", "mid", "master", "truncate", "char", "declare"};
+    String[] black_list = {"'", ";", "--", "+", ",", "%", "=", ">", "*", "(", ")", "and", "or", "exec", "insert", "select", "delete", "update", "count", "drop", "chr", "mid", "master", "truncate", "char", "declare", "sleep"};
     for (String s : black_list) {
         if (content.toLowerCase().contains(s)) {
             return true;
@@ -144,17 +194,20 @@ public static boolean checkSql(String content) {
                     </textarea><br><br>
 
                     <a target="_blank" style="float:right" class="btn btn-sm btn-success"
-                       href="/SQLI/JDBC/safe1?id=1'">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       href="/vulnapi/sqli/jdbc/safe1?id=1'">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
-                    <h5><span class="lnr lnr-smile"> 安全代码 - 预编译</span></h5>
-                    <label for="code3"></label><textarea class="form-control" id="code3">
-// 正确的使用PrepareStatement可以有效避免SQL注入，使用？作为占位符，进行参数化查询
-
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 预编译（PrepareStatement）</span></h5>
+                    <textarea class="form-control" id="code3">
+/**
+ * PrepareStatement会对SQL语句进行预编译，并且通过使用占位符来防止SQL注入
+ */
 public String safe1(String id) {
+    Class.forName("com.mysql.cj.jdbc.Driver");
+    Connection conn = DriverManager.getConnection(db_url, db_user, db_pass);
     String sql = "select * from users where id = ?";
     PreparedStatement st = conn.prepareStatement(sql);
     st.setString(1, id);
@@ -163,17 +216,17 @@ public String safe1(String id) {
                     </textarea><br><br>
 
                     <a target="_blank" style="float:right" class="btn btn-sm btn-success"
-                       href="/SQLI/JDBC/safe3?id=1'">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       href="/vulnapi/sqli/jdbc/safe3?id=1'">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
-                    <h5><span class="lnr lnr-smile"> 安全代码 - ESAPI安全框架</span></h5>
-                    <label for="code5"></label><textarea class="form-control" id="code5">
-// ESAPI 是一个免费、开源的、网页应用程序安全控件库，它使程序员能够更容易写出更低风险的程序
-// 官网：https://owasp.org/www-project-enterprise-security-api/
-
+                    <h5><span class="lnr lnr-smile"> 安全代码 - ESAPI框架</span></h5>
+                    <textarea class="form-control" id="code5">
+/**
+ * ESAPI 是一个免费、开源的、网页应用程序安全控件库，它使程序员能够更容易写出更低风险的程序
+ */
 public String safe3(String id) {
     Codec<Character> oracleCodec = new OracleCodec();
 
@@ -185,22 +238,31 @@ public String safe3(String id) {
                     </textarea><br><br>
 
                     <a target="_blank" style="float:right" class="btn btn-sm btn-success"
-                       href="/SQLI/JDBC/safe4?id=1'">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       href="/vulnapi/sqli/jdbc/safe4?id=1'">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - 强制数据类型</span></h5>
-                    <label for="code7"></label><textarea class="form-control" id="code7">
-// 如果参数类型为boolean,byte,short,int,long,float,double等，sql语句无法拼接字符串，因此不存在注入
-
+                    <textarea class="form-control" id="code7">
+/**
+ * 如果参数类型为boolean、byte、short、int、long、float、double等，sql语句无法拼接字符串，因此无法被利用
+ */
 public Map<String, Object> safe4(Integer id) {
-    String sql = "select * from users where id = " + id;
-    return jdbctemplate.queryForMap(sql);
+    DriverManagerDataSource dataSource = new DriverManagerDataSource();
+    dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+    dataSource.setUrl(db_url);
+    dataSource.setUsername(db_user);
+    dataSource.setPassword(db_pass);
+
+    JdbcTemplate jdbctemplate = new JdbcTemplate(dataSource);
+
+    String sql_vul = "select * from users where id = " + id;
+
+    return jdbctemplate.queryForMap(sql_vul);
 }
                     </textarea>
-
 
                 </div>
             </div>
@@ -210,7 +272,6 @@ public Map<String, Object> safe4(Integer id) {
 
 <!-- 引入script -->
 <div th:replace="~{commons/commons::script}"></div>
-
 
 </body>
 

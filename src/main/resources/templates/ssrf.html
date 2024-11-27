@@ -11,54 +11,66 @@
         <!-- 侧边栏 -->
         <div th:replace="~{commons/commons::siderbar(active='ssrf.html')}"></div>
 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <div class="vul_header">
-                <span>SSRF</span>
-            </div>
-            <hr>
-
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span>
-                        漏洞描述</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
-                </li>
-            </ul>
-
-            <div class="tab-content">
-                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
-                    SSRF(Server-Side Request Forgery) 服务器端请求伪造，是一种由攻击者构造形成由服务端发起请求的一个安全漏洞。
+        <main role="main" class="col-md-10 offset-md-2 pt-3 main">
+            <div class="card">
+                <div class="card-header py-1">
+                    <div class="vul_header">
+                        <span>SSRF</span>
+                        <span class="header_link">
+                            <a class="btn btn-sm btn-primary" href="#">漏洞案例</a>
+                            <a class="btn btn-sm btn-primary" href="#">wiki</a>
+                        </span>
+                    </div>
                 </div>
-                <div class="tab-pane fade" id="bb">
-                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder"
-                              style="height: 160px;">
-【必须】避免直接访问不可信地址
-1.服务器访问不可信地址时，禁止访问私有地址段及内网域名。
-2.建议通过URL解析函数进行解析，获取host或者domain后通过DNS获取其IP，然后和内网地址进行比较。
-3.对已校验通过地址进行访问时，应关闭跟进跳转功能。
-4.或者只允许访问白名单内的域名。
-                    </textarea>
+
+                <div class="card-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#vulDescription">
+                                漏洞描述</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#secureCoding"> 安全编码</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="vulDescription">
+                            <div class="alert alert-desc"><i class="lnr lnr-alarm"></i>
+                                SSRF（Server-Side Request
+                                Forgery）是一种服务器端请求伪造的安全漏洞，攻击者通过构造恶意请求，让目标服务器发起请求到攻击者指定的内部网站或者外部网站，从而达到获取内部网站信息或者攻击外部网站的目的。常见的攻击方式包括利用目标服务器的功能从外部获取数据、攻击内网系统、绕过防火墙和任意文件读取等。
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="secureCoding">
+                            <div class="alert alert-desc">
+                                <li>【必须】避免直接访问不可信地址</li>
+                                1. 服务器访问不可信地址时，禁止访问私有地址段及内网域名。<br>
+                                2. 建议通过URL解析函数进行解析，获取host或者domain后通过DNS获取其IP，然后和内网地址进行比较。<br>
+                                3. 对已校验通过地址进行访问时，应关闭跟进跳转功能。<br>
+                                4. 或者只允许访问白名单内的域名。
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <hr>
 
             <div class="box-float">
                 <div class="float1">
 
                     <a target="_blank" style="float:right" class="btn btn-sm btn-danger"
-                       th:href="@{/SSRF/URLConnection/vul?url=file:///etc/passwd}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       th:href="@{/vulnapi/SSRF/URLConnection/vul?url=file:///etc/passwd}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
-                    <label for="code1"></label><textarea class="form-control" id="code1">
-// url参数没做限制，可调用URLConnection发起任意请求，比如请求内网，或使用file等协议读取文件
-
+                    <textarea class="form-control" id="code1">
+/**
+ * 产生原因：url参数没做限制，可调用URLConnection发起任意请求，比如请求内网，或使用file等协议读取文件
+ * url=file:///etc/passwd
+ * url=http://172.17.0.1:80
+ */
 public static String URLConnection(String url) {
     try {
         URL u = new URL(url);
@@ -81,16 +93,17 @@ public static String URLConnection(String url) {
 
 
                     <a target="_blank" style="float:right" class="btn btn-sm btn-danger"
-                       th:href="@{/SSRF/URLConnection/vul2?url=http://168302434}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       th:href="@{/vulnapi/SSRF/URLConnection/vul2?url=http://168302434}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - 绕过</span></h5>
-                    <label for="code2"></label><textarea class="form-control" id="code2">
-// SSRF修复经常碰到的问题，虽然过滤了内网地址，但通过短链接跳转、IP进制的方式可以绕过
-
+                    <textarea class="form-control" id="code2">
+/**
+ * SSRF修复经常碰到的问题，虽然过滤了内网地址，但通过短链接跳转、IP进制的方式可以绕过
+ */
 public String URLConnection2(String url) {
     if (!Security.isHttp(url)) {
         return "不允许非http协议!!!";
@@ -107,15 +120,17 @@ public String URLConnection2(String url) {
                 <div class="float2">
 
                     <a target="_blank" style="float:right" class="btn btn-sm btn-success"
-                       th:href="@{/SSRF//URLConnection/safe?url=http://192.168.1.1}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       th:href="@{/vulnapi/SSRF//URLConnection/safe?url=http://192.168.1.1}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - 白名单方式</span></h5>
-                    <label for="code4"></label><textarea class="form-control" id="code4">
-// 白名单是最佳修复方案
+                    <textarea class="form-control" id="code4">
+/**
+ * 最佳修复方案：通过使用白名单机制来限制允许访问的域名或IP
+ */
 public String URLConnection3(String url) {
     if (!Security.isHttp(url)) {
         return "不允许非http/https协议!!!";
@@ -129,14 +144,20 @@ public String URLConnection3(String url) {
 
 
                     <a target="_blank" style="float:right" class="btn btn-sm btn-success"
-                       th:href="@{/SSRF/HTTPURLConnection/safe?url=http://192.168.1.1}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       th:href="@{/vulnapi/SSRF/HTTPURLConnection/safe?url=http://192.168.1.1}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - 过滤方式</span></h5>
-                    <label for="code3"></label><textarea class="form-control" id="code3">
+                    <textarea class="form-control" id="code3">
+/**
+ * 过滤方式，需要考虑的点
+ * 1. 校验URL协议：确保只允许HTTP和HTTPS协议。
+ * 2. 校验域名或IP是否为内网地址。
+ * 3. 禁止重定向
+ */
 public String HTTPURLConnection(String url) {
     // 校验 url 是否以 http 或 https 开头
     if (!Security.isHttp(url)) {
@@ -162,12 +183,11 @@ public String HTTPURLConnection(String url) {
     }
 }
 
-// 1. 判断是否为http协议
+
 public static boolean isHttp(String url) {
     return url.startsWith("http://") || url.startsWith("https://");
 }
 
-// 2. 解析IP地址
 public static String urltoIp(String url) {
     try {
         URI uri = new URI(url);
@@ -179,7 +199,6 @@ public static String urltoIp(String url) {
     }
 }
 
-// 3. 判断是否为内网IP
 public static boolean isIntranet(String url) {
     Pattern reg = Pattern.compile("^(127\\.0\\.0\\.1)|(localhost)|^(10\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})|^(172\\.((1[6-9])|(2\\d)|(3[01]))\\.\\d{1,3}\\.\\d{1,3})|^(192\\.168\\.\\d{1,3}\\.\\d{1,3})$");
     Matcher match = reg.matcher(url);
@@ -187,7 +206,6 @@ public static boolean isIntranet(String url) {
     return a;
 }
 
-// 4. 不允许302跳转
 HttpURLConnection conn = (HttpURLConnection) u.openConnection();
 conn.setInstanceFollowRedirects(false); // 不允许重定向或者对重定向后的地址做二次判断
 conn.connect();

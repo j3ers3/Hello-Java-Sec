@@ -11,47 +11,56 @@
         <!-- 侧边栏 -->
         <div th:replace="~{commons/commons::siderbar(active='xstream.html')}"></div>
 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <div class="vul_header">
-                <span>组件漏洞 - XStream反序列化</span>
-            </div>
-            <hr>
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span> 漏洞描述</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
-                </li>
-            </ul>
-
-            <div class="tab-content">
-                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
-                    XStream是一个简单的基于Java库，Java对象序列化到XML，历史上存在多个反序列化漏洞。
+        <main role="main" class="col-md-10 offset-md-2 pt-3 main">
+            <div class="card">
+                <div class="card-header py-1">
+                    <div class="vul_header">
+                        <span>组件漏洞 - XStream反序列化</span>
+                    </div>
                 </div>
-                <div class="tab-pane fade" id="bb">
-                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder" style="height: 100px;">
-方案一、对于第三方依赖组件，需要及时更新版本
-方案二、1.4.10后可启用默认安全配置，setupDefaultSecurity
-                    </textarea>
+
+                <div class="card-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#vulDescription">
+                                漏洞描述</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#secureCoding"> 安全编码</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="vulDescription">
+                            <div class="alert alert-desc"><i class="lnr lnr-alarm"></i>
+                                XStream是一个基于Java的库，可以将Java对象序列化为XML格式。但在历史上，XStream存在多个反序列化漏洞，攻击者可以通过构造恶意的序列化数据，利用这些漏洞执行任意代码。
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="secureCoding">
+                            <div class="alert alert-desc">
+                                <li>方案一、对于第三方依赖组件，需要及时更新版本</li>
+                                <li>方案二、1.4.10后可启用默认安全配置，setupDefaultSecurity</li>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <hr>
 
             <div class="box-float">
                 <div class="float1">
                     <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
-                       href="/XStream/vul"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
-                                                viewBox="0 0 16 16">
-                        <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
-                    </svg>
+                       href="/vulnapi/XStream/vul">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
 
-                    <label for="code1"></label><textarea class="form-control" id="code1">
-// 客户端请求的字符串作为 XML 反序列化为 Java 对象
-
+                    <textarea class="form-control" id="code1">
+/**
+ * 产生原因：客户端请求的字符串作为 XML 反序列化为 Java 对象
+ */
 public String vul(@RequestBody String content) {
     XStream xs = new XStream();
     xs.fromXML(content);
@@ -64,13 +73,14 @@ public String vul(@RequestBody String content) {
                 <div class="float2">
 
                     <a style="float:right" class="btn btn-sm btn-success" target="_blank"
-                       href="/XStream/safe"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
-                                                 viewBox="0 0 16 16">
-                        <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
-                    </svg>
+                       href="/vulnapi/XStream/safe">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
-                    <label for="code2"></label><textarea class="form-control" id="code2">
+                    <textarea class="form-control" id="code2">
 public String vul(@RequestBody String content) {
     XStream xs = new XStream();
     // 修复：1.4.10后可用，启用黑名单特性的安全配置

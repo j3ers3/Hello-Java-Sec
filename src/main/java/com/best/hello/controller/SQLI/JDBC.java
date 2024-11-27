@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.*;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * SQL注入 - JDBC注入
@@ -32,7 +33,7 @@ import java.util.Map;
 
 @Api("SQL注入 - JDBC")
 @RestController
-@RequestMapping("/SQLI/JDBC")
+@RequestMapping("/vulnapi/sqli/jdbc")
 public class JDBC {
 
     Logger log = LoggerFactory.getLogger(JDBC.class);
@@ -52,30 +53,28 @@ public class JDBC {
     @ApiOperation(value = "vul: JDBC语句拼接")
     @GetMapping("/vul1")
     public String vul1(String id) {
-
         StringBuilder result = new StringBuilder();
+        String sql = "select * from users where id = '" + id + "'";
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = DriverManager.getConnection(db_url, db_user, db_pass);
 
             Statement stmt = conn.createStatement();
-            String sql = "select * from users where id = '" + id + "'";
-            log.info("[vul] 执行SQL语句： " + sql);
+
+            log.info("[vul] 执行SQL语句： {}", sql);
             ResultSet rs = stmt.executeQuery(sql);
 
             while (rs.next()) {
                 String res_name = rs.getString("user");
                 String res_pass = rs.getString("pass");
-                String info = String.format("查询结果 %s: %s", res_name, res_pass);
-                result.append(info);
+                result.append(String.format("查询结果 %s: %s", res_name, res_pass));
             }
 
             rs.close();
             stmt.close();
             conn.close();
             return result.toString();
-
         } catch (Exception e) {
             // 输出错误，用于报错注入
             return e.toString();
@@ -89,15 +88,14 @@ public class JDBC {
     @ApiOperation(value = "vul：JDBC预编译拼接", notes = "采用预编译的方法，但没使用?占位，此时进行预编译也无法阻止SQL注入")
     @GetMapping("/vul2")
     public String vul2(String id) {
-
         StringBuilder result = new StringBuilder();
+        String sql = "select * from users where id = " + id;
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = DriverManager.getConnection(db_url, db_user, db_pass);
 
-            String sql = "select * from users where id = " + id;
-            log.info("[vul] 执行SQL语句： " + sql);
+            log.info("[vul] 执行SQL语句： {}", sql);
             PreparedStatement st = conn.prepareStatement(sql);
             ResultSet rs = st.executeQuery();
 
@@ -112,7 +110,6 @@ public class JDBC {
             st.close();
             conn.close();
             return result.toString();
-
         } catch (Exception e) {
             return e.toString();
         }
@@ -140,17 +137,15 @@ public class JDBC {
     @ApiOperation(value = "safe：JDBC预编译", notes = "采用预编译的方法，使用?占位，也叫参数化的SQL")
     @GetMapping("/safe1")
     public String safe1(String id) {
-
         StringBuilder result = new StringBuilder();
+        String sql = "select * from users where id = ?";
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = DriverManager.getConnection(db_url, db_user, db_pass);
-
-            String sql = "select * from users where id = ?";
             PreparedStatement st = conn.prepareStatement(sql);
             st.setString(1, id);
-            log.info("[safe] 执行SQL语句： " + st);
+            log.info("[safe] 执行SQL语句： {}", st);
             ResultSet rs = st.executeQuery();
 
             while (rs.next()) {
@@ -164,7 +159,6 @@ public class JDBC {
             st.close();
             conn.close();
             return result.toString();
-
         } catch (Exception e) {
             return e.toString();
         }
@@ -176,17 +170,15 @@ public class JDBC {
     public String safe2(String id) {
 
         if (!Security.checkSql(id)) {
-
             StringBuilder result = new StringBuilder();
+            String sql = "select * from users where id = '" + id + "'";
 
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 Connection conn = DriverManager.getConnection(db_url, db_user, db_pass);
-
                 Statement stmt = conn.createStatement();
-                String sql = "select * from users where id = '" + id + "'";
+                log.info("[safe] 执行SQL语句：{}", sql);
                 ResultSet rs = stmt.executeQuery(sql);
-                log.info("[safe] 执行SQL语句： " + sql);
 
                 while (rs.next()) {
                     String res_name = rs.getString("user");
@@ -199,7 +191,6 @@ public class JDBC {
                 stmt.close();
                 conn.close();
                 return result.toString();
-
             } catch (Exception e) {
                 return e.toString();
             }
@@ -257,6 +248,43 @@ public class JDBC {
         String sql_vul = "select * from users where id = " + id;
 
         return jdbctemplate.queryForMap(sql_vul);
+    }
+
+    @ApiOperation(value = "safe: 正则过滤")
+    @GetMapping("/safe5")
+    public String safe5(String name) {
+        StringBuilder result = new StringBuilder();
+        // 只能输入字母和数字
+        String pattern = "^[a-zA-Z0-9]+$";
+        boolean isValid = Pattern.matches(pattern, name);
+
+        if (isValid) {
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                Connection conn = DriverManager.getConnection(db_url, db_user, db_pass);
+                Statement stmt = conn.createStatement();
+                String sql = "select * from users where user = '" + name + "'";
+                log.info("[vul] 执行SQL语句： {}", sql);
+                ResultSet rs = stmt.executeQuery(sql);
+                while (rs.next()) {
+                    String info = String.format("查询结果 %s: %s", rs.getString("user"), rs.getString("pass"));
+                    result.append(info);
+                }
+                rs.close();
+                stmt.close();
+                conn.close();
+                return result.toString();
+            } catch (Exception e) {
+                return e.toString();
+            }
+        } else {
+            return "非法正则匹配！";
+        }
+    }
+
+    private Connection getConnection() throws Exception {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        return DriverManager.getConnection(db_url, db_user, db_pass);
     }
 
 }

@@ -4,110 +4,95 @@
 
 <body>
 <!-- 顶部导航栏 -->
-<div th:replace="~{commons/commons::topbar}" }></div>
+<div th:replace="~{commons/commons::topbar}"></div>
 
 <div class="container-fluid">
     <div class="row">
         <!-- 侧边栏 -->
         <div th:replace="~{commons/commons::siderbar(active='spel.html')}"></div>
 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <div class="vul_header">
-                <span>表达式注入</span>
-            </div>
-            <hr>
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span>
-                        漏洞描述</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
-                </li>
-            </ul>
-
-            <div class="tab-content">
-                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
-                    SpEL（Spring Expression Language）表达式注入, 是一种功能强大的表达式语言、用于在运行时查询和操作对象图，由于未对参数做过滤可造成任意命令执行。
+        <main role="main" class="col-md-10 offset-md-2 pt-3 main">
+            <div class="card">
+                <div class="card-header py-1">
+                    <div class="vul_header">
+                        <span>表达式注入</span>
+                        <span class="header_link">
+                            <a class="btn btn-sm btn-primary" href="#">漏洞案例</a>
+                            <a class="btn btn-sm btn-primary" href="#">wiki</a>
+                        </span>
+                    </div>
                 </div>
-                <div class="tab-pane fade" id="bb">
-                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder"
-                              style="height: 180px;">
-web view层通常通过模板技术或者表达式引擎来实现界面与业务数据分离，比如jsp中的EL表达式。这些引擎通常可执行敏感操作，如果外部不可信数据未经过滤拼接到表达式中进行解析，则可能造成严重漏洞。
-应避免外部输入的内容拼接到EL表达式或其他表达式引起、模板引擎进行解析。
-白名单过滤外部输入，仅允许字符、数字、下划线等。
-                    </textarea>
+                <div class="card-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#vulDescription">
+                                漏洞描述</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#secureCoding"> 安全编码</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="vulDescription">
+                            <div class="alert alert-desc"><i class="lnr lnr-alarm"></i>
+                                SpEL（Spring Expression Language）是Spring
+                                Framework中的一种表达式语言，它允许在运行时对对象图进行查询和操作。在应用程序中，如果使用不当，攻击者可以通过构造恶意输入来注入SpEL表达式，从而在表达式被解析时执行任意的命令，导致安全漏洞。
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="secureCoding">
+                            <div class="alert alert-desc">
+                                web
+                                view层通常通过模板技术或者表达式引擎来实现界面与业务数据分离，比如jsp中的EL表达式。这些引擎通常可执行敏感操作，如果外部不可信数据未经过滤拼接到表达式中进行解析，则可能造成严重漏洞。<br>
+                                应避免外部输入的内容拼接到EL表达式或其他表达式引起、模板引擎进行解析。<br>
+                                白名单过滤外部输入，仅允许字符、数字、下划线等。
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <hr>
 
             <div class="box-float">
                 <div class="float1">
                     <a style="float:right" target="_blank" class="btn btn-sm btn-danger"
-                       href="/SPEL/vul?ex=100-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       href="/vulnapi/SPEL/vul?ex=100-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码</span></h5>
 
-                    <label for="code1"></label><textarea class="form-control" name="code" id="code1">
-// PoC: T(java.lang.Runtime).getRuntime().exec(%22open%20-a%20Calculator%22)
-
+                    <textarea class="form-control" name="code" id="code1">
+/**
+ * 产生原因：默认的StandardEvaluationContext权限过大，用户输入的表达式被直接解析和执行
+ * PoC: T(java.lang.Runtime).getRuntime().exec(%22open%20-a%20Calculator%22)
+ */
 public String vul(String ex) {
     ExpressionParser parser = new SpelExpressionParser();
 
-    // StandardEvaluationContext权限过大，可以执行任意代码，默认使用
     EvaluationContext evaluationContext = new StandardEvaluationContext();
 
     Expression exp = parser.parseExpression(ex);
     String result = exp.getValue(evaluationContext).toString();
     return result;
 }
-                    </textarea><br><br>
-                    <a style="float:right" target="_blank" class="btn btn-sm btn-danger"
-                       href="/SPEL/vul2?ex=T(java.lang.Runtime).getRuntime().exec(%22open%20-a%20Calculator%22)">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
-                             viewBox="0 0 16 16">
-                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
-                        </svg>
-                        <span class="align-middle"> Run</span></a>
-                    <h5><span class="lnr lnr-bug"> 漏洞代码 - 黑名单绕过</span></h5>
-
-                    <label for="code3"></label><textarea class="form-control" name="code" id="code3">
-// 黑名单正则，尝试绕过执行恶意代码
-
-public String vul2(String ex) {
-    String[] black_list = {"java.+lang", "Runtime", "exec.*\\("};
-    for (String s : black_list) {
-        Matcher matcher = Pattern.compile(s).matcher(ex);
-        if (matcher.find()) {
-            return "黑名单过滤";
-        }
-    }
-
-    ExpressionParser parser = new SpelExpressionParser();
-    Expression exp = parser.parseExpression(ex);
-    String result = exp.getValue().toString();
-    return result;
-}
-                    </textarea><br><br>
+                    </textarea>
                 </div>
 
                 <div class="float2">
                     <a style="float:right" target="_blank" class="btn btn-sm btn-success"
-                       href="/SPEL/safe?ex=100-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       href="/vulnapi/SPEL/safe?ex=100-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
-                    <label for="code2"></label><textarea class="form-control" name="code" id="code2">
-// SimpleEvaluationContext 旨在仅支持 SpEL 语言语法的一个子集。它不包括 Java 类型引用，构造函数和 bean 引用
-
+                    <textarea class="form-control" name="code" id="code2">
+/**
+ * SimpleEvaluationContext 旨在仅支持 SpEL 语言语法的一个子集。它不包括 Java 类型引用，构造函数和 bean 引用
+ */
 public String spelSafe(String ex) {
     ExpressionParser parser = new SpelExpressionParser();
 

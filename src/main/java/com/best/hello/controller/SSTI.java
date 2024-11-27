@@ -23,7 +23,7 @@ import java.util.Map;
  */
 @Api("服务端模版注入")
 @Controller
-@RequestMapping("/SSTI")
+@RequestMapping("/vulnapi/SSTI")
 public class SSTI {
     Logger log = LoggerFactory.getLogger(SSTI.class);
 

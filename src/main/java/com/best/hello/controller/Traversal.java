@@ -14,24 +14,28 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.alibaba.fastjson.JSON;
 
 /**
  * @date 2021/07/15
  */
 @Api("目录遍历")
 @RestController
-@RequestMapping("/Traversal")
+@RequestMapping("/vulnapi/Traversal")
 public class Traversal {
     Logger log = LoggerFactory.getLogger(Traversal.class);
 
     @ApiOperation(value = "vul：任意文件下载")
     @GetMapping("/download")
     public String download(String filename, HttpServletResponse response) {
+        Map<String, String> m = new HashMap<>();
+
         // 下载的文件路径
         String filePath = System.getProperty("user.dir") + "/logs/" + filename;
-        log.info("[vul] 任意文件下载：" + filePath);
+        log.info("[vul] 任意文件下载：{}", filePath);
 
         try (InputStream inputStream = new BufferedInputStream(Files.newInputStream(Paths.get(filePath)))) {
             response.setHeader("Content-Disposition", "attachment; filename=" + filename);
@@ -41,18 +45,20 @@ public class Traversal {
             // 使用 Apache Commons IO 库的工具方法将输入流中的数据拷贝到输出流中
             IOUtils.copy(inputStream, response.getOutputStream());
             log.info("文件 {} 下载成功，路径：{}", filename, filePath);
-            return "下载文件成功：" + filePath;
+            m.put("message", "success");
         } catch (IOException e) {
-            log.error("下载文件失败，路径：{}", filePath, e);
-            return "未找到文件：" + filePath;
+            m.put("message", "未找到文件");
         }
+        m.put("filepath", filePath);
+        return JSON.toJSONString(m);
     }
 
     @ApiOperation(value = "vul：任意路径遍历")
     @GetMapping("/list")
     public String fileList(String filename) {
+        Map<String, String> m = new HashMap<>();
         String filePath = System.getProperty("user.dir") + "/logs/" + filename;
-        log.info("[vul] 任意路径遍历：" + filePath);
+        log.info("[vul] 任意路径遍历：{}", filePath);
         StringBuilder sb = new StringBuilder();
 
         File f = new File(filePath);
@@ -64,19 +70,35 @@ public class Traversal {
             }
             return sb.toString();
         }
-        return filePath + "目录不存在！";
+
+        m.put("message", "目录不存在");
+        m.put("filepath", filePath);
+        return JSON.toJSONString(m);
     }
 
+    @ApiOperation(value = "safe：自带的安全方法")
+    @GetMapping("/download/safe2")
+    public String safe2(String filename) {
+        Map<String, String> m = new HashMap<>();
+        String filePath = System.getProperty("user.dir") + "/logs/" + filename;
+        String filePathSafe = Paths.get(filePath).normalize().toString();
+        m.put("message", "使用normalize()方法进行路径规范化");
+        m.put("originalFilePath", filePath);
+        m.put("safeFilePath", filePathSafe);
+        return JSON.toJSONString(m);
+    }
 
-    @ApiOperation(value = "safe：过滤../")
+    @ApiOperation(value = "safe：黑名单过滤")
     @GetMapping("/download/safe")
     public String safe(String filename) {
+        Map<String, String> m = new HashMap<>();
         if (!Security.checkTraversal(filename)) {
-            String filePath = System.getProperty("user.dir") + "/logs/" + filename;
-            return "安全路径：" + filePath;
+            m.put("message", "安全通过");
         } else {
-            return "检测到非法遍历！";
+            m.put("message", "检测到非法的文件名");
         }
+        m.put("filename", filename);
+        return JSON.toJSONString(m);
     }
 }
 

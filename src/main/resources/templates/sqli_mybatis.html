@@ -11,144 +11,229 @@
         <!-- 侧边栏 -->
         <div th:replace="~{commons/commons::siderbar(active='sqli_mybatis.html')}"></div>
 
-        <main role="main" class="col-md-10 ml-sm-auto pt-3 px-4">
-            <div class="vul_header">
-                <span>SQL Injection - MyBatis框架</span>
-            </div>
-            <hr>
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#aa"><span class="lnr lnr-bug"></span>
-                        漏洞描述</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#bb"><span class="lnr lnr-bullhorn"></span> 安全编码</a>
-                </li>
-            </ul>
+        <main role="main" class="col-md-10 offset-md-2 pt-3 main">
+            <div class="card">
+                <div class="card-header py-1">
+                    <div class="vul_header">
+                        <span>SQL Injection - MyBatis</span>
+                        <span class="header_link">
+                            <a class="btn btn-sm btn-primary"
+                               href="#">漏洞案例</a>
+                            <a class="btn btn-sm btn-primary"
+                               href="#">wiki</a>
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#vulDescription">漏洞描述</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#secureCoding">安全编码</a>
+                        </li>
+                    </ul>
 
-            <div class="tab-content">
-                <div class="tab-pane dec shadow-sm p-3 mb-4 rounded active" id="aa">
-                    SQLI(SQL Injection)，
-                    SQL注入是因为程序未能正确对用户的输入进行检查，将用户的输入以拼接的方式带入SQL语句，导致了SQL注入的产生。攻击者可通过SQL注入直接获取数据库信息，造成信息泄漏。<br>
-                    MyBatis框架底层已经实现了对SQL注入的防御，但存在使用不当的情况下，仍然存在SQL注入的风险。
-                </div>
-                <div class="tab-pane fade" id="bb">
-                    <textarea disabled="disabled" class="form-control shadow-sm p-3 mb-5 rounded" id="coder"
-                              style="height: 130px;">
-【必须】SQL语句默认使用预编译并绑定变量
- 使用Mybatis作为持久层框架，应通过#{}语法进行参数绑定，MyBatis 会创建 PreparedStatement 参数占位符，并通过占位符安全地设置参数。
- 针对order by 注入可以在java层面做映射来进行解决。
-                    </textarea>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="vulDescription">
+                            <div class="alert alert-desc"><i class="lnr lnr-alarm"></i>
+                                SQL 注入（SQL Injection）是一种常见且危险的安全漏洞，是由于应用程序没有正确地检查用户输入而导致的。攻击者通过构造恶意的
+                                SQL 语句，并将其作为用户输入提交，从而成功地执行对数据库的攻击。这种攻击方式可能导致敏感数据泄露、数据篡改，甚至完全控制数据库。<br><br>
+                                MyBatis 是一个流行的Java持久性框架，通过预处理和参数绑定的方式，有效地防止SQL注入攻击，但如果
+                                MyBatis 框架的使用不当或未正确配置，仍然可能存在SQL注入的风险。
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="secureCoding">
+                            <div class="alert alert-desc">
+                                <li>【必须】SQL语句默认使用预编译并绑定变量</li>
+                                使用Mybatis作为持久层框架，应通过#{}语法进行参数绑定，MyBatis 会创建 PreparedStatement
+                                参数占位符，并通过占位符安全地设置参数。
+                                针对order by 注入可以在java层面做映射来进行解决。
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <hr>
 
             <div class="box-float">
                 <div class="float1">
                     <a target="_blank" style="float:right" class="btn btn-sm btn-danger"
-                       href="/SQLI/MyBatis/vul/order?field=id&sort=desc,abs(111111)">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       href="/vulnapi/sqli/mybatis/vul/order?field=id&sort=desc,abs(111111)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - order by 注入</span></h5>
-                    <label for="code1"></label><textarea class="form-control" id="code1">
-// 由于使用#{}会将对象转成字符串，形成order by "user" desc造成错误，因此很多研发会采用${}来解决，从而造成SQL注入
-
+                    <textarea class="form-control" id="code1">
+/**
+ * 产生原因：由于使用 #{} 会将对象转成字符串，形成order by "user" desc造成错误，因此很多开发人员会采用 ${} 来解决，从而造成SQL注入
+ */
 @GetMapping("/vul/order")
 public List<User> orderBy(String field, String sort) {
     return userMapper.orderBy(field, sort);
 }
 
-// xml方式
+// 不安全的注解写法
+public interface UserMapper {
+    @Select("select * from users order by ${field} ${sort}")
+    List<User> orderBy(@Param("field") String field, @Param("sort") String sort);
+}
+
+// 不安全的XML映射写法
 <select id="orderBy" resultType="com.best.hello.entity.User">
     select * from users order by ${field} ${sort}
 </select>
-
-// 注解方式
-@Select("select * from users order by ${field} desc")
-List<User> orderBy2(@Param("field") String field);
                     </textarea><br><br>
 
-                    <h5><span class="lnr lnr-bug"> 漏洞代码 - 搜索框注入</span></h5>
-                    <form role="search" th:action="@{/SQLI/MyBatis/vul/search}" method="get" target="_blank">
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - 搜索注入</span></h5>
+                    <form role="search" th:action="@{/vulnapi/sqli/mybatis/vul/search}" method="get"
+                          target="_blank">
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" name="q"
-                                   value="test%' union select 1,user(),@@version_compile_os-- " style="color: #b5babb">
+                            <input type="text" class="form-control" name="user"
+                                   value="t%' or 1=1 and '%'='" style="color: #b5babb">
                             <div class="input-group-append">
-                                <button class="btn btn-sm btn-danger" type="submit">搜索</button>
+                                <button class="btn btn-sm btn-danger" type="submit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                                         viewBox="0 0 16 16">
+                                        <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                                    </svg>
+                                    <span class="align-middle"> Run</span></button>
                             </div>
                         </div>
                     </form>
-                    <label for="code2"></label><textarea class="form-control" id="code2">
-// 模糊搜索时，直接使用'%#{q}%' 会报错，部分研发图方便直接改成'%${q}%'从而造成注入
+                    <textarea class="form-control" id="code2">
+/**
+ * 产生原因：由于在 LIKE 查询中直接使用 '%#{q}%' 会导致语法错误，一些开发者为了简化操作而改用 '%${q}%' 导致SQL注入
+ */
+@GetMapping("/vul/search")
+public List<User> searchVul(@RequestParam("user") String user) {
+    return userMapper.searchVul(user);
+}
 
+// 不安全的注解
 @Select("select * from users where user like '%${q}%'")
 List<User> search(String q);
+                    </textarea><br><br>
 
-// 安全代码,采用concat
-@Select("select * from users where user like concat('%',#{q},'%')")
-List<User> search(String q);
+                    <a target="_blank" style="float:right" class="btn btn-sm btn-success"
+                       href="/vulnapi/sqli/mybatis/safe/orderbyre?field=id&sort=desc">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - order by 正则过滤</span></h5>
+                    <textarea class="form-control" id="code6">
+/**
+ * 使用白名单与正则表达式验证排序字段与排序顺序的合法性
+ */
+public List<User> orderBySafeRe(String field, String sort) {
+    if (Security.isValidOrder(field) && Security.isValidSort(sort)) {
+        return userMapper.orderBy2(field, sort);
+    } else {
+        return userMapper.orderBy2("id", "desc");
+    }
+}
+
+// 正则表达式验证排序字段是否仅包含数字、字母、加号或下划线
+public static boolean isValidOrder(String content) {
+    return content.matches("[0-9a-zA-Z+_]+");
+}
+
+// 白名单验证排序顺序，只允许 "desc" 和 "asc"
+public static boolean isValidSort(String sort) {
+    return "desc".equalsIgnoreCase(sort) || "asc".equalsIgnoreCase(sort);
+}
                     </textarea>
-
                 </div>
 
                 <div class="float2">
                     <a target="_blank" style="float:right" class="btn btn-sm btn-success"
-                       href="/SQLI/MyBatis/safe/order?field=id">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                       href="/vulnapi/sqli/mybatis/safe/order?field=id">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
                             <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
                         </svg>
                         <span class="align-middle"> Run</span></a>
                     <h5><span class="lnr lnr-smile"> 安全代码 - 排序映射</span></h5>
-                    <label for="code3"></label><textarea class="form-control" id="code3">
-<select id="orderBySafe" resultType="com.best.hello.entity.User">
-    select * from users
-    <choose>
-        <when test="field == 'id'">
-            order by id desc
-        </when>
-        <when test="field == 'user'">
-            order by user desc
-        </when>
-        <otherwise>
-            order by id desc
-        </otherwise>
-    </choose>
-</select>
+                    <textarea class="form-control" id="code3">
+@GetMapping("/safe/order")
+public List<User> orderBySafe(String field) {
+    return userMapper.orderBySafe(field);
+}
+
+<mapper namespace="com.best.hello.mapper.UserMapper">
+    <select id="orderBySafe" resultType="com.best.hello.entity.User">
+        select * from users
+        <choose>
+            <!-- 根据字段选择排序方式，避免 SQL 注入 -->
+            <when test="field == 'id'">
+                order by id desc
+            </when>
+            <when test="field == 'user'">
+                order by user desc
+            </when>
+            <otherwise>
+                <!-- 默认排序方式，防止不合法输入 -->
+                order by id asc limit 1
+            </otherwise>
+        </choose>
+    </select>
+</mapper>
                     </textarea><br><br>
 
-                    <a target="_blank" style="float:right" class="btn btn-sm btn-success"
-                       href="/SQLI/MyBatis/safe/id/1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
-                             viewBox="0 0 16 16">
-                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
-                        </svg>
-                        <span class="align-middle"> Run</span></a>
-                    <h5><span class="lnr lnr-smile"> 安全代码 - 强制类型</span></h5>
-                    <label for="code4"></label><textarea class="form-control" id="code4">
-// 使用 ${} 本身是存在注入的，但由于强制使用Integer或long类型导致注入无效（无法注入字符串）
+                    <h5><span class="lnr lnr-smile"> 安全代码 - #{} 参数化</span></h5>
+                    <form role="search" th:action="@{/vulnapi/sqli/mybatis/safe/search}" method="get"
+                          target="_blank">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" name="user"
+                                   value="t%' or 1=1 and '%'='" style="color: #b5babb">
+                            <div class="input-group-append">
+                                <button class="btn btn-sm btn-success" type="submit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                                         viewBox="0 0 16 16">
+                                        <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                                    </svg>
+                                    <span class="align-middle"> Run</span></button>
+                            </div>
+                        </div>
+                    </form>
+                    <textarea class="form-control" id="code5">
+/**
+ * MyBatis 安全编码实践：使用参数化查询来防止 SQL 注入
+ */
+@GetMapping("/safe/search")
+public List<User> searchSafe(String user) {
+    return userMapper.searchSafe(user);
+}
 
-@Select("select * from users where id = ${id}")
-List<User> queryById2(@Param("id") Integer id);
-                    </textarea><br><br>
-
-                    <a target="_blank" style="float:right" class="btn btn-sm btn-success"
-                       href="/SQLI/MyBatis/safe/query?user=admin">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
-                             viewBox="0 0 16 16">
-                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
-                        </svg>
-                        <span class="align-middle"> Run</span></a>
-                    <h5><span class="lnr lnr-smile"> 安全代码 - 使用#{}</span></h5>
-                    <label for="code5"></label><textarea class="form-control" id="code5">
-// 使用 #{} 安全编码
-
+// 使用 MyBatis 注解的安全查询方法
 @Select("select * from users where user like CONCAT('%', #{user}, '%')")
 List<User> queryByUser(@Param("user") String user);
+                    </textarea><br><br>
+
+                    <a target="_blank" style="float:right" class="btn btn-sm btn-success"
+                       href="/vulnapi/sqli/mybatis/safe/id/1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - 强制数据类型</span></h5>
+                    <textarea class="form-control" id="code4">
+/**
+ * 使用 ${} 本身是存在注入的，但由于强制使用Integer或long类型导致无法注入
+ */
+@GetMapping("/safe/id/{id}")
+public List<User> queryById(@PathVariable Integer id) {
+    return userMapper.queryByIdAsInterger(id);
+}
+
+@Select("select * from users where id = ${id}")
+List<User> queryByIdAsInterger(@Param("id") Integer id);
                     </textarea>
+
                 </div>
             </div>
         </main>
@@ -157,7 +242,6 @@ List<User> queryByUser(@Param("user") String user);
 
 <!-- 引入script -->
 <div th:replace="~{commons/commons::script}"></div>
-
 
 </body>
 

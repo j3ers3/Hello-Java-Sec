@@ -6,25 +6,46 @@
     <div class="row">
         <div class="col-md-12">
             <form class="form-signin" th:action="@{/user/login}" method="post">
-                <img class="mb-4" src="/img/logo.png" alt=""><span style="font-size: 32px;"> Java漏洞平台</span>
+                <span style="font-size: 32px;"><img src="/img/logo.png" class="logo"> Java Security</span>
 
                 <p th:text="${msg}"></p>
 
                 <div class="form-group">
-                    <input type="text" class="form-control" name="username" placeholder="用户名" required="">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-transparent">
+                                <i class="lnr lnr-user"></i>
+                            </span>
+                        </div>
+                        <input type="text" class="form-control" name="username" placeholder="用户名" required="">
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <input type="password" class="form-control" name="password" placeholder="密码" required="">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-transparent">
+                                <i class="lnr lnr-lock"></i>
+                            </span>
+                        </div>
+                        <input type="password" class="form-control" name="password" placeholder="密码" required="">
+                    </div>
                 </div>
 
                 <div class="form-group form-inline">
-                    <input type="text" name="captcha" class="form-control" placeholder="验证码"
-                           style="width: 66%">&nbsp;&nbsp;<img
-                        src="/captcha" style="width: 30%;height: 48px" onclick="this.src='/captcha?d='+Math.random()"
-                        alt=""/>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-transparent">
+                                <i class="lnr lnr-lock"></i>
+                            </span>
+                        </div>
+                        <input type="text" name="captcha" class="form-control" placeholder="验证码"
+                               style="width: 50%">&nbsp;&nbsp;<img
+                            src="/captcha" style="width: 30%;"
+                            onclick="this.src='/captcha?d='+Math.random()"
+                            alt=""/>
+                    </div>
                 </div>
-
 
                 <div class="checkbox mb-3">
                     <label>

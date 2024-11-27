@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{commons/commons::head}"></div>
+
+<body>
+<!-- 顶部导航栏 -->
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- 侧边栏 -->
+        <div th:replace="~{commons/commons::siderbar(active='idor_horizontal.html')}"></div>
+
+        <main role="main" class="col-md-10 offset-md-2 pt-3 main">
+            <div class="card">
+                <div class="card-header py-1">
+                    <div class="vul_header">
+                        <span>水平越权</span>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#vulnerability"><span
+                                    class="lnr lnr-bug"></span>
+                                漏洞描述</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#security-coding"><span
+                                    class="lnr lnr-bullhorn"></span> 安全编码</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="vulnerability">
+                            <div class="alert alert-desc"><i class="lnr lnr-alarm"></i>
+                                越权漏洞，应用在检查授权时存在纰漏，使得攻击者在获得低权限用户账户后，利用一些方式绕过权限检查，访问或者操作其他用户或者更高权限。<br>
+                                越权漏洞的成因主要是因为开发人员在对数据进行增、删、改、查询时对客户端请求的数据过分相信而遗漏了权限的判定，一旦权限验证不充分，就会导致越权漏洞。
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="security-coding">
+                            <div class="alert alert-desc"><i class="lnr lnr-alarm"></i>
+                                <li>【必须】权限校验</li>
+                                对于非公共操作，应当校验当前访问账号进行操作权限和数据权限校验。<br>
+                                1. 验证当前用户的登录态。<br>
+                                2. 从可信结构中获取经过校验的当前请求账号的身份信息（如：session）。禁止从用户请求参数或Cookie中获取外部传入不可信用户身份直接进行查询。<br>
+                                3. 校验当前用户是否具备该操作权限。<br>
+                                4. 校验当前用户是否具备所操作数据的权限，避免越权。<br><br>
+                                <li>【建议】加密</li>
+                                对于敏感信息，如用户ID、记录ID等，在URL或请求参数中使用时，建议采用加密技术进行保护。通过加密后的ID可以有效防止敏感数据被恶意用户猜测和篡改。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="box-float">
+                <div class="float1">
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                       href="/vulnapi/IDOR/vul/info?name=zhangwei">查看个人信息</a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - 身份越权</span></h5>
+
+                    <textarea class="form-control" id="code1">
+/**
+ * 基于用户身份越权，攻击者可以通过遍历 name 参数查询任意用户信息
+ */
+@GetMapping("/vul/info")
+public List<User> vul(String name) {
+    return userMapper.queryByUser(name);
+}
+                    </textarea><br><br>
+
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                       href="/vulnapi/IDOR/vul/userid?id=1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - ID遍历</span></h5>
+
+                    <textarea class="form-control" id="code3">
+/**
+ * 基于对象ID越权，攻击者可以通过遍历ID来查询任意用户信息
+ */
+@GetMapping(value = "/vul/userid")
+public List<User> vul(Integer id) {
+    return userMapper.queryByIdAsInterger(id);
+}
+                    </textarea>
+                </div>
+
+                <div class="float2">
+                    <input type="hidden" th:value="${session.LoginUser}" id="current_user">
+                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
+                       href="/vulnapi/IDOR/safe/info?name=admin">查看个人信息</a>
+                    <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
+                    <textarea class="form-control" id="code2">
+/**
+ * 判断当前登录用户与要查询的用户是否一致
+ */
+public String safe(String name, HttpSession session) {
+    String loginUser = (String) session.getAttribute("LoginUser");
+    if (loginUser.equals(name)) { {
+        return userMapper.queryByUser(name);
+    }
+}
+                    </textarea><br><br>
+
+                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
+                       href="/vulnapi/IDOR/safe/userid?uuid=1efbd215-69ce-11ef-840e-0242ac110002">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 - UUID</span></h5>
+                    <textarea class="form-control" id="code4">
+/**
+ * 通过UUID查询用户信息，防止ID被猜测
+ */
+public List<User> safe2(@RequestParam("uuid") String uuid) {
+    return userMapper.queryByUuid(uuid);
+}
+                    </textarea>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- 引入script -->
+<div th:replace="~{commons/commons::script}"></div>
+
+</body>
+
+</html>

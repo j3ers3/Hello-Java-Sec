@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Api("Jackson反序列化漏洞")
 @RestController
-@RequestMapping("/Jackson")
+@RequestMapping("/vulnapi/Jackson")
 public class JacksonVul {
 
     @RequestMapping("/vul")
