@@ -3,6 +3,7 @@ package com.best.hello.controller;
 import com.best.hello.util.JwtUtils;
 import com.wf.captcha.utils.CaptchaUtil;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,9 +17,11 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class Login {
-    // 密码明文写死漏洞，请及时修改
-    String user = "admin";
-    String pass = "admin";
+    @Value("${local.admin.name}")
+    private String user;
+
+    @Value("${local.admin.password}")
+    private String pass;
 
     private static final String COOKIE_NAME = "JWT_TOKEN";
 

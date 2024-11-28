@@ -16,6 +16,8 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/vulnapi/IDOR")
 public class IDOR2 {
 
+    @Value("${local.admin.name}")
+    private String user;
 
     @GetMapping(value = "/vul/admin")
     public String vul() {
@@ -25,7 +27,7 @@ public class IDOR2 {
     @ApiOperation(value = "权限控制", notes = "只允许admin用户可以访问管理页面")
     @GetMapping(value = "/safe/admin")
     public String safe(HttpSession session) {
-        if (session.getAttribute("LoginUser").equals("admin")) {
+        if (session.getAttribute("LoginUser").equals(user)) {
             return "idor/idoradmin";
         } else {
             return "commons/403";

@@ -1,0 +1,22 @@
+services:
+  db:
+    image: mysql:8.3.0
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234567
+      MYSQL_DATABASE: test
+    ports:
+      - "3306:3306"
+    volumes:
+#      - ./docker_mysql:/var/lib/mysql
+      - ./src/main/resources/db.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: always
+
+  javasec:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hello_javasec_container
+    depends_on:
+      - db
+    ports:
+      - "8888:8888"

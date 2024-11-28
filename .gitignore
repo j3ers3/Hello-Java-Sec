@@ -3,6 +3,8 @@
 /logs/
 /target/
 /out
+/backups/
+/docker_mysql/
 .apt_generated
 .classpath
 .factorypath

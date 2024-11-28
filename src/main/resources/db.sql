@@ -8,7 +8,6 @@ CREATE TABLE `users`
     `uuid` CHAR(36)         NOT NULL DEFAULT (UUID()) UNIQUE,
     `user` varchar(50)      NOT NULL,
     `pass` varchar(128)     NOT NULL,
-    `flag` varchar(128)     NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `uuid_unique` (`uuid`)
 );

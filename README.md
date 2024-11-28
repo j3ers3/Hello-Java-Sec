@@ -37,10 +37,10 @@
 
 ## Run
 
-### 配置数据库
+### 手工部署
+配置数据库
 
 导入数据库文件 `src/main/resources/db.sql`
-
 配置数据库连接 `src/main/application.properties`
 
 ```
@@ -49,9 +49,9 @@ spring.datasource.username=root
 spring.datasource.password=1234567
 ```
 
-### Jar运行
+编译并启动
 
-> JDK 1.8环境，高版本会报错
+> 使用JDK 1.8环境，高版本会报错
 
 ```
 git clone https://github.com/j3ers3/Hello-Java-Sec
@@ -60,14 +60,16 @@ mvn clean package -DskipTests
 java -jar target/javasec-x.x.jar
 ```
 
-### Docker运行
+### Docker部署
 
 ```
-mvn clean package
-./deploy.sh
+git clone https://github.com/j3ers3/Hello-Java-Sec
+cd Hello-Java-Sec
+mvn clean package -DskipTests
+docker-compose up
 ```
 
-![](media/16512152886514.jpg)
+![](media/17327839424016.jpg)
 
 ## 技术架构
 
