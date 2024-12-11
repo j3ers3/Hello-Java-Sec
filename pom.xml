@@ -205,10 +205,16 @@
         </dependency>
 
         <!-- 高版本会报错! -->
-        <dependency>
+       <dependency>
             <groupId>org.owasp.esapi</groupId>
             <artifactId>esapi</artifactId>
-            <version>2.2.0.0</version>
+            <version>2.5.5.0</version>
+        </dependency>
+             
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.13</version>
         </dependency>
 
         <dependency>
