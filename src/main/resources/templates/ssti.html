@@ -108,7 +108,34 @@
 public String  fragmentVul(@RequestParam String section) {
     return "lang/en :: " + section;
 }
+                    </textarea><br><br>
+
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                       href='/vulnapi/SSTI/freemarker/vul?file=index.ftl&content=<%23assign%20ex%3d"freemarker%2etemplate%2eutility%2eExecute"%3fnew%28%29>%20%24%7b%20ex%28"whoami"%29%20%7d'>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - Freemarker模版注入</span></h5>
+                    <textarea class="form-control" name="code" id="code7">
+ /**
+  * 模版文件内容可控，造成模版注入漏洞
+  * payload: <#assign ex="freemarker.template.utility.Execute"?new()> ${ ex("open -a Calculator") }
+  */
+ @GetMapping("/freemarker/vul")
+ public String freemarkerVul(@RequestParam String file, @RequestParam String content, Model model) {
+    // 构建模板的完整路径，模板名应以 "freemarker/" 作为前缀
+    String templateName = "freemarker/" + file;
+    // 使用 StringTemplateLoader 动态存储模板内容
+    stringTemplateLoader.putTemplate(templateName, content);
+    // 设置 FreeMarker 配置，禁用模板缓存，确保每次都能使用最新模板
+    conf.setTemplateUpdateDelayMilliseconds(0);
+    // 返回模板名称，但去掉了 ".ftl" 后缀，Spring 会自动将其解析为模板
+    return templateName.replace(".ftl", "");
+ }
                     </textarea>
+
 
                 </div>
 
@@ -170,6 +197,31 @@ public void getDocument(@PathVariable String document, HttpServletResponse respo
 @ResponseBody
 public String fragmentSafe(@RequestParam String section) {
     return "lang/en :: " + section;
+}
+                    </textarea><br><br>
+
+                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
+                       href='/vulnapi/SSTI/freemarker/safe?file=index.ftl&content=<%23assign%20ex%3d"freemarker%2etemplate%2eutility%2eExecute"%3fnew%28%29>%20%24%7b%20ex%28"whoami"%29%20%7d'>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
+                    <textarea class="form-control" name="code" id="code8">
+/*
+ * conf.setNewBuiltinClassResolver()
+ * 1. TemplateClassResolver.UNRESTRICTED_RESOLVER: 可以通过 ClassUtil.forName(className)获取任何类
+ * 2. SAFER_RESOLVER: 不能加载恶意类如Execute、ObjectConstructor、JythonRuntime
+ * 3. ALLOWS_NOTHING_RESOLVER: 不能解析任何类
+*/
+@GetMapping("/freemarker/safe")
+public String freemarkerSafe(@RequestParam String file, @RequestParam String content, Model model) throws TemplateException {
+    // 使用安全的解析器
+    conf.setNewBuiltinClassResolver(TemplateClassResolver.SAFER_RESOLVER);
+    // 关闭 FreeMarker debug 信息
+    conf.setTemplateExceptionHandler(freemarker.template.TemplateExceptionHandler.RETHROW_HANDLER);
+    return this.freemarkerVul(file, content, model);
 }
                     </textarea>
 

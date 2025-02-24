@@ -1,16 +1,22 @@
 package com.best.hello.controller;
 
+import freemarker.cache.StringTemplateLoader;
+import freemarker.core.TemplateClassResolver;
+import freemarker.template.Configuration;
+import freemarker.template.TemplateException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * SSTI （服务端模板注入）
@@ -22,6 +28,14 @@ import java.util.Map;
 @Controller
 @RequestMapping("/vulnapi/SSTI")
 public class SSTI {
+    private final Configuration conf;
+    private final StringTemplateLoader stringTemplateLoader;
+
+    public SSTI(Configuration configuration) {
+        this.conf = configuration;
+        this.stringTemplateLoader = new StringTemplateLoader();
+        configuration.setTemplateLoader(stringTemplateLoader);
+    }
     Logger log = LoggerFactory.getLogger(SSTI.class);
 
     /**
@@ -88,4 +102,65 @@ public class SSTI {
     public String fragmentSafe(@RequestParam String section) {
         return "lang/en :: " + section;
     }
+
+    /**
+     * SpringBoot FreeMarker 模版注入
+     * @poc http://127.0.0.1:8888/vulnapi/SSTI/freemarker/vul?file=index.ftl&content=%3C%23assign%20ex%3d%22freemarker%2etemplate%2eutility%2eExecute%22%3fnew%28%29%3E%20%24%7b%20ex%28%22whoami%22%29%20%7d
+     */
+
+    @ApiOperation(value = "vul：freemarker模版注入")
+    @GetMapping("/freemarker/vul")
+    public String freemarkerVul(@RequestParam String file, @RequestParam String content, Model model, HttpServletRequest request) {
+        log.info("[vul] FreeMarker payload: {}", content);
+        if (!file.trim().isEmpty()) {
+            // 防止目录穿越
+            if (!file.contains("..") && !file.startsWith("/")) {
+                if (!content.trim().isEmpty()) {
+                    // 检查类路径下模板是否存在
+                    String resourcePath = "templates/freemarker/" + file;
+                    InputStream is = getClass().getClassLoader().getResourceAsStream(resourcePath);
+                    if (is != null) {
+                        try {
+                            is.close();
+                        } catch (IOException e) {
+                            log.error("关闭流失败", e);
+                        }
+
+                        // 如果请求路径为 /vulnapi/SSTI/freemarker/safe 则不设置解析所有类
+                        if (!request.getRequestURI().startsWith("/vulnapi/SSTI/freemarker/safe")) {
+                            conf.setNewBuiltinClassResolver(TemplateClassResolver.UNRESTRICTED_RESOLVER);
+                        }
+
+                        // 添加模板到StringTemplateLoader（名称需与后续查找一致）
+                        stringTemplateLoader.putTemplate(file, content);
+                        // 禁用缓存以确保立即生效
+                        conf.setTemplateUpdateDelayMilliseconds(0);
+                        // 关闭模版加载时的异常日志
+                        conf.setLogTemplateExceptions(false);
+                        return file.replace(".ftl", "");
+                    }
+                    model.addAttribute("error", "模版文件不存在！");
+                    return "commons/404";
+                }
+                model.addAttribute("error", "文件内容不能为空！");
+                return "commons/400";
+            }
+            model.addAttribute("error", "文件名称非法！");
+            return "commons/400";
+        }
+        model.addAttribute("error", "文件名不能为空！");
+        return "commons/400";
+    }
+
+    @ApiOperation(value = "vul：freemarker模版注入修复代码")
+    @GetMapping("/freemarker/safe")
+    public String freemarkerSafe(@RequestParam String file, @RequestParam String content, Model model, HttpServletRequest request) throws TemplateException {
+        // 使用安全的解析器
+        conf.setNewBuiltinClassResolver(TemplateClassResolver.SAFER_RESOLVER);
+        // 关闭 FreeMarker debug 信息
+        conf.setTemplateExceptionHandler(freemarker.template.TemplateExceptionHandler.RETHROW_HANDLER);
+        return this.freemarkerVul(file, content, model, request);
+    }
+
+
 }
