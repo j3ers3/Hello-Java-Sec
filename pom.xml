@@ -28,20 +28,20 @@
             <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
 
-        <!-- thymeleaf模版 -->
+        <!-- thymeleaf -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
-        <!-- velocity模版 -->
+        <!-- Velocity -->
         <dependency>
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity</artifactId>
             <version>1.7</version>
         </dependency>
 
-        <!-- mybatis -->
+        <!-- MyBatis -->
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
@@ -54,7 +54,7 @@
             <artifactId>unboundid-ldapsdk</artifactId>
         </dependency>
 
-        <!-- mysql驱动 -->
+        <!-- mysql -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -81,7 +81,7 @@
             <version>1.2.41</version>
         </dependency>
 
-        <!-- xstream多个rce -->
+        <!-- xstream -->
         <dependency>
             <groupId>com.thoughtworks.xstream</groupId>
             <artifactId>xstream</artifactId>
@@ -95,7 +95,7 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- actuator监控 -->
+        <!-- actuator -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
@@ -140,6 +140,7 @@
             <artifactId>springfox-swagger-ui</artifactId>
             <version>2.10.5</version>
         </dependency>
+
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
@@ -171,7 +172,6 @@
             <version>1.2.4</version>
         </dependency>
 
-
         <!-- Jackson 引入低版本会报错 -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -197,7 +197,7 @@
             <version>1.9</version>
         </dependency>
 
-        <!-- snakeyaml rce-->
+        <!-- snakeyaml -->
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
@@ -215,6 +215,18 @@
             <groupId>org.owasp.encoder</groupId>
             <artifactId>encoder</artifactId>
             <version>1.2.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.14</version>
+        </dependency>
+
+        <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+            <version>2.7.3</version>
         </dependency>
 
         <!-- log4Shell -->
@@ -247,7 +259,6 @@
             <artifactId>re2j</artifactId>
             <version>1.6</version>
         </dependency>
-
 
         <!-- 图形验证码 -->
         <dependency>
@@ -294,11 +305,11 @@
             <version>2.3.1</version>
         </dependency>
 
-        <!-- Freemarker 依赖 -->
+        <!-- Freemarker -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-freemarker</artifactId>
-            <version>1.5.8.RELEASE</version>
+            <version>3.4.3</version>
         </dependency>
 
     </dependencies>

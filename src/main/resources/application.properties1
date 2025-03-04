@@ -1,0 +1,25 @@
+spring.profiles.active=dev
+
+# Actuator??????
+management.endpoints.web.exposure.include=*
+#management.endpoints.enabled-by-default=false
+# ?????
+info.author=nul1
+info.create=2021-07-10
+
+# ??mapper.xml??
+mybatis.mapper-locations=classpath:mapper/*.xml
+
+# ????
+server.tomcat.accesslog.enabled=true
+server.tomcat.basedir=./
+management.health.ldap.enabled=false
+
+# ??????????
+local.admin.name = admin
+local.admin.password = admin
+
+# Freemarker ????
+spring.freemarker.template-loader-path=classpath:/templates/
+spring.freemarker.suffix=.ftl
+spring.freemarker.charset=UTF-8
