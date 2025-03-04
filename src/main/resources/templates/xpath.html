@@ -51,7 +51,7 @@
 
             <div class="box-float">
                 <div class="float1">
-                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                    <a target="_blank" class="btn btn-sm btn-danger run-btn"
                        th:href="@{/vulnapi/XPath/vul?username=admin&password=1%27%20or%20%271%27=%271}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
@@ -91,7 +91,7 @@ public String vul(@RequestParam("username") String username, @RequestParam("pass
                 </div>
 
                 <div class="float2">
-                    <a style="float:right" class="btn btn-sm btn-success text-right" target="_blank"
+                    <a target="_blank" class="btn btn-sm btn-success run-btn"
                        th:href="@{/vulnapi/XPath/safe?username=admin%27%20or%20%271%27=%271&password=1}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">

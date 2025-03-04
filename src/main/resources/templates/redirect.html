@@ -53,7 +53,7 @@
 
             <div class="box-float">
                 <div class="float1">
-                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                    <a target="_blank" class="btn btn-sm btn-danger run-btn"
                        th:href="@{/vulnapi/redirect/vul?url=https://www.baidu.com}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
@@ -72,7 +72,7 @@ public String vul(String url) {
 }
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                    <a target="_blank" class="btn btn-sm btn-danger run-btn"
                        th:href="@{/vulnapi/redirect/vul2?url=www.baidu.com}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
@@ -91,7 +91,7 @@ public ModelAndView vul2(String url) {
 }
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                    <a target="_blank" class="btn btn-sm btn-danger run-btn"
                        th:href="@{/vulnapi/redirect/vul3?url=https://www.baidu.com}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
@@ -114,7 +114,7 @@ public void vul3(String url, HttpServletResponse response) throws IOException {
                 </div>
 
                 <div class="float2">
-                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
+                    <a target="_blank" class="btn btn-sm btn-success run-btn"
                        href="/vulnapi/redirect/safe?url=http://www.evil.com">
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
@@ -142,7 +142,7 @@ public static boolean isWhite(String url) {
  }
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                    <a target="_blank" class="btn btn-sm btn-danger run-btn"
                        href="/vulnapi/redirect/vul4?url=https://www.baidu.com">
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">

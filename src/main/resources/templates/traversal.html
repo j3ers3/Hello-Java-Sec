@@ -58,7 +58,7 @@
 
             <div class="box-float">
                 <div class="float1">
-                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                    <a target="_blank" class="btn btn-sm btn-danger run-btn"
                        th:href="@{/vulnapi/Traversal/download?filename=dog.jpg}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
@@ -86,7 +86,7 @@ public String download(String filename, HttpServletResponse response) {
 }
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                    <a target="_blank" class="btn btn-sm btn-danger run-btn"
                        th:href="@{/vulnapi/Traversal/list?filename=../}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
@@ -117,7 +117,7 @@ public String fileList(String filename) {
                 </div>
 
                 <div class="float2">
-                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
+                    <a target="_blank" class="btn btn-sm btn-success run-btn"
                        th:href="@{/vulnapi/Traversal/download/safe?filename=../}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
@@ -134,7 +134,7 @@ public static boolean checkTraversal(String content) {
 }
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
+                    <a target="_blank" class="btn btn-sm btn-success run-btn"
                        th:href="@{/vulnapi/Traversal/download/safe2?filename=../../etc/passwd}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">

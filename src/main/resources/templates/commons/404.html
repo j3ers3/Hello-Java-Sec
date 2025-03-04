@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <title>404</title>
-  <meta charset="UTF-8">
-</head>
+
 <body>
 
 <div class="container-fluid">
-  <div class="row">
+    <div class="row">
 
-    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+        <main role="main" class="col-md-10 offset-md-2 pt-3 main">
       <pre>
                                ...
                              ;::::;
@@ -17,7 +14,7 @@
                          ;:::::'   :;
                         ;:::::;     ;.
                        ,:::::'       ;           OOO\
-                       ::::::;       ;          OOOOO\
+                       ::::::;  -  - ;          OOOOO\
                        ;:::::;       ;         OOOOOOOO
                       ,;::::::;     ;'         / OOOOOOO
                     ;:::::::::`. ,,,;.        /  / DOOOOOO
@@ -33,10 +30,10 @@
                   `:::::`::::::::;' /  / `:#
                    ::::::`:::::;'  /  /   `#
 
-                      <span style="color: red;font-size:16px">404 页面未找到!!!</span>
+                      <span style="color: red;font-size:16px" th:text="${error}"></span>
       </pre>
-    </main>
-  </div>
+        </main>
+    </div>
 </div>
 
 <!-- 引入script -->

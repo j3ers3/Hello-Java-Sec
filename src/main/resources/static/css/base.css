@@ -138,7 +138,7 @@ body {
 }
 
 .box-float .float1 {
-    width: 48%;
+    width: 49%;
     float: left;
     margin-bottom: 100px
 }
@@ -208,3 +208,40 @@ body {
     color: white;
 }
 
+
+#flag::placeholder {
+    font-size: 14px;
+    color: #808080;
+}
+
+.run-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.8rem;
+    transition: all 0.2s ease-in-out;
+    outline: none;
+    box-shadow: none;
+    float: right;
+}
+
+.run-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.run-btn svg {
+    margin-right: 0.2rem;
+}
+
+.run-btn:focus {
+    box-shadow: none;
+}
+
+.badge-new {
+    background-color: red;
+    font-size: 9px;
+    padding: 2px 5px;
+    color: white;
+}

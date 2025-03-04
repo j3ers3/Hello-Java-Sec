@@ -58,7 +58,7 @@
 
             <div class="box-float">
                 <div class="float1">
-                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                    <a target="_blank" class="btn btn-sm btn-danger run-btn"
                        href="/vulnapi/IDOR/vul/info?name=zhangwei">查看个人信息</a>
                     <h5><span class="lnr lnr-bug"> 漏洞代码 - 身份越权</span></h5>
 
@@ -72,7 +72,7 @@ public List<User> vul(String name) {
 }
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                    <a target="_blank" class="btn btn-sm btn-danger run-btn"
                        href="/vulnapi/IDOR/vul/userid?id=1">
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
@@ -94,7 +94,7 @@ public List<User> vul(Integer id) {
 
                 <div class="float2">
                     <input type="hidden" th:value="${session.LoginUser}" id="current_user">
-                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
+                    <a target="_blank" class="btn btn-sm btn-success run-btn"
                        href="/vulnapi/IDOR/safe/info?name=admin">查看个人信息</a>
                     <h5><span class="lnr lnr-smile"> 安全代码</span></h5>
                     <textarea class="form-control" id="code2">
@@ -109,7 +109,7 @@ public String safe(String name, HttpSession session) {
 }
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-success" target="_blank"
+                    <a target="_blank" class="btn btn-sm btn-success run-btn"
                        href="/vulnapi/IDOR/safe/userid?uuid=1efbd215-69ce-11ef-840e-0242ac110002">
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">

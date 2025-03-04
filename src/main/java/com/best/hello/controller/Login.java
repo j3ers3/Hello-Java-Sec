@@ -29,6 +29,9 @@ public class Login {
     @RequestMapping("/user/login")
     public String login(@RequestParam("username") String username, @RequestParam("password") String password, @RequestParam("captcha") String captcha, Model model, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
 
+        // 处理重定向
+        String referer = request.getHeader("referer");
+
         // 验证码复用
         if (!CaptchaUtil.ver(captcha, request)) {
             CaptchaUtil.clear(request);
@@ -45,7 +48,13 @@ public class Login {
             cookie.setPath("/");
             response.addCookie(cookie);
             session.setAttribute("LoginUser", username);
-            return "redirect:/index";
+
+            if (referer == null || referer.isEmpty() || referer.contains("/login") || referer.contains("/user/ldap") || referer.contains("/user/logout")) {
+                return "redirect:/index";
+            } else {
+                return "redirect:" + referer;
+            }
+
         } else {
             model.addAttribute("msg", "用户名或者密码错误");
             return "login";

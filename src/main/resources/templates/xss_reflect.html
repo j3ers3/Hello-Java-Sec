@@ -60,7 +60,7 @@
 
             <div class="box-float">
                 <div class="float1">
-                    <a style="float:right" class="btn btn-sm btn-danger" target="_blank"
+                    <a target="_blank" class="btn btn-sm btn-danger run-btn"
                        th:href="@{/vulnapi/XSS/reflect?content=test%3Cscript%3E%0A%20%20%20%20window.onload=function()%20%7B%0A%20%20%20%20%20%20%20%20document.bgColor%20=%20%22black%22;%0A%20%20%20%20%20%20%20%20document.body.innerHTML=%22%3Cfont%20color=white%20size=40%3E%E4%BD%A0%E8%A2%ABXSS%E9%BB%91%E4%BA%86%EF%BC%81%3C/font%3E%22%0A%20%20%20%20%7D%0A%3C/script%3E}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
@@ -80,7 +80,7 @@ public static String input(String content) {
                     </textarea><br><br>
 
 
-                    <a style="float:right" class="btn btn-sm btn-success text-right" target="_blank"
+                    <a target="_blank" class="btn btn-sm btn-success run-btn"
                        th:href="@{/vulnapi/XSS/escape?content=test<script>alert(1)</script>}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
@@ -101,7 +101,7 @@ public static String safe1(String content) {
 }
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-success text-right" target="_blank"
+                    <a target="_blank" class="btn btn-sm btn-success run-btn"
                        th:href="@{/vulnapi/XSS/owaspEncoder?content=test<script>alert(1)</script>}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
@@ -124,7 +124,7 @@ public static String safe5(String content){
 
                 <div class="float2">
 
-                    <a style="float:right" class="btn btn-sm btn-success text-right" target="_blank"
+                    <a target="_blank" class="btn btn-sm btn-success run-btn"
                        th:href="@{/vulnapi/XSS/filter?content=test<script>alert(1)</script>}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
@@ -147,7 +147,7 @@ private static String XssFilter(String content) {
 }
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-success text-right" target="_blank"
+                    <a target="_blank" class="btn btn-sm btn-success run-btn"
                        th:href="@{/vulnapi/XSS/whitelist?content=aaa<img%20src=1%20onerror=alert(1)>}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
@@ -177,7 +177,7 @@ public static String safe3(String content) {
 }
                     </textarea><br><br>
 
-                    <a style="float:right" class="btn btn-sm btn-success text-right" target="_blank"
+                    <a target="_blank" class="btn btn-sm btn-success run-btn"
                        th:href="@{/vulnapi/XSS/esapi?content=aaa<img%20src=1%20onerror=alert(1)>}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor"
                              viewBox="0 0 16 16">
