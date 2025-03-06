@@ -149,6 +149,11 @@ public class SSTI {
             log.error("关闭流失败", e);
         }
 
+        if (request.getRequestURI().contains("/freemarker/vul")) {
+            // 如果访问的 URI 路径包含 /freemarker/vul 则使用不安全的解析器
+            conf.setNewBuiltinClassResolver(TemplateClassResolver.UNRESTRICTED_RESOLVER);
+        }
+
         // 添加模板到 StringTemplateLoader，并禁用缓存和异常日志
         stringTemplateLoader.putTemplate(file, content);
         conf.setTemplateUpdateDelayMilliseconds(0);
